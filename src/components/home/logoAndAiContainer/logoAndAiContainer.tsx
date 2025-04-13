@@ -1,5 +1,6 @@
 import Image from "next/image";
 import style from "./logoAndAiContainer.module.css";
+import Link from "next/link";
 
 export default function LogoAndAiContainer() {
   return (
@@ -14,9 +15,9 @@ export default function LogoAndAiContainer() {
       </div>
       <div className={style.ai_container}>
         <Image src={"/AI.svg"} alt="AI" width={25} height={25}></Image>
-        <div className={style.textArea}>
+        <Link href="/ai-helper" className={style.textArea}>
           <div className={style.font}>작업 의뢰</div>
-        </div>
+        </Link>
       </div>
     </>
   );

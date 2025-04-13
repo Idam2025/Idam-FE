@@ -1,0 +1,38 @@
+.container {
+  display: flex;
+  width: auto;
+  padding: 25px 98px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.container > .font {
+  color: var(--Neutral-8, #7b95b7);
+  font-family: "DM Sans";
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px; /* 120% */
+}
+
+.container > .row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+}
+
+.container > .row > .font {
+  width: 50px;
+  color: var(--Neutral-10, #486284);
+  text-align: center;
+
+  /* body/small */
+  font-family: "DM Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 150% */
+}

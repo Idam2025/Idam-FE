@@ -1,11 +1,11 @@
+import SearchBar from "@/components/searchbar/ai-helper/ai-searchbar";
 import { ReactNode, Suspense } from "react";
-import Searchbar from "../../components/searchbar/Home/searchbar";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <div>
       <Suspense fallback={<div>loading...</div>}>
-        <Searchbar />
+        <SearchBar />
       </Suspense>
       {children}
     </div>

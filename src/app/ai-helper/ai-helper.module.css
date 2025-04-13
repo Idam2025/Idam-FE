@@ -1,0 +1,10 @@
+.container {
+  width: auto;
+  height: 2000px;
+  background-image: url("/helperPage.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: repeat;
+  display: flex;
+  flex-direction: column;
+}
