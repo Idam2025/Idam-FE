@@ -1,0 +1,10 @@
+.container {
+  width: auto;
+  height: 5067px;
+  background-image: url("/mainPage.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: repeat;
+  display: flex;
+  flex-direction: column;
+}
