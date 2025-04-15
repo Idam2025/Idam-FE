@@ -44,6 +44,8 @@
 }
 
 .left > .btnGroup > .btn1 {
+  text-decoration: none;
+  color: inherit;
   display: flex;
   padding: 24px 36px;
   align-items: center;
@@ -53,6 +55,7 @@
 }
 
 .left > .btnGroup > .btn1 > .font {
+  text-decoration: none;
   color: var(--Neutral-Colors-Headings-Black, #5d5a88);
   text-align: center;
   font-feature-settings: "liga" off, "clig" off;

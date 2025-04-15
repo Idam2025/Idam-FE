@@ -1,5 +1,6 @@
 import Link from "next/link";
 import style from "./section.module.css";
+import Image from "next/image";
 
 export default function Section() {
   return (
@@ -7,7 +8,10 @@ export default function Section() {
       <div className={style.section}>
         <div className={style.left}>
           <div className={style.fontContainer}>
-            <div className={style.font1}>I:DAM</div>
+            <div className={style.font1}>
+              I:DAM
+              <Image src="/AI.svg" alt="AI" width={51} height={51} />
+            </div>
             <div className={style.font1}>AI Assistant</div>
           </div>
 
@@ -23,9 +27,9 @@ export default function Section() {
           </div>
 
           <div className={style.btnGroup}>
-            <div className={style.btn1}>
-              <div className={style.font}>Get started</div>
-            </div>
+            <Link href="/ai-helper/next" className={style.btn1}>
+              Get started
+            </Link>
 
             <Link href="/" className={style.btn2}>
               <div className={style.font}>HOME</div>

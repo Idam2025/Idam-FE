@@ -1,0 +1,75 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 150px;
+}
+
+.font {
+  text-align: center;
+  font-feature-settings: "liga" off, "clig" off;
+  font-family: Futura;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 46px; /* 127.778% */
+  background: var(--main, linear-gradient(90deg, #d838c9 0%, #482cbb 100%));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.font2 {
+  color: var(--Neutral-Colors-Text-Gray, #9795b5);
+  text-align: center;
+  font-feature-settings: "liga" off, "clig" off;
+  font-family: Futura-Light;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 30px; /* 166.667% */
+  margin-top: 21px;
+}
+
+.imgContainer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 가로 4칸 */
+  grid-template-rows: repeat(2, auto); /* 세로 2줄 */
+  gap: 50px; /* 이미지 사이 여백 */
+  width: 100%;
+  max-width: 800px; /* 필요 시 */
+  margin: 0 auto; /* 가운데 정렬 */
+  padding: 20px;
+}
+
+.element {
+  display: flex;
+  flex-direction: column;
+}
+
+.element > .font1 {
+  color: var(--Neutral-Colors-Headings-Black, #5d5a88);
+  text-align: center;
+  font-feature-settings: "liga" off, "clig" off;
+
+  /* Special headings/Display 4 */
+  font-family: "DM Sans";
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 38px; /* 135.714% */
+  margin-top: 12px;
+}
+
+.element > .font2 {
+  color: var(--Neutral-Colors-Color-900, #8d8ba7);
+  text-align: center;
+  font-feature-settings: "liga" off, "clig" off;
+
+  /* Text single/100/Regular */
+  font-family: "DM Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18px; /* 112.5% */
+  margin-top: 2px;
+}

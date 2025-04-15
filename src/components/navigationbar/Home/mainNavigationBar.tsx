@@ -1,6 +1,6 @@
-import style from "./mainSearchbar.module.css";
+import style from "./mainNavigationbar.module.css";
 
-export default function SearchBar() {
+export default function NavigationBar() {
   return (
     <div className={style.container}>
       <div className={style.font}>IDAM</div>

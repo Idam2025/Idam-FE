@@ -1,0 +1,102 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.font {
+  margin-top: 150px;
+  text-align: center;
+  font-feature-settings: "liga" off, "clig" off;
+
+  /* Headings/H2 */
+  font-family: "DM Sans";
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 46px; /* 127.778% */
+  background: var(--main, linear-gradient(90deg, #d838c9 0%, #482cbb 100%));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.font2 {
+  color: var(--Neutral-Colors-Text-Gray, #9795b5);
+  text-align: center;
+  font-feature-settings: "liga" off, "clig" off;
+
+  /* Body/Default */
+  font-family: "DM Sans";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px; /* 166.667% */
+  margin-top: 16px;
+}
+
+.styleContainer {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 가로 4칸 */
+  grid-template-rows: repeat(2, auto); /* 세로 2줄 */
+  gap: 50px; /* 이미지 사이 여백 */
+  width: 70%;
+  margin: 0 auto; /* 가운데 정렬 */
+  padding: 20px;
+  place-items: center;
+  margin-top: 100px;
+}
+
+.style_group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.imageWrapper {
+  position: relative; /* 자식 absolute의 기준 */
+  width: 80px;
+  height: 80px;
+}
+
+.bgImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.overlayImage {
+  position: absolute;
+  top: 24px; /* 원하는 위치 조정 */
+  left: 24px;
+  z-index: 2; /* 위로 올리기 */
+}
+
+.font3 {
+  color: var(--Neutral-Colors-Headings-Black, #5d5a88);
+  text-align: center;
+  font-feature-settings: "liga" off, "clig" off;
+
+  /* Headings/H3 */
+  font-family: "DM Sans";
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 34px; /* 141.667% */
+  margin-top: 16px;
+}
+
+.font4 {
+  color: var(--Neutral-Colors-Color-900, #8d8ba7);
+  text-align: center;
+  font-feature-settings: "liga" off, "clig" off;
+
+  /* Text single/100/Regular */
+  font-family: "DM Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18px; /* 112.5% */
+  margin-top: 9px;
+}

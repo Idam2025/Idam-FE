@@ -1,0 +1,115 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 177px;
+}
+
+.font {
+  text-align: center;
+  font-feature-settings: "liga" off, "clig" off;
+
+  /* Headings/H2 */
+  font-family: "DM Sans";
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 46px; /* 127.778% */
+  background: var(--main, linear-gradient(90deg, #d838c9 0%, #482cbb 100%));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.font2 {
+  color: var(--Neutral-Colors-Text-Gray, #9795b5);
+  text-align: center;
+  font-feature-settings: "liga" off, "clig" off;
+
+  /* Body/Default */
+  font-family: "DM Sans";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px; /* 166.667% */
+  margin-top: 16px;
+}
+
+.choiceContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, auto); /* 세로 2줄 */
+
+  width: 80%;
+  min-height: 500px;
+  height: 80%;
+  margin: 0 auto; /* 가운데 정렬 */
+  padding: 20px;
+
+  place-items: center;
+}
+
+.choiceContainer > .choiceBlock {
+  display: flex;
+  width: 80%;
+  height: 160px;
+  border-radius: 24px;
+  border: 1px solid var(--Neutral-Colors-Color-600, #d4d2e3);
+  background: var(--Neutral-Colors-White, #fff);
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.imageWrapper {
+  position: relative; /* 자식 absolute의 기준 */
+  width: 80px;
+  height: 80px;
+}
+
+.bgImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.overlayImage {
+  position: absolute;
+  top: 24px; /* 원하는 위치 조정 */
+  left: 24px;
+  z-index: 2; /* 위로 올리기 */
+}
+
+.textContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.textContainer > .font {
+  color: var(--Neutral-Colors-Headings-Black, #5d5a88);
+  font-feature-settings: "liga" off, "clig" off;
+
+  /* Headings/H4 */
+  font-family: "DM Sans";
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 28px; /* 127.273% */
+  text-decoration: none !important;
+}
+
+.textContainer > .font2 {
+  color: var(--Neutral-Colors-Color-900, #8d8ba7);
+  font-feature-settings: "liga" off, "clig" off;
+
+  /* Text Single Uppercase/100/Bold */
+  font-family: "DM Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 18px; /* 112.5% */
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+}

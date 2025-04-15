@@ -1,7 +1,7 @@
 import Image from "next/image";
-import style from "./ai-searchbar.module.css";
+import style from "./ai-navigationbar.module.css";
 
-export default function SearchBar() {
+export default function NavigationBar() {
   return (
     <div className={style.container}>
       <Image src={"/logo.svg"} alt="logo" width={41} height={38} />

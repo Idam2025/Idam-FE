@@ -1,12 +1,11 @@
+import NavigationBar from "@/components/navigationbar/Home/mainNavigationBar";
 import { ReactNode, Suspense } from "react";
-import Searchbar from "../../components/searchbar/Home/searchbar";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <div>
-      <Suspense fallback={<div>loading...</div>}>
-        <Searchbar />
-      </Suspense>
+      <NavigationBar />
+
       {children}
     </div>
   );
