@@ -17,3 +17,7 @@ a:active {
   text-decoration: none;
   color: inherit;
 }
+
+:root {
+  --Neutral-Colors-Headings-Black: #5d5a88; /* 너가 원하는 색상 */
+}

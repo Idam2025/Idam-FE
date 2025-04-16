@@ -1,11 +1,14 @@
-import styles from "./result.module.css";
+import { Suspense } from "react";
+import SuspensePage from "@/components/result/suspense";
+import DelayedContent from "./delaycontent";
+import ResultSection from "@/components/result/section";
 
 export default function Page() {
   return (
     <>
-      <div className={styles.header}></div>
-      <div className={styles.container}></div>
-      <div className={styles.footer}></div>
+      <Suspense fallback={<SuspensePage />}>
+        <ResultSection />
+      </Suspense>
     </>
   );
 }

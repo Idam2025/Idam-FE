@@ -1,4 +1,4 @@
-import NextSection from "@/components/ai-helper/next/section";
+import NextSection from "@/components/next/section";
 
 export default function Page() {
   return (

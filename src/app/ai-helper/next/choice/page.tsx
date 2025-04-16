@@ -1,4 +1,4 @@
-import ChoiceSection from "@/components/ai-helper/next/choice/section";
+import ChoiceSection from "@/components/choice/section";
 
 export default function Page() {
   return (

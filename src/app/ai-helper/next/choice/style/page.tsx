@@ -1,4 +1,4 @@
-import StyleSection from "@/components/ai-helper/next/choice/style/section";
+import StyleSection from "@/components/style/section";
 
 export default function Page() {
   return (
