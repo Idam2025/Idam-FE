@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function ChoiceSection() {
   const imgContainer = (text: string, text2: string) => {
     return (
-      <Link href="/ai-helper/next/choice/style" className={style.choiceBlock}>
+      <Link href="/ai-helper/next/choice/AIchat" className={style.choiceBlock}>
         <div className={style.imageWrapper}>
           <Image
             src="/BG.svg"
@@ -32,18 +32,20 @@ export default function ChoiceSection() {
   return (
     <>
       <div className={style.container}>
-        <div className={style.font}>$</div>
-        <div className={style.font2}>
-          Lorem ipsum dolor sit amet consectetur adipiscing elit volutpat
-          gravida malesuada quam commodo id integer nam.
-        </div>
-        <div className={style.choiceContainer}>
-          {imgContainer("up to 100$", "CEO & Co-Founder")}
-          {imgContainer("up to 100$", "CTO & Co-Founder")}
-          {imgContainer("up to 100$", "VP of Marketing")}
-          {imgContainer("the lowest price", "VP of Sales")}
-          {imgContainer("recommend me", "VP of Design")}
-          {imgContainer("the maximum price", "VP of Product")}
+        <div className={style.contentContainer}>
+          <div className={style.font}>$</div>
+          <div className={style.font2}>
+            Lorem ipsum dolor sit amet consectetur adipiscing elit volutpat
+            gravida malesuada quam commodo id integer nam.
+          </div>
+          <div className={style.choiceContainer}>
+            {imgContainer("up to 100$", "CEO & Co-Founder")}
+            {imgContainer("up to 100$", "CTO & Co-Founder")}
+            {imgContainer("up to 100$", "VP of Marketing")}
+            {imgContainer("the lowest price", "VP of Sales")}
+            {imgContainer("recommend me", "VP of Design")}
+            {imgContainer("the maximum price", "VP of Product")}
+          </div>
         </div>
       </div>
     </>

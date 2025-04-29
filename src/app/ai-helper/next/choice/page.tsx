@@ -1,9 +1,11 @@
 import ChoiceSection from "@/components/choice/section";
-
+import style from "./choice.module.css";
 export default function Page() {
   return (
     <>
-      <ChoiceSection />
+      <div className={style.container}>
+        <ChoiceSection />
+      </div>
     </>
   );
 }

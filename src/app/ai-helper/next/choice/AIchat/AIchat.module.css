@@ -1,0 +1,10 @@
+.container {
+  height: 100vh;
+  width: auto;
+  background-image: url("/resized_image.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: repeat;
+  display: flex;
+  flex-direction: column;
+}
