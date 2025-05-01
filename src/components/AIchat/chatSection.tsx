@@ -25,8 +25,7 @@ export default function ChatInput() {
     if (input.trim() === "") return;
 
     if (confirm("AI 검색을 시작할까요?")) {
-      // ✅ confirm창 띄우기
-      router.push("/ai-helper/next/choice/AIchat/result"); // ✅ 이동
+      window.location.href = "/result";
     }
 
     setInput(""); // 입력창 비우기

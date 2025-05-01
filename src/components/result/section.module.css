@@ -2,19 +2,24 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  height: 100vh;
+  width: auto;
+  background-image: url("/resized_image.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: repeat;
 }
 
 .textContainer {
   display: flex;
   position: relative;
   flex-direction: column;
-  margin-top: 170px;
   gap: 20px;
-  padding-left: 200px;
+  padding-left: 100px;
 }
 
 .textContainer > .font1 {
-  color: var(--Neutral-Colors-Headings-Black, #5d5a88);
+  color: #fff;
   font-feature-settings: "liga" off, "clig" off;
 
   /* Headings/H2 */
@@ -40,8 +45,19 @@
   width: 500px;
 }
 
-.textContainer > .font3 {
-  color: var(--Neutral-Colors-Headings-Black, #5d5a88);
+.textContainer > .group {
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  justify-content: center;
+  align-items: center;
+  padding-left: 100px;
+  cursor: pointer;
+}
+
+.textContainer > .group > .font3 {
+  color: #fff;
   font-feature-settings: "liga" off, "clig" off;
 
   /* Text single/200/Bold */
@@ -52,21 +68,12 @@
   line-height: 18px; /* 100% */
 }
 
-.textContainer > .group {
-  display: flex;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  justify-content: center;
-  align-items: center;
-  padding-left: 200px;
-}
-
 .center {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding-left: 100px;
 }
 
 .circleContainer {
@@ -81,25 +88,28 @@
   height: 211px;
   margin-right: -100px;
   margin-bottom: -50px;
+  cursor: pointer;
 }
 .circleSvg2 {
   fill: #fff;
   stroke: #486284;
   stroke-width: 1px;
-  width: 94px;
-  height: 94px;
+  width: 114px;
+  height: 114px;
   left: -100px;
   top: 100px;
   margin-top: -50px;
+  cursor: pointer;
 }
 
 .circleSvg3 {
   fill: #fff;
   stroke: #486284;
   stroke-width: 1px;
-  width: 92px;
-  height: 92px;
+  width: 112px;
+  height: 112px;
   padding-left: 50px;
+  cursor: pointer;
 }
 
 .circleSvg4 {
@@ -110,6 +120,7 @@
   height: 161px;
   padding-right: 100px;
   padding-bottom: 20px;
+  cursor: pointer;
 }
 
 .circleSvg5 {
@@ -120,6 +131,7 @@
   height: 85px;
   padding-left: 50px;
   padding-top: 30px;
+  cursor: pointer;
 }
 
 .button {
@@ -153,7 +165,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: -500px;
 }
 
 .imgContainer {
@@ -164,7 +175,7 @@
   margin: auto 0;
   margin-right: 100px;
   margin-top: -40px;
-  z-index: -1;
+  z-index: 1;
 }
 
 .imgContainer2 {
@@ -175,7 +186,7 @@
   margin: auto 0;
   margin-right: 100px;
   margin-top: 100px;
-  z-index: -1;
+  z-index: 1;
 }
 
 .imgContainer > .imgSample,
@@ -188,7 +199,8 @@
   flex-shrink: 0;
   border-radius: 15.922px;
   background: var(--Neutral-Colors-Color-300, #f9f9ff);
-  z-index: -1;
+  z-index: 1;
+  opacity: 20%;
 }
 
 .imgContainer > .font,
@@ -205,5 +217,5 @@
 
   margin-right: auto;
   opacity: 0.1;
-  z-index: -1;
+  z-index: 1;
 }
