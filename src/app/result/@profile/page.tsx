@@ -2,7 +2,7 @@
 
 "use client";
 import { useSearchParams } from "next/navigation";
-import ProfileClientModal from "@/components/profile/ProfileClientModal";
+import ProfileClientModal from "@/components/modal/ProfileClientModal";
 
 export default function ProfileModal() {
   const searchParams = useSearchParams();

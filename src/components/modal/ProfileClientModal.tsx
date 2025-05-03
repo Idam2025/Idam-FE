@@ -14,7 +14,7 @@ const dummyStudents = [
     id: "2",
     name: "John Smith",
     role: "UX ENGINEER",
-    image: "/profiles/john.png",
+    image: "/resized_image.png",
   },
   {
     id: "3",
@@ -43,7 +43,9 @@ export default function ProfileClientModal({ id }: { id: string }) {
   if (!student) return <div>존재하지 않는 프로필입니다.</div>;
 
   const handleClose = () => router.back();
-
+  const moveProfile = () => {
+    router.push(`/result/profile/${id}`);
+  };
   return (
     <div className={styles.overlay} onClick={handleClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
@@ -67,7 +69,14 @@ export default function ProfileClientModal({ id }: { id: string }) {
           <div className={styles.card} />
         </div>
 
-        <button className={styles.closeButton}>See More →</button>
+        <button
+          className={styles.moveProfile}
+          onClick={() => {
+            moveProfile();
+          }}
+        >
+          See More →
+        </button>
       </div>
     </div>
   );
