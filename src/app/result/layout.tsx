@@ -1,3 +1,5 @@
+import React, { Suspense } from "react";
+
 export default function Layout({
   children,
   profile,
@@ -8,7 +10,7 @@ export default function Layout({
   return (
     <>
       <main>{children}</main>
-      {profile}
+      <Suspense fallback={null}>{profile}</Suspense>
     </>
   );
 }
