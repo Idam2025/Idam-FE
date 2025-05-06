@@ -8,14 +8,14 @@ export default function ChoiceSection() {
       <Link href="/ai-helper/next/choice/AIchat" className={style.choiceBlock}>
         <div className={style.imageWrapper}>
           <Image
-            src="/BG.svg"
+            src="/usual/BG.svg"
             alt="Cycle"
             width={80}
             height={80}
             className={style.bgImage}
           />
           <Image
-            src="/example2.svg"
+            src="/usual/example2.svg"
             alt="ex"
             width={32}
             height={28}

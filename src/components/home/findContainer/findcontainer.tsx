@@ -17,9 +17,24 @@ export default function FindContainer() {
           </div>
         </div>
         <div className={style.right}>
-          <Image src={"/example.svg"} alt="ex" width={312} height={312}></Image>
-          <Image src={"/example.svg"} alt="ex" width={312} height={312}></Image>
-          <Image src={"/example.svg"} alt="ex" width={312} height={312}></Image>
+          <Image
+            src={"/usual/example.svg"}
+            alt="ex"
+            width={312}
+            height={312}
+          ></Image>
+          <Image
+            src={"/usual/example.svg"}
+            alt="ex"
+            width={312}
+            height={312}
+          ></Image>
+          <Image
+            src={"/usual/example.svg"}
+            alt="ex"
+            width={312}
+            height={312}
+          ></Image>
         </div>
       </div>
 
@@ -33,9 +48,24 @@ export default function FindContainer() {
           </div>
         </div>
         <div className={style.right}>
-          <Image src={"/example.svg"} alt="ex" width={312} height={312}></Image>
-          <Image src={"/example.svg"} alt="ex" width={312} height={312}></Image>
-          <Image src={"/example.svg"} alt="ex" width={312} height={312}></Image>
+          <Image
+            src={"/usual/example.svg"}
+            alt="ex"
+            width={312}
+            height={312}
+          ></Image>
+          <Image
+            src={"/usual/example.svg"}
+            alt="ex"
+            width={312}
+            height={312}
+          ></Image>
+          <Image
+            src={"/usual/example.svg"}
+            alt="ex"
+            width={312}
+            height={312}
+          ></Image>
         </div>
       </div>
 
@@ -49,9 +79,24 @@ export default function FindContainer() {
           </div>
         </div>
         <div className={style.right}>
-          <Image src={"/example.svg"} alt="ex" width={312} height={312}></Image>
-          <Image src={"/example.svg"} alt="ex" width={312} height={312}></Image>
-          <Image src={"/example.svg"} alt="ex" width={312} height={312}></Image>
+          <Image
+            src={"/usual/example.svg"}
+            alt="ex"
+            width={312}
+            height={312}
+          ></Image>
+          <Image
+            src={"/usual/example.svg"}
+            alt="ex"
+            width={312}
+            height={312}
+          ></Image>
+          <Image
+            src={"/usual/example.svg"}
+            alt="ex"
+            width={312}
+            height={312}
+          ></Image>
         </div>
       </div>
     </div>

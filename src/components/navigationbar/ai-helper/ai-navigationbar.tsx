@@ -4,7 +4,7 @@ import style from "./ai-navigationbar.module.css";
 export default function NavigationBar() {
   return (
     <div className={style.container}>
-      <Image src={"/logo.svg"} alt="logo" width={41} height={38} />
+      <Image src={"/usual/logo.svg"} alt="logo" width={41} height={38} />
       <div className={style.row}>
         <div className={style.font}>Home</div>
         <div className={style.font}>Artist</div>

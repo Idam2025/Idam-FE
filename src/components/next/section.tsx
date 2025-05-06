@@ -8,7 +8,7 @@ export default function NextSection() {
       <div className={style.container}>
         <div className={style.contentContainer}>
           <div className={style.font}>
-            <Image src="/AI2.svg" alt="AI" width={37} height={37} />
+            <Image src="/usual/AI2.svg" alt="AI" width={37} height={37} />
             Choose Work Type / Design Tool
           </div>
           <div className={style.font2}>

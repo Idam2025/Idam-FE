@@ -20,7 +20,7 @@ export default function Page() {
       <div className={styles.profile_container}>
         <div className={styles.profile_content}>
           <Image
-            src="/profileBox.png"
+            src="/usual/profileBox.png"
             alt="Rectangle"
             width={1200}
             height={95}

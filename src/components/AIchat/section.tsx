@@ -7,7 +7,7 @@ export default function AiSection() {
   return (
     <div className={styles.container}>
       <div className={styles.card}>
-        <Image src="/logo.svg" alt="logo" width={120} height={120} />
+        <Image src="/usual/logo.svg" alt="logo" width={120} height={120} />
         <div className={styles.title}>Talk to your AI Partner IDAM</div>
         <ChatInput />
       </div>

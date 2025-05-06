@@ -1,0 +1,62 @@
+.container {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #eef1f8, #f8f9fb);
+  background-image: url("/resized_image.png");
+  background-size: cover; /* 이미지를 화면에 맞게 확대/축소 */
+  background-position: center;
+  background-repeat: no-repeat;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #cfddff;
+  margin-bottom: 40px;
+}
+
+.cardContainer {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.card {
+  width: 240px;
+  padding: 32px 24px;
+  border-radius: 16px;
+  background-color: #ffffff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  text-align: center;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+.icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.roleTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #3f497f;
+  margin-bottom: 8px;
+}
+
+.description {
+  font-size: 14px;
+  color: #7e84a3;
+  line-height: 1.6;
+}

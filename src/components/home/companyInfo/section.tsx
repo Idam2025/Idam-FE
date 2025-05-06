@@ -19,7 +19,7 @@ export default function Section() {
         <div className={style.right}>
           <div className={style.imgStyle}>
             <Image
-              src="/example.svg"
+              src="/usual/example.svg"
               alt="example"
               fill
               style={{ objectFit: "contain" }}

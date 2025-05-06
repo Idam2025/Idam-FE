@@ -1,7 +1,7 @@
 .container {
   width: auto;
   height: 900px;
-  background-image: url("/helperPage.png");
+  background-image: url("/usual/helperPage.png");
   background-size: cover;
   background-position: center;
   background-repeat: repeat;

@@ -10,7 +10,7 @@ export default function Section() {
           <div className={style.fontContainer}>
             <div className={style.font1}>
               I:DAM
-              <Image src="/AI.svg" alt="AI" width={51} height={51} />
+              <Image src="/usual/AI.svg" alt="AI" width={51} height={51} />
             </div>
             <div className={style.font1}>AI Assistant</div>
           </div>

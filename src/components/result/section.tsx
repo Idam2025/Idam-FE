@@ -26,7 +26,7 @@ export default function ResultSection() {
         </div>
         <div className={style.group}>
           <div className={style.font3}>See more</div>
-          <Image src="/arrow2.svg" alt="arrow2" width={20} height={20} />
+          <Image src="/usual/arrow2.svg" alt="arrow2" width={20} height={20} />
         </div>
       </div>
     );
@@ -48,7 +48,12 @@ export default function ResultSection() {
         <div className={style.button}>
           <div className={style.font}>
             Done
-            <Image src="/arrow2.svg" alt="arrow2" width={13.5} height={12.7} />
+            <Image
+              src="/usual/arrow2.svg"
+              alt="arrow2"
+              width={13.5}
+              height={12.7}
+            />
           </div>
         </div>
         <div className={style.circleContainer}>
@@ -75,7 +80,7 @@ export default function ResultSection() {
     return (
       <>
         <div className={style.imgSample}>
-          <Image src="/example2.svg" alt="ex" width={92} height={81} />
+          <Image src="/usual/example2.svg" alt="ex" width={92} height={81} />
         </div>
         <div className={style.font}>{text}</div>
       </>
@@ -88,7 +93,7 @@ export default function ResultSection() {
     return (
       <>
         <div className={style.imgSample}>
-          <Image src="/example2.svg" alt="ex" width={92} height={81} />
+          <Image src="/usual/example2.svg" alt="ex" width={92} height={81} />
         </div>
         <div className={style.font}>{text}</div>
       </>

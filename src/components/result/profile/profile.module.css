@@ -5,7 +5,7 @@
   height: 100vh;
   flex-direction: column;
   width: auto;
-  background-image: url("/resized_image.png");
+  background-image: url("/usual/resized_image.png");
   background-size: cover;
   background-position: center;
   background-repeat: repeat;
@@ -71,7 +71,7 @@
   height: 93.611px;
   flex-shrink: 0;
   border-radius: 93.611px;
-  background: url("/profile_sample.svg") lightgray 50% / cover no-repeat;
+  background: url("/usual/profile_sample.svg") lightgray 50% / cover no-repeat;
 }
 
 .detail_info_container {
