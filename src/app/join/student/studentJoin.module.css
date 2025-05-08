@@ -1,0 +1,75 @@
+.bg {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  background-image: url("/usual/resized_image.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: rgba(0, 0, 0, 0.4); /* 어두운 오버레이 효과 */
+  backdrop-filter: blur(2px); /* 흐림 효과 */
+}
+
+.container {
+  width: 500px;
+  margin: 0 auto;
+  padding: 40px 30px;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  text-align: center;
+  color: #2c2c2c;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.inputField {
+  padding: 14px;
+  font-size: 15px;
+  border: 1px solid #cfcfcf;
+  border-radius: 10px;
+  background-color: #f5f6f9;
+  color: #2c2c2c;
+}
+
+.inputField::placeholder {
+  color: #999;
+}
+
+.selectField {
+  padding: 14px;
+  font-size: 15px;
+  border: 1px solid #cfcfcf;
+  border-radius: 10px;
+  background-color: #f5f6f9;
+  color: #2c2c2c;
+}
+
+.submitButton {
+  background-color: #4c4a7c;
+  color: #ffffff;
+  padding: 14px;
+  border: none;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.submitButton:hover {
+  background-color: #3b3966;
+}

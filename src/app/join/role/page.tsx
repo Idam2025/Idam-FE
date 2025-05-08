@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import styles from "./role.module.css";
+import Image from "next/image";
 
 export default function RoleSelectPage() {
   const router = useRouter();
@@ -14,7 +15,11 @@ export default function RoleSelectPage() {
           className={styles.card}
           onClick={() => router.push("/join/student")}
         >
-          <div className={styles.icon}>🎓</div>
+          <img
+            className={styles.cardImage}
+            src="/role/student.jpg"
+            alt="학생 이미지"
+          />
           <div className={styles.roleTitle}>학생</div>
           <div className={styles.description}>
             포트폴리오와 실력을 등록해 외주 제안을 받아보세요.
@@ -24,7 +29,11 @@ export default function RoleSelectPage() {
           className={styles.card}
           onClick={() => router.push("/join/company")}
         >
-          <div className={styles.icon}>🏢</div>
+          <img
+            className={styles.cardImage}
+            src="/role/company.jpg"
+            alt="기업 이미지"
+          />
           <div className={styles.roleTitle}>기업</div>
           <div className={styles.description}>
             전문 학생 인재를 찾고 직접 제안해보세요.

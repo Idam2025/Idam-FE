@@ -1,0 +1,152 @@
+.container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+
+  background-image: url("/usual/resized_image.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.sign_up {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 10px 16px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1.5px solid #ffffff50;
+  border-radius: 8px;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: all 0.2s ease-in-out;
+}
+
+.sign_up:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.login_container {
+  position: relative;
+  width: 500px;
+  padding: 48px 32px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.font_container {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.font1 {
+  font-size: 28px;
+  font-weight: 800;
+  color: #3f497f;
+}
+
+.font2 {
+  font-size: 13px;
+  color: #888;
+  margin-top: 8px;
+}
+
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.inputWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.inputWrapper::before {
+  content: "👤";
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #aaa;
+}
+
+.inputWrapper:nth-child(2)::before {
+  content: "🔒";
+}
+
+.input {
+  width: 90%;
+  padding: 14px 18px 14px 36px;
+  font-size: 15px;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  font-family: "Zen Kaku Gothic Antique", sans-serif;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #aeb6fc;
+}
+
+.loginButton {
+  width: 100%;
+  padding: 14px 0;
+  background-color: #aeb6fc;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  font-family: "Zen Kaku Gothic Antique", sans-serif;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.loginButton:hover {
+  background-color: #8d96e9;
+}
+
+/* 기존 .sign_up 제거해도 됨 */
+
+.signupBox {
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #555;
+  font-family: "Zen Kaku Gothic Antique", sans-serif;
+  justify-content: center;
+}
+
+.signupButton {
+  background: none;
+  border: none;
+  color: #6c7bff;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 13px;
+  font-family: inherit;
+  padding: 0;
+}
+
+.signupButton:hover {
+  color: #4a5de1;
+}

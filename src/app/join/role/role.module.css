@@ -1,9 +1,8 @@
 .container {
   width: 100%;
   min-height: 100vh;
-  background: linear-gradient(135deg, #eef1f8, #f8f9fb);
-  background-image: url("/resized_image.png");
-  background-size: cover; /* 이미지를 화면에 맞게 확대/축소 */
+  background-image: url("/usual/resized_image.png");
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 
@@ -11,52 +10,63 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  backdrop-filter: blur(4px);
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 .title {
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 700;
-  color: #cfddff;
-  margin-bottom: 40px;
+  color: #ffffff;
+  margin-bottom: 48px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .cardContainer {
   display: flex;
-  gap: 40px;
+  gap: 32px;
   flex-wrap: wrap;
   justify-content: center;
 }
 
 .card {
-  width: 240px;
-  padding: 32px 24px;
-  border-radius: 16px;
-  background-color: #ffffff;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  width: 500px;
+  height: 600px;
+  padding: 24px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s ease;
   text-align: center;
+  color: #ffffff;
 }
 
 .card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
 }
 
-.icon {
-  font-size: 48px;
-  margin-bottom: 12px;
+.cardImage {
+  width: 100%;
+  height: 80%;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 16px;
 }
 
 .roleTitle {
-  font-size: 20px;
-  font-weight: 600;
-  color: #3f497f;
-  margin-bottom: 8px;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #ffffff;
 }
 
 .description {
-  font-size: 14px;
-  color: #7e84a3;
+  font-size: 15px;
+  color: #e0e0e0;
   line-height: 1.6;
 }

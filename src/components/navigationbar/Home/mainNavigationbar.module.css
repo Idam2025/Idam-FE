@@ -2,13 +2,20 @@
   display: flex;
   width: auto;
   padding: 25px 98px;
-  flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   gap: 20px;
 }
 
-.container > .font {
+.font_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-left: 125px;
+}
+
+.title {
   color: var(--Neutral-8, #7b95b7);
   font-family: "DM Sans";
   font-size: 20px;
@@ -17,14 +24,14 @@
   line-height: 24px; /* 120% */
 }
 
-.container > .row {
+.font_container > .row {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 50px;
 }
 
-.container > .row > .font {
+.font {
   width: 50px;
   color: var(--Neutral-10, #486284);
   text-align: center;
@@ -35,4 +42,74 @@
   font-style: normal;
   font-weight: 400;
   line-height: 24px; /* 150% */
+  cursor: pointer;
+}
+
+.login_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+@keyframes fadeSlideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.container {
+  display: flex;
+  width: auto;
+  padding: 25px 98px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+
+  animation: fadeSlideDown 0.6s ease-in-out;
+}
+
+/* 슬라이딩 밑줄 애니메이션 */
+.font {
+  position: relative;
+  width: auto;
+  color: var(--Neutral-10, #486284);
+  text-align: center;
+  font-family: "DM Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.font::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #486284;
+  transition: width 0.3s ease-in-out;
+}
+
+.font:hover::after {
+  width: 100%;
+}
+
+.font:hover {
+  color: #30445f;
+}
+
+/* 로그인 hover 효과 */
+.login_container .font:hover {
+  color: #6c7bff;
+  transition: color 0.3s;
 }
