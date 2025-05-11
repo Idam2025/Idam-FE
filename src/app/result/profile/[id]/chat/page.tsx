@@ -85,7 +85,7 @@ export default function Page() {
       <div className={style.container_right}>
         <div className={style.container_right_up}></div>
         <div className={style.chatPlace}>
-          <Image src="/logo.svg" alt="로고" width={61} height={57} />
+          <Image src="/usual/logo.svg" alt="로고" width={61} height={57} />
           <div className={style.comment}>
             <div className={style.frame}>
               <div className={style.top}>

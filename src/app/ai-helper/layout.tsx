@@ -1,6 +1,6 @@
 "use client";
 
-import NavigationBar from "@/components/navigationbar/ai-helper/ai-navigationbar";
+import NavigationBar from "@/components/navigationbar/Home/mainNavigationBar";
 import { usePathname } from "next/navigation";
 
 import { ReactNode, Suspense } from "react";

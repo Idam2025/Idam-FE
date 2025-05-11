@@ -1,38 +1,59 @@
+@keyframes fadeSlideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .container {
   display: flex;
-  width: auto;
-  padding: 25px 98px;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  flex-direction: column;
+  padding: 25px 98px;
+  width: 100%;
+  animation: fadeSlideDown 0.6s ease-in-out;
 }
 
-.container > .font {
-  color: var(--Neutral-8, #7b95b7);
-  font-family: "DM Sans";
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 24px; /* 120% */
-  letter-spacing: 0.15px;
-}
-
-.container > .row {
+.row {
   display: flex;
   align-items: center;
   gap: 48px;
 }
 
-.container > .row > .font {
-  width: 50px;
+/* 로고 텍스트 (필요 시 유지) */
+.font {
   color: var(--Neutral-10, #486284);
   text-align: center;
-
-  /* body/small */
   font-family: "DM Sans";
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
-  line-height: 24px; /* 150% */
+  line-height: 24px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.font::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #486284;
+  transition: width 0.3s ease-in-out;
+}
+
+.font:hover::after {
+  width: 100%;
+}
+
+.font:hover {
+  color: #30445f;
 }
