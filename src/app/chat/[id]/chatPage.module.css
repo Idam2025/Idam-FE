@@ -91,13 +91,11 @@
   color: var(--black-100, #fff);
   font-feature-settings: "ss01" on, "cv01" on, "cv11" on;
   cursor: pointer;
-
-  /* 14 Regular */
   font-family: Inter;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  line-height: 20px; /* 142.857% */
+  line-height: 20px;
 }
 
 .sidebar > .lowfontSpace {
@@ -143,9 +141,9 @@
 
 .comment {
   display: flex;
-  width: 920px;
-  height: 272px;
-  align-items: flex-start;
+  width: auto;
+  height: auto;
+  align-items: center;
   align-content: flex-start;
   gap: var(--16, 16px) var(--40, 40px);
   flex-wrap: wrap;
@@ -155,7 +153,7 @@
   display: flex;
   flex-direction: column;
   width: auto;
-  height: 272px;
+  height: auto;
 }
 
 .comment > .frame > .top {
@@ -187,6 +185,29 @@
   font-weight: 400;
   line-height: 20px;
   margin-bottom: 15px;
+}
+
+.messageBubble {
+  max-width: 70%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 15px;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.userBubble {
+  align-self: flex-end;
+  background: #3b82f6;
+  color: white;
+  border-bottom-right-radius: 0;
+}
+
+.partnerBubble {
+  align-self: flex-start;
+  background: #e5e7eb;
+  color: #1f2937;
+  border-bottom-left-radius: 0;
 }
 
 .chatBarPlace {

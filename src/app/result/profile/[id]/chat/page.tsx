@@ -1,27 +1,82 @@
+"use client";
 import style from "@/components/chat/chat.module.css";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
+const dummyChats = [
+  {
+    id: 1,
+    name: "Alice",
+    lastMessage: "See you tomorrow!",
+    avatar: "/default-profile.png",
+  },
+  {
+    id: 2,
+    name: "Bob",
+    lastMessage: "Can you send me the file?",
+    avatar: "/default-profile.png",
+  },
+  {
+    id: 3,
+    name: "Charlie",
+    lastMessage: "Let's meet at 5pm.",
+    avatar: "/default-profile.png",
+  },
+  {
+    id: 4,
+    name: "Diana",
+    lastMessage: "Got it, thanks!",
+    avatar: "/default-profile.png",
+  },
+  {
+    id: 5,
+    name: "Ethan",
+    lastMessage: "Let me know if you're free.",
+    avatar: "/default-profile.png",
+  },
+];
+
 export default function Page() {
+  const router = useRouter();
+  const moveHome = () => {
+    router.push("/");
+  };
+
+  const goToChat = (chatId: any) => {
+    router.push(`/chat/${chatId}`);
+  };
+
   const SideBar = () => {
     return (
       <div className={style.sidebar}>
         <div className={style.fontSpace}>
-          <div className={style.font1}>
-            <Image
-              src="/chatplace/ChatText.svg"
-              alt="chatIcon"
-              width={24}
-              height={24}
-            />{" "}
-            Al Chat Tool Impact Writing
-          </div>
-          <div className={style.font1}>
-            <Image
-              src="/chatplace/ChatText.svg"
-              alt="chatIcon"
-              width={24}
-              height={24}
-            />{" "}
-            New chat
+          <input
+            type="text"
+            placeholder="Search..."
+            className={style.searchInput}
+          />
+
+          <div className={style.chatList}>
+            {dummyChats.map((chat) => (
+              <div
+                key={chat.id}
+                className={style.chatItemBox}
+                onClick={() => goToChat(chat.id)}
+              >
+                <Image
+                  src={chat.avatar}
+                  alt={chat.name}
+                  width={36}
+                  height={36}
+                  className={style.chatAvatarRounded}
+                />
+                <div className={style.chatTextBright}>
+                  <div className={style.chatName}>{chat.name}</div>
+                  <div className={style.chatLast}>{chat.lastMessage}</div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -59,14 +114,14 @@ export default function Page() {
           <div className={style.font1}>
             <Image
               src="/chatplace/ArrowSquareOut.svg"
-              alt="sqaure"
+              alt="square"
               width={24}
               height={24}
             />
             Updates & FAQ
           </div>
 
-          <div className={style.font1}>
+          <div onClick={moveHome} className={style.font1}>
             <Image
               src="/chatplace/SignOut.svg"
               alt="home"
@@ -96,13 +151,13 @@ export default function Page() {
                   height={32}
                 />
                 <div className={style.fontFrame}>
-                  "Explain quantum computing insimple terms"
+                  "Explain quantum computing in simple terms"
                 </div>
                 <div className={style.fontFrame}>
-                  "Got any creative ideas for a 10year old's birthday?"
+                  "Got any creative ideas for a 10 year old's birthday?"
                 </div>
                 <div className={style.fontFrame}>
-                  "Got any creative ideas for a 10year old's birthday?"
+                  "Got any creative ideas for a 10 year old's birthday?"
                 </div>
               </div>
             </div>
@@ -116,13 +171,13 @@ export default function Page() {
                   height={32}
                 />
                 <div className={style.fontFrame}>
-                  "Explain quantum computing insimple terms"
+                  "Explain quantum computing in simple terms"
                 </div>
                 <div className={style.fontFrame}>
-                  "Got any creative ideas for a 10year old's birthday?"
+                  "Got any creative ideas for a 10 year old's birthday?"
                 </div>
                 <div className={style.fontFrame}>
-                  "Got any creative ideas for a 10year old's birthday?"
+                  "Got any creative ideas for a 10 year old's birthday?"
                 </div>
               </div>
             </div>
@@ -136,13 +191,13 @@ export default function Page() {
                   height={32}
                 />
                 <div className={style.fontFrame}>
-                  "Explain quantum computing insimple terms"
+                  "Explain quantum computing in simple terms"
                 </div>
                 <div className={style.fontFrame}>
-                  "Got any creative ideas for a 10year old's birthday?"
+                  "Got any creative ideas for a 10 year old's birthday?"
                 </div>
                 <div className={style.fontFrame}>
-                  "Got any creative ideas for a 10year old's birthday?"
+                  "Got any creative ideas for a 10 year old's birthday?"
                 </div>
               </div>
             </div>

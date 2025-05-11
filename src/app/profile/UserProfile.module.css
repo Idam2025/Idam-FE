@@ -1,0 +1,322 @@
+.bg {
+  width: 100%;
+  min-height: 100vh;
+  background-image: url("/usual/resized_image.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(6px);
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.container {
+  width: 100%;
+  max-width: 640px;
+  background-color: rgba(0, 0, 0, 0.35);
+  border-radius: 24px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  padding: 40px;
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+}
+
+.profile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #819ddb;
+}
+
+.nickname {
+  font-size: 26px;
+  font-weight: 800;
+  color: #cbdfff;
+}
+d .email {
+  font-size: 14px;
+  color: #d6e5ff;
+}
+
+.textRow {
+  font-size: 15px;
+  color: #e0edff;
+  margin-top: 4px;
+}
+
+.textRow span {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.portfolioSection {
+  margin-top: 40px;
+}
+
+.portfolioTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #d0e7ff;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.portfolioList {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.portfolioItemBox {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 240px;
+  box-sizing: border-box;
+  backdrop-filter: blur(10px) saturate(160%);
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
+  color: #eef4ff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+.portfolioItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  font-size: 14px;
+  color: #dbeafe;
+  text-decoration: none;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.portfolioItem:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.uploadForm {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.uploadForm label {
+  font-size: 15px;
+  font-weight: 500;
+  color: #cbd5e1;
+}
+
+.uploadForm input[type="file"] {
+  font-size: 14px;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #e2e8f0;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.uploadForm input[type="file"]:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.pdfPreview {
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+}
+
+.deleteBtn {
+  margin-top: 8px;
+  font-size: 13px;
+  background-color: rgba(255, 71, 71, 0.2);
+  color: #f87171;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.deleteBtn:hover {
+  background-color: rgba(255, 71, 71, 0.3);
+}
+
+.editBtn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 14px;
+  background-color: rgba(0, 160, 255, 0.2);
+  color: #38bdf8;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  z-index: 2;
+}
+
+.editBtn:hover {
+  background-color: rgba(0, 160, 255, 0.3);
+}
+
+.pdfPreviewContainer {
+  position: relative;
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #cbd5e1;
+  transition: box-shadow 0.2s ease;
+}
+
+.pdfPreviewContainer:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.overlay {
+  position: absolute;
+  bottom: 6px;
+  right: 10px;
+  font-size: 12px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalContent {
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+  width: 90%;
+  height: 80%;
+  max-width: 900px;
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.closeBtn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 14px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  background-color: #f87171;
+  color: white;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.avatarLabel {
+  display: inline-block;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.linkForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f1f5f9;
+}
+
+.linkSubmitBtn {
+  margin-top: 8px;
+  background-color: rgba(0, 160, 255, 0.2);
+  color: #38bdf8;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.linkSubmitBtn:hover {
+  background-color: rgba(0, 160, 255, 0.35);
+}
+
+.avatarWrapper {
+  width: 126px;
+  height: 126px;
+  position: relative;
+  display: inline-block; /* block이면 더 안정적 */
+}
+
+.avatarLabel {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.avatarPlus {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #3b82f6; /* Tailwind blue-500 */
+  color: white;
+  border-radius: 9999px;
+  font-size: 16px;
+  padding: 4px 8px;
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+}
