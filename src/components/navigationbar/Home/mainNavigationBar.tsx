@@ -14,31 +14,48 @@ export default function NavigationBar() {
     router.push("/");
   };
 
-  const handleProfile = () => {
+  const handleChat = () => {
+    router.push("/chat");
+  };
+
+  const handleEditProfile = () => {
     router.push("/profile");
   };
 
+  const Content = (content: string) => {
+    return <div className={style.font}>{content}</div>;
+  };
+
   return (
-    <div className={style.container}>
-      <div></div>
-      <div className={style.font_container}>
+    <>
+      <div className={style.container}>
         <div className={style.title}>IDAM</div>
-        <div className={style.row}>
-          <div onClick={handleHome} className={style.font}>
-            Home
+        <div className={style.font_container}>
+          <div className={style.row}>
+            <div onClick={handleHome} className={style.font}>
+              Home
+            </div>
+            {Content("Artist")}
+            {Content("Contact")}
           </div>
-          <div className={style.font}>Artist</div>
-          <div className={style.font}>Contact</div>
+        </div>
+        <div className={style.login_container}>
+          <div className={style.font} onClick={handleLogin}>
+            Login
+          </div>
+          <div className={style.profileWrapper}>
+            {Content("프로필")}
+            <div className={style.dropdownMenu}>
+              <div className={style.dropdownItem} onClick={handleChat}>
+                💬 채팅
+              </div>
+              <div className={style.dropdownItem} onClick={handleEditProfile}>
+                ✏️ 프로필 수정
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div className={style.login_container}>
-        <div className={style.font} onClick={handleLogin}>
-          Login
-        </div>
-        <div onClick={handleProfile} className={style.font}>
-          프로필
-        </div>
-      </div>
-    </div>
+    </>
   );
 }

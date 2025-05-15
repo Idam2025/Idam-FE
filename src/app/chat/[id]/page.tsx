@@ -39,7 +39,7 @@ export default function ChatDetailPage() {
               <div
                 key={id}
                 className={styles.chatItemBox}
-                onClick={() => router.push(`/result/profile/${id}/chat/${id}`)}
+                onClick={() => router.push(`/chat/${id}`)}
               >
                 <Image
                   src={c.avatar}

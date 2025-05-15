@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import styles from "./studentJoin.module.css";
 
 export default function StudentJoinPage() {
@@ -14,8 +15,9 @@ export default function StudentJoinPage() {
     schoolId: "",
     phone: "",
     gender: "",
-    profileImage: "",
   });
+
+  const router = useRouter();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -26,7 +28,29 @@ export default function StudentJoinPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("회원가입 요청:", form);
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/signup/student`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+        }
+      );
+
+      if (!res.ok) throw new Error("회원가입 실패");
+
+      const data = await res.json();
+      console.log("회원가입 성공:", data);
+      alert("회원가입이 완료되었습니다!");
+      router.push("/join");
+    } catch (err) {
+      console.error("에러 발생:", err);
+      alert("회원가입 중 문제가 발생했습니다.");
+    }
   };
 
   return (
