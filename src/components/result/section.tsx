@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import style from "./section.module.css";
 import Circle1 from "@/asset/circle/circle1.svg";
@@ -7,14 +5,14 @@ import Circle2 from "@/asset/circle/circle2.svg";
 import Circle3 from "@/asset/circle/circle3.svg";
 import Circle4 from "@/asset/circle/circle4.svg";
 import Circle5 from "@/asset/circle/circle5.svg";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-export default function ResultSection() {
-  const router = useRouter();
-
-  const handleClick = (id: string) => {
-    router.push(`/result?profile=${id}`);
-  };
+export default async function ResultSection({
+  dataPromise,
+}: {
+  dataPromise: Promise<any>;
+}) {
+  const aiResult = await dataPromise;
 
   const left = () => {
     return (
@@ -36,14 +34,8 @@ export default function ResultSection() {
     return (
       <div className={style.center}>
         <div className={style.circleContainer}>
-          <Circle4
-            onClick={() => handleClick("4")}
-            className={style.circleSvg4}
-          />
-          <Circle1
-            onClick={() => handleClick("1")}
-            className={style.circleSvg}
-          />
+          <Circle4 />
+          <Circle1 />
         </div>
         <div className={style.button}>
           <div className={style.font}>
@@ -57,65 +49,37 @@ export default function ResultSection() {
           </div>
         </div>
         <div className={style.circleContainer}>
-          <Circle2
-            onClick={() => handleClick("2")}
-            className={style.circleSvg2}
-          />
-          <Circle5
-            onClick={() => handleClick("5")}
-            className={style.circleSvg5}
-          />
-          <Circle3
-            onClick={() => handleClick("3")}
-            className={style.circleSvg3}
-          />
+          <Circle2 />
+          <Circle5 />
+          <Circle3 />
         </div>
       </div>
     );
   };
 
-  const imgSample = (text: string, hide: boolean) => {
-    if (hide) return null;
-
-    return (
-      <>
-        <div className={style.imgSample}>
-          <Image src="/usual/example2.svg" alt="ex" width={92} height={81} />
-        </div>
-        <div className={style.font}>{text}</div>
-      </>
-    );
-  };
-
-  const imgSample2 = (text: string, hide: boolean) => {
-    if (hide) return null;
-
-    return (
-      <>
-        <div className={style.imgSample}>
-          <Image src="/usual/example2.svg" alt="ex" width={92} height={81} />
-        </div>
-        <div className={style.font}>{text}</div>
-      </>
-    );
-  };
+  const imgSample = (text: string) => (
+    <>
+      <div className={style.imgSample}>
+        <Image src="/usual/example2.svg" alt="ex" width={92} height={81} />
+      </div>
+      <div className={style.font}>{text}</div>
+    </>
+  );
 
   return (
-    <>
-      <div className={style.container}>
-        {left()}
-        {center()}
-        <div className={style.right}>
-          <div className={style.imgContainer}>
-            {imgSample("성민", false)}
-            {imgSample("성민dd", false)}
-          </div>
-          <div className={style.imgContainer2}>
-            {imgSample2("dkdk", false)}
-            {imgSample2("재영", false)}
-          </div>
+    <div className={style.container}>
+      {left()}
+      {center()}
+      <div className={style.right}>
+        <div className={style.imgContainer}>
+          {imgSample(aiResult.member1Name)}
+          {imgSample(aiResult.member2Name)}
+        </div>
+        <div className={style.imgContainer2}>
+          {imgSample(aiResult.member3Name)}
+          {imgSample(aiResult.member4Name)}
         </div>
       </div>
-    </>
+    </div>
   );
 }

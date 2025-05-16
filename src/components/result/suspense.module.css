@@ -1,24 +1,13 @@
 .container {
   width: auto;
-  height: 950px;
-  background-image: url("/resultPage.png");
+  height: 100vh;
+  background-image: url("/usual/resultPage.png");
   background-size: cover;
+  overflow: hidden;
   background-position: center;
   background-repeat: repeat;
   display: flex;
   justify-content: space-between;
-  margin-top: 120px;
-  margin-bottom: 120px;
-}
-
-.header {
-  width: auto;
-  height: 10px;
-}
-
-.footer {
-  width: auto;
-  height: 10px;
 }
 
 .textContainer {
@@ -73,6 +62,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  pointer-events: auto;
+  z-index: 100;
+  cursor: pointer;
 }
 
 .imgContainer {
@@ -117,15 +109,33 @@
 .imgLine1 {
   display: flex;
   flex-direction: column;
-  justify-content: auto;
   align-items: center;
   margin-top: -200px;
+  animation: moveUpDown1 4s ease-in-out infinite alternate;
 }
 
 .imgLine2 {
   display: flex;
   flex-direction: column;
-  justify-content: auto;
   align-items: center;
   margin-top: 200px;
+  animation: moveUpDown2 4s ease-in-out infinite alternate;
+}
+
+@keyframes moveUpDown1 {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-30px);
+  }
+}
+
+@keyframes moveUpDown2 {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(30px);
+  }
 }

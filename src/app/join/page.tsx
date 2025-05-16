@@ -3,22 +3,28 @@
 import { useState } from "react";
 import style from "@/components/join/join.module.css";
 import { useRouter } from "next/navigation";
+import { useDeviceId } from "@/hooks/useDeviceId"; // ✅ import
+import { useAccessToken } from "@/hooks/useAccessToken";
+
+const { saveToken } = useAccessToken();
 
 export default function Page() {
   const router = useRouter();
+  const deviceId = useDeviceId(); // ✅ 커스텀 훅 사용
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const moveSignup = () => {
-    router.push("join/role");
+    router.push("/join/role");
   };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isLoading || !deviceId) return;
 
-    const deviceId = navigator.userAgent; // 간단하게 userAgent 사용
-    console.log(deviceId);
+    setIsLoading(true);
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/login`, {
@@ -33,16 +39,24 @@ export default function Page() {
         }),
       });
 
-      if (!res.ok) throw new Error("로그인 실패");
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData?.message || "로그인 실패");
+      }
 
       const data = await res.json();
       console.log("로그인 성공:", data);
 
+      saveToken(data.accessToken); // ✅ 커스텀 훅으로 저장
+      localStorage.setItem("refreshToken", data.refreshToken);
+
       alert("로그인 성공!");
-      router.push("/"); // 홈으로 이동
-    } catch (err) {
+      router.push("/");
+    } catch (err: any) {
       console.error(err);
-      alert("로그인 중 오류가 발생했습니다.");
+      alert(err.message || "로그인 중 오류가 발생했습니다.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -64,6 +78,7 @@ export default function Page() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={isLoading}
             />
           </div>
           <div className={style.inputWrapper}>
@@ -74,10 +89,15 @@ export default function Page() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={isLoading}
             />
           </div>
-          <button type="submit" className={style.loginButton}>
-            로그인
+          <button
+            type="submit"
+            className={style.loginButton}
+            disabled={isLoading || !deviceId}
+          >
+            {isLoading ? "로그인 중..." : "로그인"}
           </button>
         </form>
         <div className={style.signupBox}>
