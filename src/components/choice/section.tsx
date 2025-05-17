@@ -2,11 +2,19 @@
 import Image from "next/image";
 import style from "./section.module.css";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 export default function ChoiceSection() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const domain = searchParams.get("domain");
+  useEffect(() => {
+    if (!domain) {
+      alert("카테고리 정보가 없습니다. 처음부터 다시 선택해주세요.");
+      router.push("/ai-helper/next");
+    }
+  }, [domain]);
 
   const imgContainer = (price: string, role: string) => {
     // ✅ domain도 query에 유지, 선택한 price도 같이 넘김

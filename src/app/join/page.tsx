@@ -3,14 +3,13 @@
 import { useState } from "react";
 import style from "@/components/join/join.module.css";
 import { useRouter } from "next/navigation";
-import { useDeviceId } from "@/hooks/useDeviceId"; // ✅ import
+import { useDeviceId } from "@/hooks/useDeviceId";
 import { useAccessToken } from "@/hooks/useAccessToken";
-
-const { saveToken } = useAccessToken();
 
 export default function Page() {
   const router = useRouter();
-  const deviceId = useDeviceId(); // ✅ 커스텀 훅 사용
+  const deviceId = useDeviceId(); // 커스텀 훅 정상 사용
+  const { saveToken } = useAccessToken(); // ✅ 컴포넌트 함수 내부에서 호출해야 정상
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -47,7 +46,7 @@ export default function Page() {
       const data = await res.json();
       console.log("로그인 성공:", data);
 
-      saveToken(data.accessToken); // ✅ 커스텀 훅으로 저장
+      saveToken(data.accessToken); // ✅ 정상 호출
       localStorage.setItem("refreshToken", data.refreshToken);
 
       alert("로그인 성공!");

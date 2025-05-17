@@ -10,7 +10,6 @@ export default function ChatInput() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // domain, price → query로 유지
   const domain = searchParams.get("domain");
   const price = searchParams.get("price");
 
@@ -26,24 +25,50 @@ export default function ChatInput() {
     }
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (input.trim() === "") return;
 
-    if (!domain || !price) {
-      alert("카테고리 또는 가격 정보를 먼저 선택해주세요.");
+    if (!domain) {
+      alert("도메인 정보가 없습니다. 이전 페이지부터 다시 선택해주세요.");
       router.push("/ai-helper/next/choice");
       return;
     }
 
-    // ✅ AIChat에서는 API 호출 없이 → 바로 result 페이지로 prompt 포함 redirect
-    if (confirm("AI 매칭 결과 페이지로 이동할까요?")) {
-      router.push(
-        `/result?domain=${encodeURIComponent(
-          domain
-        )}&price=${encodeURIComponent(price)}&prompt=${encodeURIComponent(
-          input
-        )}`
-      );
+    if (confirm("AI 검색을 시작할까요?")) {
+      try {
+        const accessToken = localStorage.getItem("accessToken");
+        if (!accessToken) throw new Error("Access Token이 없습니다.");
+
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/ai-match`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+            credentials: "include", // refreshToken 쿠키 자동 포함
+            body: JSON.stringify({
+              domain,
+              prompt: input,
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData?.message || "AI 매칭 요청 실패");
+        }
+
+        const data = await response.json();
+        console.log("AI 매칭 결과:", data);
+
+        // ➡ 결과 페이지로 이동 (필요하다면 데이터 전달 가능)
+        router.push("/result");
+      } catch (error: any) {
+        console.error(error);
+        alert(error.message || "AI 매칭 중 오류 발생");
+      }
     }
 
     setInput(""); // 입력창 초기화

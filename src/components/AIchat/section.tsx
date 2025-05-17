@@ -3,6 +3,7 @@
 import Image from "next/image";
 import styles from "./section.module.css";
 import ChatInput from "./chatSection";
+
 export default function AiSection() {
   return (
     <div className={styles.container}>
