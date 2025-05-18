@@ -4,9 +4,11 @@ import styles from "./Sidebar.module.css";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { dummyChats } from "@/lib/data";
+import { useChatStore } from "@/stores/useChatStore";
 
 export default function Sidebar() {
   const router = useRouter();
+  const lastMessages = useChatStore((s) => s.lastMessagesByChatId);
 
   return (
     <div className={styles.sidebar}>
@@ -32,7 +34,9 @@ export default function Sidebar() {
               />
               <div className={styles.chatTextBright}>
                 <div className={styles.chatName}>{chat.name}</div>
-                <div className={styles.chatLast}>{chat.lastMessage}</div>
+                <div className={styles.chatLast}>
+                  {lastMessages[chat.id] ?? "대화를 시작해보세요!"}
+                </div>
               </div>
             </div>
           ))}
