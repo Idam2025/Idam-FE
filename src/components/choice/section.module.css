@@ -15,12 +15,11 @@
   text-align: center;
   font-feature-settings: "liga" off, "clig" off;
 
-  /* Headings/H2 */
   font-family: "DM Sans";
   font-size: 36px;
   font-style: normal;
   font-weight: 700;
-  line-height: 46px; /* 127.778% */
+  line-height: 46px;
   background: var(--main, linear-gradient(90deg, #d838c9 0%, #482cbb 100%));
   background-clip: text;
   -webkit-background-clip: text;
@@ -32,24 +31,23 @@
   text-align: center;
   font-feature-settings: "liga" off, "clig" off;
 
-  /* Body/Default */
   font-family: "DM Sans";
   font-size: 18px;
   font-style: normal;
   font-weight: 400;
-  line-height: 30px; /* 166.667% */
+  line-height: 30px;
   margin-top: 16px;
 }
 
 .choiceContainer {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, auto); /* 세로 2줄 */
+  grid-template-rows: repeat(2, auto);
 
   width: 80%;
   min-height: 500px;
   height: 80%;
-  margin: 0 auto; /* 가운데 정렬 */
+  margin: 0 auto;
   padding: 20px;
 
   place-items: center;
@@ -68,7 +66,7 @@
 }
 
 .imageWrapper {
-  position: relative; /* 자식 absolute의 기준 */
+  position: relative;
   width: 80px;
   height: 80px;
 }
@@ -82,9 +80,9 @@
 
 .overlayImage {
   position: absolute;
-  top: 24px; /* 원하는 위치 조정 */
+  top: 24px;
   left: 24px;
-  z-index: 2; /* 위로 올리기 */
+  z-index: 2;
 }
 
 .textContainer {
@@ -98,12 +96,11 @@
   color: var(--Neutral-Colors-Headings-Black, #5d5a88);
   font-feature-settings: "liga" off, "clig" off;
 
-  /* Headings/H4 */
   font-family: "DM Sans";
   font-size: 22px;
   font-style: normal;
   font-weight: 700;
-  line-height: 28px; /* 127.273% */
+  line-height: 28px;
   text-decoration: none !important;
 }
 
@@ -111,12 +108,11 @@
   color: var(--Neutral-Colors-Color-900, #8d8ba7);
   font-feature-settings: "liga" off, "clig" off;
 
-  /* Text Single Uppercase/100/Bold */
   font-family: "DM Sans";
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
-  line-height: 18px; /* 112.5% */
+  line-height: 18px;
   letter-spacing: 1.6px;
   text-transform: uppercase;
 }

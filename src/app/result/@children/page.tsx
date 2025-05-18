@@ -7,17 +7,15 @@ async function fetchAiTag(domain: string, prompt: string) {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
 
-  // if (!accessToken) throw new Error("Access Token이 없습니다.");
-
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/ai-tag`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
     },
-    credentials: "include", // 쿠키 자동 포함
+    credentials: "include",
     body: JSON.stringify({ domain, prompt }),
-    cache: "no-store", // 항상 fresh하게 요청
+    cache: "no-store",
   });
 
   if (!res.ok) throw new Error("AI 매칭 API 호출 실패");
@@ -34,8 +32,7 @@ export default async function ResultPage({
 
   if (!domain || !prompt) return <div>도메인 또는 프롬프트 누락</div>;
 
-  const dataPromise = fetchAiTag(domain, prompt); // ✅ 서버에서 fetch (Suspense-ready)
-
+  const dataPromise = fetchAiTag(domain, prompt);
   return (
     <Suspense fallback={<SuspensePage />}>
       <ResultSection dataPromise={dataPromise} />

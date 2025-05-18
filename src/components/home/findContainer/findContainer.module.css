@@ -1,4 +1,6 @@
-.find_container {
+/* findContainer.module.css */
+
+.findContainerWrapper {
   display: flex;
   flex-direction: column;
   width: 90%;
@@ -8,7 +10,7 @@
   margin: 0 auto;
 }
 
-.find_container > .textArea {
+.header {
   display: flex;
   width: 100%;
   height: 48px;
@@ -18,60 +20,54 @@
   align-items: center;
 }
 
-.find_container > .textArea > .font {
+.headerText {
   color: var(--Neutral-0, #fff);
-
-  /* body/small */
   font-family: "DM Sans";
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
-  line-height: 24px; /* 150% */
+  line-height: 24px;
   letter-spacing: 0.5px;
   margin: 0 auto;
 }
 
-.find_container > .section {
+.section {
   display: flex;
   width: 100%;
   height: 400px;
   margin-top: 100px;
 }
 
-.find_container > .section > .left {
+.left {
   display: flex;
   flex-direction: column;
   width: 15%;
   height: 85%;
 }
 
-.find_container > .section > .left > .text {
+.sectionTitle {
   color: #fff;
-
-  /* title/large */
   font-family: "DM Sans";
   font-size: 60px;
   font-style: normal;
   font-weight: 700;
-  line-height: 76px; /* 126.667% */
+  line-height: 76px;
   letter-spacing: 0.5px;
-  white-space: normal; /* ✅ 자동 줄바꿈 허용 */
+  white-space: normal;
   word-break: break-word;
 }
 
-.find_container > .section > .left > .text2 {
+.sectionDesc {
   color: var(--Neutral-7, #8ca2c0);
-
-  /* body/large */
   font-family: "DM Sans";
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
-  line-height: 32px; /* 160% */
+  line-height: 32px;
   letter-spacing: 0.5px;
 }
 
-.find_container > .section > .right {
+.right {
   display: flex;
   width: 85%;
   height: 85%;
