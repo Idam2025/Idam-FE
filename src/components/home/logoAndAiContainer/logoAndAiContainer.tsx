@@ -2,7 +2,6 @@ import Image from "next/image";
 import style from "./logoAndAiContainer.module.css";
 import Link from "next/link";
 
-// UI 텍스트는 추후 i18n 고려해서 상수화
 const SLOGANS = [
   "필요는 인재를 부르고, 이담은 연결합니다.",
   "AI 매칭으로 더 빠르게, 더 정확하게",

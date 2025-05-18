@@ -65,8 +65,8 @@ export default function Img() {
           >
             <Image src={cat.img} alt={cat.alt} width={180} height={180} />
           </Link>
-          <div className={style.font1}>{cat.label}</div>
-          <div className={style.font2}>{cat.desc}</div>
+          <div className={style.cardTitle}>{cat.label}</div>
+          <div className={style.cardDesc}>{cat.desc}</div>
         </div>
       ))}
     </>

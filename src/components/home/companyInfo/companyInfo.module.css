@@ -42,7 +42,7 @@
   font-size: 23.65px;
   font-style: normal;
   font-weight: 500;
-  line-height: 27.029px; /* 114.286% */
+  line-height: 27.029px;
 }
 
 .left > .font2 {
@@ -51,7 +51,7 @@
   font-size: 16.893px;
   font-style: normal;
   font-weight: 400;
-  line-height: 27.029px; /* 160% */
+  line-height: 27.029px;
   letter-spacing: 0.422px;
 }
 
@@ -71,7 +71,7 @@
   font-size: 13.514px;
   font-style: normal;
   font-weight: 400;
-  line-height: 20.271px; /* 150% */
+  line-height: 20.271px;
   letter-spacing: 0.422px;
 }
 
