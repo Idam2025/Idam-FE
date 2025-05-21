@@ -12,8 +12,11 @@ export default function NavigationBar() {
   const handleLogout = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
+      console.log(accessToken);
       const userId = localStorage.getItem("userId");
+      console.log(userId);
       const deviceId = localStorage.getItem("deviceId");
+      console.log(deviceId);
 
       if (!accessToken || !userId || !deviceId) {
         alert("로그아웃 정보가 부족합니다.");
@@ -21,9 +24,9 @@ export default function NavigationBar() {
       }
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/logout?userId=${userId}&deviceId=${deviceId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/${userId}/${deviceId}`,
         {
-          method: "GET",
+          method: "POST",
           headers: {
             Authorization: `Bearer ${accessToken}`, // ✅ Authorization header 추가
           },
@@ -75,7 +78,7 @@ export default function NavigationBar() {
         <div className={style.row}>
           <NavItem text="Home" onClick={handleHome} />
           <NavItem text="Artist" />
-          <NavItem text="Contact" />
+          <NavItem text="Chat" onClick={handleChat} />
         </div>
       </div>
       <div className={style.login_container}>
@@ -84,17 +87,8 @@ export default function NavigationBar() {
         ) : (
           <NavItem text="Login" onClick={handleLogin} />
         )}
-        <div className={style.profileWrapper}>
-          <NavItem text="프로필" />
-          <div className={style.dropdownMenu}>
-            <div className={style.dropdownItem} onClick={handleChat}>
-              💬 채팅
-            </div>
-            <div className={style.dropdownItem} onClick={handleEditProfile}>
-              ✏️ 프로필 수정
-            </div>
-          </div>
-        </div>
+
+        <NavItem text="프로필" onClick={handleEditProfile} />
       </div>
     </div>
   );

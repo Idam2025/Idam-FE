@@ -8,8 +8,8 @@ import { useAccessToken } from "@/hooks/useAccessToken";
 
 export default function Page() {
   const router = useRouter();
-  const deviceId = useDeviceId(); // 커스텀 훅 정상 사용
-  const { saveToken } = useAccessToken(); // ✅ 컴포넌트 함수 내부에서 호출해야 정상
+  const deviceId = useDeviceId();
+  const { saveToken } = useAccessToken();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,13 +46,22 @@ export default function Page() {
       const data = await res.json();
       console.log("로그인 성공:", data);
 
-      saveToken(data.accessToken); // ✅ 정상 호출
+      // ✅ 토큰 및 ID 저장 (localStorage + 쿠키)
+      saveToken(data.accessToken);
+      document.cookie = `accessToken=${data.accessToken}; path=/; SameSite=Lax`;
+
       localStorage.setItem("refreshToken", data.refreshToken);
+      localStorage.setItem("userId", data.userId);
+
+      console.log("accessToken:", data.accessToken);
+      console.log("refreshToken:", data.refreshToken);
+      console.log("userId:", data.userId);
+      console.log("deviceId:", deviceId);
 
       alert("로그인 성공!");
       router.push("/");
     } catch (err: any) {
-      console.error(err);
+      console.error("로그인 오류:", err);
       alert(err.message || "로그인 중 오류가 발생했습니다.");
     } finally {
       setIsLoading(false);

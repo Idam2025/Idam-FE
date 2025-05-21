@@ -66,10 +66,15 @@ export default function ChatInput() {
 
     setIsLoading(true);
     try {
-      await postPrompt();
+      // 여기에 API 요청 제거
+      router.push(
+        `/result?domain=${encodeURIComponent(
+          domain
+        )}&prompt=${encodeURIComponent(input)}`
+      );
     } catch (err: any) {
       console.error(err);
-      setErrorMsg(err.message || "AI 매칭 중 오류 발생");
+      setErrorMsg(err.message || "페이지 이동 중 오류 발생");
     } finally {
       setIsLoading(false);
       resetInput();
