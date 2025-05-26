@@ -41,7 +41,6 @@ export default async function ResultPage({
   }
 
   const dataPromise = fetchAiTag(domain, prompt);
-
   return (
     <Suspense fallback={<SuspensePage />}>
       <ResultSection dataPromise={dataPromise} />

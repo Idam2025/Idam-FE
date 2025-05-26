@@ -3,9 +3,10 @@ import { persist } from "zustand/middleware";
 
 export type ChatMessage = {
   id: number;
-  sender: "me" | "other";
+  sender: string;
   content: string;
   timestamp: number;
+  type?: "TALK" | "ENTER" | "LEAVE";
 };
 
 type ChatStore = {

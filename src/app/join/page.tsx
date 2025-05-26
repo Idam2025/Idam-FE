@@ -42,20 +42,17 @@ export default function Page() {
         const errorData = await res.json();
         throw new Error(errorData?.message || "로그인 실패");
       }
-
       const data = await res.json();
-      console.log("로그인 성공:", data);
+      console.log("전체 응답 데이터:", data); // 이걸 먼저 확인
 
       // ✅ 토큰 및 ID 저장 (localStorage + 쿠키)
       saveToken(data.accessToken);
       document.cookie = `accessToken=${data.accessToken}; path=/; SameSite=Lax`;
-
-      localStorage.setItem("refreshToken", data.refreshToken);
       localStorage.setItem("userId", data.userId);
-
+      localStorage.setItem("userType", data.userType);
       console.log("accessToken:", data.accessToken);
-      console.log("refreshToken:", data.refreshToken);
       console.log("userId:", data.userId);
+      console.log("userType:", data.userType);
       console.log("deviceId:", deviceId);
 
       alert("로그인 성공!");

@@ -3,46 +3,21 @@
 import styles from "@/components/chat/chat.module.css";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-
-const dummyChats = [
-  {
-    id: 1,
-    name: "Alice",
-    lastMessage: "See you tomorrow!",
-    avatar: "/profile/default.png",
-  },
-  {
-    id: 2,
-    name: "Bob",
-    lastMessage: "Can you send me the file?",
-    avatar: "/profile/default.png",
-  },
-  {
-    id: 3,
-    name: "Charlie",
-    lastMessage: "Let's meet at 5pm.",
-    avatar: "/profile/default.png",
-  },
-  {
-    id: 4,
-    name: "Diana",
-    lastMessage: "Got it, thanks!",
-    avatar: "/profile/default.png",
-  },
-  {
-    id: 5,
-    name: "Ethan",
-    lastMessage: "Let me know if you're free.",
-    avatar: "/profile/default.png",
-  },
-];
+import { useEffect, useState } from "react";
+import ChatView from "@/components/chat/ChatView";
+interface ChatItem {
+  id: number;
+  name: string;
+  lastMessage: string;
+  avatar: string;
+}
 
 type SidebarProps = {
-  onSelectChat: (id: number) => void;
+  chats: ChatItem[];
+  onSelectChat: (chat: ChatItem) => void;
 };
 
-function Sidebar({ onSelectChat }: SidebarProps) {
+function Sidebar({ chats, onSelectChat }: SidebarProps) {
   const router = useRouter();
 
   return (
@@ -54,11 +29,11 @@ function Sidebar({ onSelectChat }: SidebarProps) {
           className={styles.searchInput}
         />
         <div className={styles.chatList}>
-          {dummyChats.map((chat) => (
+          {chats.map((chat) => (
             <div
               key={chat.id}
               className={styles.chatItemBox}
-              onClick={() => onSelectChat(chat.id)}
+              onClick={() => onSelectChat(chat)}
             >
               <Image
                 src={chat.avatar}
@@ -140,47 +115,36 @@ function EmptyChatView() {
   );
 }
 
-function ChatView({ chat }: { chat: (typeof dummyChats)[number] }) {
-  return (
-    <div className={styles.container_right}>
-      <div className={styles.container_right_up}>
-        <h3 style={{ color: "#fff" }}>{chat.name}</h3>
-      </div>
-      <div className={styles.chatPlace}>
-        <div className={styles.comment}>
-          <div className={styles.frame}>
-            <div className={styles.top}>
-              <div className={styles.fontFrame}>Hi, how are you?</div>
-              <div className={styles.fontFrame}>Can we talk today?</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className={styles.chatBarPlace}>
-        <div className={styles.chatBar}>
-          <Image
-            src="/chatplace/Image.svg"
-            alt="image"
-            width={20}
-            height={20}
-          />
-          <input placeholder="Type a message..." className={styles.darkInput} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function ChatPage() {
-  const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
+  const [chatList, setChatList] = useState<ChatItem[]>([]);
+  const [selectedChat, setSelectedChat] = useState<ChatItem | null>(null);
+
+  useEffect(() => {
+    const fetchChats = async () => {
+      try {
+        const res = await fetch("/api/chat/rooms"); // ✅ 실제 API
+        if (!res.ok) throw new Error("채팅방 목록 로딩 실패");
+        const data = await res.json();
+
+        const chats = data.map((item: any) => ({
+          id: item.roomId,
+          name: item.opponentName,
+          lastMessage: item.lastMessage || "새로운 채팅입니다",
+          avatar: item.opponentProfileImage || "/profile/default.png",
+        }));
+
+        setChatList(chats);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchChats();
+  }, []);
 
   return (
     <div className={styles.container}>
-      {selectedChatId ? (
-        <ChatView chat={dummyChats.find((c) => c.id === selectedChatId)!} />
-      ) : (
-        <EmptyChatView />
-      )}
+      {selectedChat ? <ChatView chat={selectedChat} /> : <EmptyChatView />}
     </div>
   );
 }

@@ -6,12 +6,30 @@ import { useRouter, usePathname } from "next/navigation";
 
 export default function Page() {
   const router = useRouter();
-  const pathname = usePathname(); // 👈 현재 경로 가져오기
-  const id = pathname.split("/").pop(); // 👈 마지막 segment가 id
+  const pathname = usePathname();
+  const id = pathname.split("/").pop(); // 현재 사용자 ID
 
-  const moveChat = () => {
-    if (id) {
-      router.push(`/result/profile/${id}/chat`);
+  const moveChat = async () => {
+    if (!id) return;
+
+    try {
+      const res = await fetch(`/api/chat/room?targetUserId=${id}`, {
+        method: "POST", // 서버가 POST를 요구할 수도 있음
+      });
+
+      if (!res.ok) {
+        throw new Error("채팅방 생성 실패");
+      }
+
+      const data = await res.json();
+      const roomId = data.roomId;
+
+      if (roomId) {
+        router.push(`/chat/${roomId}`);
+      }
+    } catch (error) {
+      console.error("채팅방 이동 오류:", error);
+      alert("채팅방 생성에 실패했습니다.");
     }
   };
 

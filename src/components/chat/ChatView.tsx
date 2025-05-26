@@ -2,9 +2,9 @@
 
 import { useState, useRef, useEffect } from "react";
 import styles from "./ChatView.module.css";
-import Image from "next/image";
 import ChatInput from "./ChatInput";
 import { useChatStore, ChatMessage } from "@/stores/useChatStore";
+import { useChatSocket } from "@/stores/useChatSocket";
 
 type Chat = {
   id: number;
@@ -16,39 +16,118 @@ type Chat = {
 export default function ChatView({ chat }: { chat: Chat }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const addMessage = useChatStore((state) => state.addMessage);
+  const getMessagesByChatId = useChatStore(
+    (state) => state.messagesByChatId[chat.id] || []
+  );
+
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const seenIds = useRef<Set<number>>(new Set());
 
+  const userId =
+    typeof window !== "undefined"
+      ? localStorage.getItem("userId") || "anonymous"
+      : "anonymous";
+  const token =
+    typeof window !== "undefined"
+      ? localStorage.getItem("accessToken") || ""
+      : "";
+
+  // ✅ 과거 메시지 조회
   useEffect(() => {
-    // ✅ 최초 메시지 수동 세팅
-    const initial = useChatStore.getState().messagesByChatId[chat.id] || [];
-    setMessages(initial);
+    const fetchMessages = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/chat/room/${chat.id}/messages`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (!res.ok) throw new Error("메시지 조회 실패");
 
-    // ✅ 이후 구독 시작
-    const unsubscribe = useChatStore.subscribe((state) => {
-      const msgs: ChatMessage[] = state.messagesByChatId[chat.id] || [];
-      setMessages(msgs);
-    });
+        const data = await res.json();
 
-    return () => unsubscribe();
-  }, [chat.id]);
+        const parsedMessages: ChatMessage[] = data.map((item: any) => ({
+          id: item.messageId,
+          sender: String(item.senderId),
+          content: item.content,
+          timestamp: new Date(item.sentAt).getTime(),
+          type: "TALK",
+        }));
 
+        parsedMessages.forEach((msg) => seenIds.current.add(msg.id));
+        useChatStore.getState().setMessages(chat.id, parsedMessages);
+      } catch (err) {
+        console.error("초기 메시지 조회 실패:", err);
+      }
+    };
+
+    if (token) fetchMessages();
+  }, [chat.id, token]);
+
+  // ✅ 웹소켓 수신
+  useChatSocket({
+    roomId: chat.id,
+    token,
+    onMessage: (data) => {
+      if (!data.id || seenIds.current.has(data.id)) return;
+      seenIds.current.add(data.id);
+
+      const newMsg: ChatMessage = {
+        id: data.id,
+        sender: data.sender,
+        content: data.message,
+        timestamp: data.timestamp || Date.now(),
+        type: data.type || "TALK",
+      };
+
+      addMessage(chat.id, newMsg);
+    },
+  });
+
+  // ✅ 입장 메시지 전송
+  useEffect(() => {
+    if ((window as any).stompClient?.connected) {
+      (window as any).stompClient.publish({
+        destination: "/pub/chat/send",
+        body: JSON.stringify({
+          roomId: chat.id,
+          sender: userId,
+          message: `${userId}님이 입장했습니다.`,
+          type: "ENTER",
+        }),
+      });
+    }
+  }, [chat.id, userId]);
+
+  // ✅ 메시지 전송 핸들러
   const handleSend = (text: string) => {
     const newMsg: ChatMessage = {
       id: Date.now(),
-      sender: "me",
+      sender: userId,
       content: text,
       timestamp: Date.now(),
+      type: "TALK",
     };
+
     addMessage(chat.id, newMsg);
 
-    setTimeout(() => {
-      addMessage(chat.id, {
-        id: Date.now() + 1,
-        sender: "other",
-        content: "알겠습니다.",
-        timestamp: Date.now() + 1,
+    const payload = {
+      roomId: chat.id,
+      sender: userId,
+      message: text,
+      type: "TALK",
+    };
+
+    if ((window as any).stompClient?.connected) {
+      (window as any).stompClient.publish({
+        destination: "/pub/chat/send",
+        body: JSON.stringify(payload),
       });
-    }, 1000);
+    } else {
+      console.warn("WebSocket 연결되지 않음");
+    }
   };
 
   const formatTime = (timestamp: number) => {
@@ -77,14 +156,20 @@ export default function ChatView({ chat }: { chat: Chat }) {
               {messages.map((msg) => (
                 <div
                   key={msg.id}
-                  className={`${styles.message} ${
-                    msg.sender === "me" ? styles.messageMe : styles.messageOther
-                  }`}
+                  className={
+                    msg.type === "TALK"
+                      ? msg.sender === userId
+                        ? styles.messageMe
+                        : styles.messageOther
+                      : styles.systemMessage
+                  }
                 >
                   <div>{msg.content}</div>
-                  <div className={styles.timestamp}>
-                    {formatTime(msg.timestamp)}
-                  </div>
+                  {msg.type === "TALK" && (
+                    <div className={styles.timestamp}>
+                      {formatTime(msg.timestamp)}
+                    </div>
+                  )}
                 </div>
               ))}
               <div ref={bottomRef} />
