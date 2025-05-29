@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import style from "./section.module.css";
 import Circle1 from "@/asset/circle/circle1.svg";
@@ -6,14 +8,8 @@ import Circle3 from "@/asset/circle/circle3.svg";
 import Circle4 from "@/asset/circle/circle4.svg";
 import Circle5 from "@/asset/circle/circle5.svg";
 
-export default async function ResultSection({
-  dataPromise,
-}: {
-  dataPromise: Promise<any>;
-}) {
-  const aiResult = await dataPromise;
-
-  const tags: string[] = aiResult.tag ?? []; // fallback 안전 처리
+export default function ResultSection({ data }: { data: any }) {
+  const tags: string[] = data.tag ?? [];
 
   const left = () => (
     <div className={style.textContainer}>

@@ -24,9 +24,7 @@ export default function ChatView({ chat }: { chat: Chat }) {
   const seenIds = useRef<Set<number>>(new Set());
 
   const userId =
-    typeof window !== "undefined"
-      ? localStorage.getItem("userId") || "anonymous"
-      : "anonymous";
+    typeof window !== "undefined" ? localStorage.getItem("userId") || "0" : "0";
   const token =
     typeof window !== "undefined"
       ? localStorage.getItem("accessToken") || ""
@@ -71,31 +69,30 @@ export default function ChatView({ chat }: { chat: Chat }) {
     roomId: chat.id,
     token,
     onMessage: (data) => {
-      if (!data.id || seenIds.current.has(data.id)) return;
-      seenIds.current.add(data.id);
+      if (!data.messageId || seenIds.current.has(data.messageId)) return;
+      seenIds.current.add(data.messageId);
 
       const newMsg: ChatMessage = {
-        id: data.id,
-        sender: data.sender,
-        content: data.message,
-        timestamp: data.timestamp || Date.now(),
-        type: data.type || "TALK",
+        id: data.messageId,
+        sender: String(data.senderId),
+        content: data.content,
+        timestamp: new Date(data.sentAt).getTime(),
+        type: "TALK",
       };
 
       addMessage(chat.id, newMsg);
     },
   });
 
-  // ✅ 입장 메시지 전송
+  // ✅ 입장 메시지 전송 (선택적)
   useEffect(() => {
     if ((window as any).stompClient?.connected) {
       (window as any).stompClient.publish({
         destination: "/pub/chat/send",
         body: JSON.stringify({
           roomId: chat.id,
-          sender: userId,
-          message: `${userId}님이 입장했습니다.`,
-          type: "ENTER",
+          senderId: Number(userId),
+          content: `${userId}님이 입장했습니다.`,
         }),
       });
     }
@@ -104,7 +101,7 @@ export default function ChatView({ chat }: { chat: Chat }) {
   // ✅ 메시지 전송 핸들러
   const handleSend = (text: string) => {
     const newMsg: ChatMessage = {
-      id: Date.now(),
+      id: Date.now(), // optimistic ID
       sender: userId,
       content: text,
       timestamp: Date.now(),
@@ -115,9 +112,8 @@ export default function ChatView({ chat }: { chat: Chat }) {
 
     const payload = {
       roomId: chat.id,
-      sender: userId,
-      message: text,
-      type: "TALK",
+      senderId: Number(userId),
+      content: text,
     };
 
     if ((window as any).stompClient?.connected) {
@@ -141,7 +137,7 @@ export default function ChatView({ chat }: { chat: Chat }) {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [getMessagesByChatId]);
 
   return (
     <div className={styles.container_right}>
@@ -153,7 +149,7 @@ export default function ChatView({ chat }: { chat: Chat }) {
         <div className={styles.comment}>
           <div className={styles.frame}>
             <div className={styles.top}>
-              {messages.map((msg) => (
+              {getMessagesByChatId.map((msg) => (
                 <div
                   key={msg.id}
                   className={

@@ -18,7 +18,7 @@ const categories = [
   {
     img: "/ImgContainer/adobeps.svg",
     alt: "adobePs",
-    label: "IT",
+    label: "IT·프로그래밍",
     desc: "IT 카테고리로 검색을 시도합니다.",
   },
   {
