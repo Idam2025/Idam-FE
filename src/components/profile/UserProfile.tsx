@@ -51,7 +51,12 @@ export default function UserProfilePage() {
         );
         const json = await res.json();
         if (!json.success) throw new Error("프로필 조회 실패");
-        setUser(json.data);
+
+        // ✅ portfolios 기본값 처리
+        setUser({
+          ...json.data,
+          portfolios: json.data.portfolios ?? [],
+        });
       } catch (err) {
         console.error("프로필 불러오기 실패:", err);
       }

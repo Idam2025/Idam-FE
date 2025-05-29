@@ -22,10 +22,34 @@ export default function BusinessJoinPage() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("기업 회원가입 요청:", form);
-    // TODO: 실제 API 연결
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/signup/company`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data?.message || "회원가입 실패");
+      }
+
+      alert("회원가입 성공!");
+      // TODO: 로그인 페이지로 이동 등
+    } catch (err: any) {
+      console.error("회원가입 에러:", err);
+      alert(err.message || "오류 발생");
+    }
   };
 
   return (

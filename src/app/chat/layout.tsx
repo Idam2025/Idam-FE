@@ -6,10 +6,5 @@ export default function ChatLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className={styles.container}>
-      <Sidebar />
-      {children}
-    </div>
-  );
+  return <div className={styles.container}>{children}</div>;
 }

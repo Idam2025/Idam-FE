@@ -1,10 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import styles from "@/components/chat/chat.module.css";
+import ChatView from "@/components/chat/ChatView";
+import { useChatStore } from "@/stores/useChatStore";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import ChatView from "@/components/chat/ChatView";
+
 interface ChatItem {
   id: number;
   name: string;
@@ -12,20 +14,22 @@ interface ChatItem {
   avatar: string;
 }
 
-type SidebarProps = {
+function Sidebar({
+  chats,
+  onSelectChat,
+}: {
   chats: ChatItem[];
   onSelectChat: (chat: ChatItem) => void;
-};
-
-function Sidebar({ chats, onSelectChat }: SidebarProps) {
+}) {
   const router = useRouter();
+  const lastMessages = useChatStore((s) => s.lastMessagesByChatId);
 
   return (
     <div className={styles.sidebar}>
       <div className={styles.fontSpace}>
         <input
           type="text"
-          placeholder="Search..."
+          placeholder="채팅 검색"
           className={styles.searchInput}
         />
         <div className={styles.chatList}>
@@ -38,37 +42,27 @@ function Sidebar({ chats, onSelectChat }: SidebarProps) {
               <Image
                 src={chat.avatar}
                 alt={chat.name}
-                width={36}
-                height={36}
+                width={32}
+                height={32}
                 className={styles.chatAvatarRounded}
               />
               <div className={styles.chatTextBright}>
                 <div className={styles.chatName}>{chat.name}</div>
-                <div className={styles.chatLast}>{chat.lastMessage}</div>
+                <div className={styles.chatLast}>
+                  {lastMessages[chat.id] ??
+                    chat.lastMessage ??
+                    "대화를 시작해보세요!"}
+                </div>
               </div>
             </div>
           ))}
         </div>
       </div>
-
       <div className={styles.lowfontSpace}>
-        {[
-          { icon: "Trash", text: "Clear conversations" },
-          { icon: "Sun", text: "Light mode" },
-          { icon: "User", text: "My account" },
-          { icon: "ArrowSquareOut", text: "Updates & FAQ" },
-          { icon: "SignOut", text: "Home", onClick: () => router.push("/") },
-        ].map(({ icon, text, onClick }) => (
-          <div key={text} className={styles.font1} onClick={onClick}>
-            <Image
-              src={`/chatplace/${icon}.svg`}
-              alt={text}
-              width={24}
-              height={24}
-            />
-            {text}
-          </div>
-        ))}
+        <div className={styles.font1}>설정</div>
+        <div className={styles.font1} onClick={() => router.push(`/chat`)}>
+          뒤로가기
+        </div>
       </div>
     </div>
   );
@@ -120,14 +114,29 @@ export default function ChatPage() {
   const [selectedChat, setSelectedChat] = useState<ChatItem | null>(null);
 
   useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    const userType = localStorage.getItem("userType");
+    if (!accessToken || !userType) return;
+
     const fetchChats = async () => {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/chat/rooms`
-        );
-        if (!res.ok) throw new Error("채팅방 목록 로딩 실패");
-        const data = await res.json();
+        const endpoint =
+          userType === "STUDENT"
+            ? "/api/chat/rooms/student"
+            : "/api/chat/rooms/company";
 
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}${endpoint}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+
+        if (!res.ok) throw new Error("채팅방 목록 로딩 실패");
+
+        const data = await res.json();
         const chats = data.map((item: any) => ({
           id: item.roomId,
           name: item.opponentName,
@@ -146,6 +155,7 @@ export default function ChatPage() {
 
   return (
     <div className={styles.container}>
+      <Sidebar chats={chatList} onSelectChat={setSelectedChat} />
       {selectedChat ? <ChatView chat={selectedChat} /> : <EmptyChatView />}
     </div>
   );

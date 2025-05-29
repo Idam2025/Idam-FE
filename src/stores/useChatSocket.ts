@@ -13,19 +13,32 @@ interface UseChatSocketProps {
     sentAt: string;
     read: boolean;
   }) => void;
+  onConnect?: () => void;
 }
 
 export function useChatSocket({
   roomId,
   token,
   onMessage,
+  onConnect,
 }: UseChatSocketProps) {
   const clientRef = useRef<Client | null>(null);
   const subscriptionRef = useRef<StompSubscription | null>(null);
+  const onMessageRef = useRef(onMessage);
+  const onConnectRef = useRef(onConnect);
+
+  // ✅ 콜백 ref 동기화
+  useEffect(() => {
+    onMessageRef.current = onMessage;
+  }, [onMessage]);
+
+  useEffect(() => {
+    onConnectRef.current = onConnect;
+  }, [onConnect]);
 
   useEffect(() => {
     if (!token) {
-      console.warn("🟡 WebSocket: 토큰이 없어서 연결을 시도하지 않음");
+      console.warn("🟡 WebSocket: 토큰 없음 → 연결 시도 안함");
       return;
     }
 
@@ -34,33 +47,32 @@ export function useChatSocket({
 
     const client = new Client({
       webSocketFactory: () => new SockJS(socketUrl) as WebSocket,
-      reconnectDelay: 5000, // 5초 간격 재시도
+      reconnectDelay: 5000,
       debug: (msg: string) => console.log("[STOMP DEBUG]", msg),
 
       onConnect: () => {
-        console.log(`✅ WebSocket 연결 완료: roomId = ${roomId}`);
+        console.log(`✅ 연결 완료: roomId = ${roomId}`);
         clientRef.current = client;
-        (window as any).stompClient = client; // 전역 접근 허용
+        (window as any).stompClient = client;
 
-        // 이전 구독 제거 (roomId 변경 대응)
         subscriptionRef.current?.unsubscribe();
-
-        // 메시지 구독
         subscriptionRef.current = client.subscribe(
           `/sub/chat/room/${roomId}`,
           (message: IMessage) => {
             try {
               const parsed = JSON.parse(message.body);
               if (parsed.messageId !== undefined) {
-                onMessage(parsed);
+                onMessageRef.current(parsed);
               } else {
-                console.warn("⚠️ 유효하지 않은 메시지 포맷:", parsed);
+                console.warn("⚠️ 메시지 포맷 이상:", parsed);
               }
             } catch (err) {
               console.error("❌ 메시지 파싱 실패:", err);
             }
           }
         );
+
+        onConnectRef.current?.();
       },
 
       onStompError: (frame) => {
@@ -74,16 +86,16 @@ export function useChatSocket({
       },
 
       onDisconnect: () => {
-        console.log("🔌 WebSocket 연결 해제됨");
+        console.log("🔌 WebSocket 연결 종료");
       },
     });
 
     client.activate();
 
     return () => {
-      console.log("🧹 WebSocket 클린업 수행");
+      console.log("🧹 WebSocket 클린업");
       subscriptionRef.current?.unsubscribe();
       client.deactivate();
     };
-  }, [roomId, token, onMessage]);
+  }, [roomId, token]); // ✅ 함수는 dependency에서 제외
 }

@@ -30,7 +30,6 @@ export default function ChatView({ chat }: { chat: Chat }) {
       ? localStorage.getItem("accessToken") || ""
       : "";
 
-  // ✅ 과거 메시지 조회
   useEffect(() => {
     const fetchMessages = async () => {
       try {
@@ -45,6 +44,7 @@ export default function ChatView({ chat }: { chat: Chat }) {
         if (!res.ok) throw new Error("메시지 조회 실패");
 
         const data = await res.json();
+        console.log("✅ 채팅 메시지 조회 결과:", data);
 
         const parsedMessages: ChatMessage[] = data.map((item: any) => ({
           id: item.messageId,
@@ -64,7 +64,6 @@ export default function ChatView({ chat }: { chat: Chat }) {
     if (token) fetchMessages();
   }, [chat.id, token]);
 
-  // ✅ 웹소켓 수신
   useChatSocket({
     roomId: chat.id,
     token,
@@ -82,9 +81,11 @@ export default function ChatView({ chat }: { chat: Chat }) {
 
       addMessage(chat.id, newMsg);
     },
+    onConnect: () => {
+      alert("✅ 구독 완료!");
+    },
   });
 
-  // ✅ 입장 메시지 전송 (선택적)
   useEffect(() => {
     if ((window as any).stompClient?.connected) {
       (window as any).stompClient.publish({
@@ -98,10 +99,11 @@ export default function ChatView({ chat }: { chat: Chat }) {
     }
   }, [chat.id, userId]);
 
-  // ✅ 메시지 전송 핸들러
   const handleSend = (text: string) => {
+    if (!text.trim()) return;
+
     const newMsg: ChatMessage = {
-      id: Date.now(), // optimistic ID
+      id: Date.now(),
       sender: userId,
       content: text,
       timestamp: Date.now(),
@@ -116,13 +118,17 @@ export default function ChatView({ chat }: { chat: Chat }) {
       content: text,
     };
 
-    if ((window as any).stompClient?.connected) {
-      (window as any).stompClient.publish({
-        destination: "/pub/chat/send",
-        body: JSON.stringify(payload),
-      });
-    } else {
-      console.warn("WebSocket 연결되지 않음");
+    try {
+      if ((window as any).stompClient?.connected) {
+        (window as any).stompClient.publish({
+          destination: "/pub/chat/send",
+          body: JSON.stringify(payload),
+        });
+      } else {
+        console.warn("❌ WebSocket 연결되지 않음");
+      }
+    } catch (err) {
+      console.error("메시지 전송 실패:", err);
     }
   };
 

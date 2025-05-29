@@ -12,10 +12,25 @@ export default function Page() {
   const moveChat = async () => {
     if (!id) return;
 
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+
     try {
-      const res = await fetch(`/api/chat/room?targetUserId=${id}`, {
-        method: "POST", // 서버가 POST를 요구할 수도 있음
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/chat/room?targetUserId=${Number(
+          id
+        )}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
 
       if (!res.ok) {
         throw new Error("채팅방 생성 실패");

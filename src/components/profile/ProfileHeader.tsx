@@ -91,12 +91,13 @@ export default function ProfileHeader({
         {editMode ? (
           <label htmlFor="profileImage" className={styles.avatarLabel}>
             <Image
-              src={user.profileImage}
+              src={user.profileImage?.trim() || "/profile/default.png"}
               alt="프로필 이미지"
               width={120}
               height={120}
               className={styles.avatar}
             />
+
             <input
               type="file"
               id="profileImage"

@@ -1,15 +1,21 @@
 "use client";
 
+import { useState } from "react";
+import ProfileClientModal from "@/components/modal/ProfileClientModal";
 import Image from "next/image";
 import style from "./section.module.css";
+import ProfileCircle from "@/components/result/ProfileCircle";
+
 import Circle1 from "@/asset/circle/circle1.svg";
 import Circle2 from "@/asset/circle/circle2.svg";
 import Circle3 from "@/asset/circle/circle3.svg";
 import Circle4 from "@/asset/circle/circle4.svg";
 import Circle5 from "@/asset/circle/circle5.svg";
 
-export default function ResultSection({ data }: { data: any }) {
-  const tags: string[] = data.tag ?? [];
+export default function ResultSection({ data }: { data: any[] }) {
+  const students = data ?? [];
+  const fallback = "/profile/default.png";
+  const [selectedStudent, setSelectedStudent] = useState<any | null>(null);
 
   const left = () => (
     <div className={style.textContainer}>
@@ -28,9 +34,20 @@ export default function ResultSection({ data }: { data: any }) {
   const center = () => (
     <div className={style.center}>
       <div className={style.circleContainer}>
-        <Circle4 />
-        <Circle1 />
+        {students.slice(0, 2).map((student, index) => (
+          <div
+            key={student.userId}
+            onClick={() => setSelectedStudent(student)}
+            className={style[`circleSvg${index + 1}`]} // circleSvg1, circleSvg2
+          >
+            <ProfileCircle
+              imageUrl={student.profileImage?.trim() || fallback}
+              name={`${student.name} (${student.score})`}
+            />
+          </div>
+        ))}
       </div>
+
       <div className={style.button}>
         <div className={style.font}>
           Done
@@ -42,35 +59,40 @@ export default function ResultSection({ data }: { data: any }) {
           />
         </div>
       </div>
-      <div className={style.circleContainer}>
-        <Circle2 />
-        <Circle5 />
-        <Circle3 />
-      </div>
-    </div>
-  );
 
-  const imgSample = (text: string) => (
-    <div className={style.imgBlock} key={text}>
-      <div className={style.imgSample}>
-        <Image src="/usual/example2.svg" alt="ex" width={92} height={81} />
+      <div className={style.circleContainer}>
+        {students.slice(2, 5).map((student, index) => (
+          <div
+            key={student.userId}
+            onClick={() => setSelectedStudent(student)}
+            className={style[`circleSvg${index + 3}`]} // circleSvg3, 4, 5
+          >
+            <ProfileCircle
+              imageUrl={student.profileImage?.trim() || fallback}
+              name={`${student.name} (${student.score})`}
+            />
+          </div>
+        ))}
       </div>
-      <div className={style.font}>{text}</div>
     </div>
   );
 
   return (
-    <div className={style.container}>
-      {left()}
-      {center()}
-      <div className={style.right}>
-        <div className={style.imgContainer}>
-          {tags.slice(0, 2).map(imgSample)}
-        </div>
-        <div className={style.imgContainer2}>
-          {tags.slice(2, 4).map(imgSample)}
+    <>
+      <div className={style.container}>
+        {left()}
+        {center()}
+        <div className={style.right}>
+          {/* 태그 관련 요소 생략됨, 필요 시 복원 가능 */}
         </div>
       </div>
-    </div>
+
+      {selectedStudent && (
+        <ProfileClientModal
+          student={selectedStudent}
+          onClose={() => setSelectedStudent(null)}
+        />
+      )}
+    </>
   );
 }

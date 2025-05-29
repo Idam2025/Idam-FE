@@ -52,6 +52,7 @@ export default function ClientResultPage({ domain, prompt }: Props) {
 
         const result = await res.json();
         setData(result.data);
+        console.log(data);
       } catch (err: any) {
         console.error(err);
         setError(err.message || "에러 발생");
