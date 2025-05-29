@@ -29,6 +29,8 @@ export default function UserProfilePage() {
   const userId =
     typeof window !== "undefined" ? localStorage.getItem("userId") : null;
 
+  console.log(userId);
+
   useEffect(() => {
     if (!userId) return;
 

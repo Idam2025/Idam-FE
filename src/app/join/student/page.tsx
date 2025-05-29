@@ -15,6 +15,7 @@ export default function StudentJoinPage() {
     schoolId: "",
     phone: "",
     gender: "",
+    categoryName: "", // ✅ 추가
   });
 
   const router = useRouter();
@@ -139,6 +140,20 @@ export default function StudentJoinPage() {
             <option value="MALE">남성</option>
             <option value="FEMALE">여성</option>
           </select>
+
+          <select
+            name="categoryName"
+            value={form.categoryName}
+            onChange={handleChange}
+            className={styles.selectField}
+            required
+          >
+            <option value="">관심 카테고리 선택</option>
+            <option value="IT·프로그래밍">IT·프로그래밍</option>
+            <option value="디자인">디자인</option>
+            <option value="마케팅">마케팅</option>
+          </select>
+
           <button type="submit" className={styles.submitButton}>
             회원가입
           </button>

@@ -43,9 +43,7 @@ export default function Page() {
         throw new Error(errorData?.message || "로그인 실패");
       }
       const data = await res.json();
-      console.log("전체 응답 데이터:", data); // 이걸 먼저 확인
-
-      // ✅ 토큰 및 ID 저장 (localStorage + 쿠키)
+      console.log("전체 응답 데이터:", data);
       saveToken(data.accessToken);
       document.cookie = `accessToken=${data.accessToken}; path=/; SameSite=Lax`;
       if (data.userId) {
@@ -55,6 +53,7 @@ export default function Page() {
       }
 
       localStorage.setItem("userType", data.userType);
+      localStorage.setItem("deviceId", deviceId);
       console.log("accessToken:", data.accessToken);
       console.log("userType:", data.userType);
       console.log("deviceId:", deviceId);

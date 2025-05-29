@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import style from "./mainNavigationbar.module.css";
-import { useAccessToken } from "@/hooks/useAccessToken"; // ✅ 커스텀 훅 사용 권장
+import { useAccessToken } from "@/hooks/useAccessToken";
 
 export default function NavigationBar() {
   const router = useRouter();
@@ -12,45 +12,39 @@ export default function NavigationBar() {
   const handleLogout = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
-      console.log(accessToken);
       const userId = localStorage.getItem("userId");
-      console.log(userId);
       const deviceId = localStorage.getItem("deviceId");
-      console.log(deviceId);
 
       if (!accessToken || !userId || !deviceId) {
         alert("로그아웃 정보가 부족합니다.");
         return;
       }
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/${userId}/${deviceId}`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${accessToken}`, // ✅ Authorization header 추가
-          },
-          credentials: "include", // ✅ 쿠키 기반 refreshToken 포함
-        }
-      );
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData?.message || "로그아웃 실패");
-      }
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/logout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        credentials: "include",
+        body: JSON.stringify({ deviceId }),
+      });
 
       const data = await res.json();
-      console.log("로그아웃 성공:", data.message);
 
-      // ✅ 로컬 토큰 및 유저 정보 삭제
+      if (!res.ok || !data.success) {
+        throw new Error(data?.message || "로그아웃 실패");
+      }
+
       localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken"); // 혹시 localStorage에도 남아있다면 삭제 (안전)
+      localStorage.removeItem("refreshToken");
       localStorage.removeItem("userId");
+      localStorage.removeItem("deviceId");
 
       alert("로그아웃 성공!");
       router.push("/");
     } catch (err: any) {
-      console.error(err);
+      console.error("로그아웃 오류:", err);
       alert(err.message || "로그아웃 중 오류 발생");
     }
   };

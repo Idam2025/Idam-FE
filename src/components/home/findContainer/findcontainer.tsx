@@ -6,19 +6,23 @@ const sections = [
     title: "Graphic Design",
     description:
       "Welcome to Burger Bliss, where we take your cravings to a whole new level! Our mouthwatering burgers are made from 100% beef and are served on freshly baked buns.",
-    images: ["/usual/example.svg", "/usual/example.svg", "/usual/example.svg"],
+    images: [
+      "/Home/graphic/graphic1.png",
+      "/Home/graphic/graphic2.gif",
+      "/Home/graphic/graphic3.webp",
+    ],
   },
   {
     title: "3D/Modeling",
     description:
       "Welcome to Burger Bliss, where we take your cravings to a whole new level! Our mouthwatering burgers are made from 100% beef and are served on freshly baked buns.",
-    images: ["/usual/example.svg", "/usual/example.svg", "/usual/example.svg"],
+    images: ["/Home/3D/3D1.jpg", "/Home/3D/3D2.jpeg", "/Home/3D/3D3.jpg"],
   },
   {
-    title: "3D/Modeling",
+    title: "IT/Programming",
     description:
       "Welcome to Burger Bliss, where we take your cravings to a whole new level! Our mouthwatering burgers are made from 100% beef and are served on freshly baked buns.",
-    images: ["/usual/example.svg", "/usual/example.svg", "/usual/example.svg"],
+    images: ["/Home/IT/IT.webp", "/Home/IT/IT2.jpeg", "/Home/IT/IT3.jpg"],
   },
 ];
 
@@ -60,8 +64,9 @@ function Section({ title, description, images }: SectionProps) {
             key={idx}
             src={src}
             alt={`example-${idx}`}
-            width={312}
-            height={312}
+            width={330}
+            height={0} // 비율 유지되게
+            style={{ height: "auto" }}
           />
         ))}
       </div>
