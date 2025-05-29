@@ -26,16 +26,23 @@ export default function ProfileHeader({
   const [showTagEditor, setShowTagEditor] = useState(false);
   const userId =
     typeof window !== "undefined" ? localStorage.getItem("userId") || "" : "";
+  const accessToken =
+    typeof window !== "undefined"
+      ? localStorage.getItem("accessToken") || ""
+      : "";
 
   const handleProfileUpdate = async () => {
-    if (!user || !userId) return;
+    if (!user || !userId || !accessToken) return;
 
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/students/${userId}/profile`,
         {
           method: "PATCH",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
           body: JSON.stringify({
             nickname: user.nickname,
             gender: user.gender,

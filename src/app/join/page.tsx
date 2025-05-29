@@ -48,10 +48,14 @@ export default function Page() {
       // ✅ 토큰 및 ID 저장 (localStorage + 쿠키)
       saveToken(data.accessToken);
       document.cookie = `accessToken=${data.accessToken}; path=/; SameSite=Lax`;
-      localStorage.setItem("userId", data.userId);
+      if (data.userId) {
+        localStorage.setItem("userId", data.userId);
+      } else {
+        console.warn("userId가 응답에 포함되지 않았습니다.", data);
+      }
+
       localStorage.setItem("userType", data.userType);
       console.log("accessToken:", data.accessToken);
-      console.log("userId:", data.userId);
       console.log("userType:", data.userType);
       console.log("deviceId:", deviceId);
 

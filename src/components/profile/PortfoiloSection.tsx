@@ -21,27 +21,35 @@ export default function PortfolioSection({
   setNewPortfolioLink,
   setPdfModalUrl,
 }: Props) {
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL;
+  const accessToken =
+    typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
+
+  const appendPortfolio = (newItem: any) => {
+    setUser((prev) =>
+      prev ? { ...prev, portfolios: [...prev.portfolios, newItem] } : prev
+    );
+  };
+
   const handlePdfUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file || file.type !== "application/pdf") return;
+    if (!file || file.type !== "application/pdf" || !accessToken) return;
 
     const formData = new FormData();
     formData.append("portfolio", file);
 
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/profile/student/portfolios`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-      if (!res.ok) throw new Error("업로드 실패");
-      const data = await res.json();
+      const res = await fetch(`${API_BASE}/api/profile/student/portfolios`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: formData,
+      });
 
-      setUser((prev) =>
-        prev ? { ...prev, portfolios: [...prev.portfolios, data] } : prev
-      );
+      if (!res.ok) throw new Error("PDF 업로드 실패");
+      const data = await res.json();
+      appendPortfolio(data);
     } catch (err) {
       console.error("파일 업로드 오류:", err);
       alert("PDF 업로드에 실패했습니다.");
@@ -49,23 +57,21 @@ export default function PortfolioSection({
   };
 
   const handleLinkSubmit = async () => {
-    if (!newPortfolioLink) return;
+    if (!newPortfolioLink || !accessToken) return;
 
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/profile/student/portfolios`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ portfolio: newPortfolioLink }),
-        }
-      );
+      const res = await fetch(`${API_BASE}/api/profile/student/portfolios`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ portfolio: newPortfolioLink }),
+      });
+
       if (!res.ok) throw new Error("링크 업로드 실패");
       const data = await res.json();
-
-      setUser((prev) =>
-        prev ? { ...prev, portfolios: [...prev.portfolios, data] } : prev
-      );
+      appendPortfolio(data);
       setNewPortfolioLink("");
     } catch (err) {
       console.error("링크 업로드 오류:", err);
@@ -79,7 +85,9 @@ export default function PortfolioSection({
       prev
         ? {
             ...prev,
-            portfolios: prev.portfolios.filter((p) => p.portfolio_id !== id),
+            portfolios: prev.portfolios.filter(
+              (portfolio) => portfolio.portfolio_id !== id
+            ),
           }
         : prev
     );

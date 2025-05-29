@@ -24,9 +24,12 @@ export default function TagEditorModal({ userId, onClose }: Props) {
   const [tags, setTags] = useState<Tag[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
 
+  const token =
+    typeof window !== "undefined"
+      ? localStorage.getItem("accessToken") || ""
+      : "";
+
   const handleCategorySelect = async (id: number) => {
-    setCategoryId(id);
-    const token = localStorage.getItem("accessToken");
     if (!token) return alert("로그인이 필요합니다.");
 
     try {
@@ -37,12 +40,14 @@ export default function TagEditorModal({ userId, onClose }: Props) {
         }
       );
       const json = await res.json();
-      if (!json.success) throw new Error();
+      if (!json.success) throw new Error("태그 불러오기 실패");
+
+      setCategoryId(id);
       setTags(json.data);
-      setSelected([]);
+      setSelected([]); // 태그 초기화
       setStep("tags");
-    } catch {
-      alert("태그 불러오기 실패");
+    } catch (err) {
+      alert((err as Error).message);
     }
   };
 
@@ -53,9 +58,10 @@ export default function TagEditorModal({ userId, onClose }: Props) {
   };
 
   const handleSubmit = async () => {
-    if (!categoryId) return;
-    const token = localStorage.getItem("accessToken");
-    if (!token) return alert("로그인이 필요합니다.");
+    if (!token || !categoryId) {
+      alert("카테고리 또는 로그인 정보가 없습니다.");
+      return;
+    }
 
     try {
       const res = await fetch(
@@ -70,11 +76,12 @@ export default function TagEditorModal({ userId, onClose }: Props) {
         }
       );
       const json = await res.json();
-      if (!json.success) throw new Error();
+      if (!json.success) throw new Error("태그 저장 실패");
+
       alert("태그 저장 완료");
       onClose();
-    } catch {
-      alert("저장 실패");
+    } catch (err) {
+      alert((err as Error).message);
     }
   };
 
@@ -87,7 +94,17 @@ export default function TagEditorModal({ userId, onClose }: Props) {
             <button
               key={cat.id}
               onClick={() => handleCategorySelect(cat.id)}
-              style={{ margin: "8px", padding: "8px 12px" }}
+              style={{
+                margin: "8px",
+                padding: "8px 12px",
+                backgroundColor: categoryId === cat.id ? "#d0e7ff" : "#fff",
+                border:
+                  categoryId === cat.id
+                    ? "2px solid #0070f3"
+                    : "1px solid #ccc",
+                borderRadius: "8px",
+                cursor: "pointer",
+              }}
             >
               {cat.name}
             </button>
@@ -122,7 +139,15 @@ export default function TagEditorModal({ userId, onClose }: Props) {
           </div>
           <button
             onClick={handleSubmit}
-            style={{ marginTop: "16px", padding: "8px 16px" }}
+            style={{
+              marginTop: "16px",
+              padding: "8px 16px",
+              backgroundColor: "#0070f3",
+              color: "white",
+              border: "none",
+              borderRadius: "6px",
+              cursor: "pointer",
+            }}
           >
             완료
           </button>

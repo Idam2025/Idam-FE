@@ -5,7 +5,7 @@ import styles from "./UserProfile.module.css";
 import ProfileHeader from "./ProfileHeader";
 import PortfolioSection from "./PortfoiloSection";
 import PdfModal from "./PdfModal";
-import { UserProfile, Portfolio } from "@/types/user";
+import { UserProfile } from "@/types/user";
 
 const mockUser: UserProfile = {
   name: "홍길동",
@@ -33,11 +33,17 @@ export default function UserProfilePage() {
     if (!userId) return;
 
     const fetchUserProfile = async () => {
+      const token = localStorage.getItem("accessToken");
+      if (!token) return;
+
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/api/students/${userId}/profile`,
           {
             method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
             credentials: "include",
           }
         );

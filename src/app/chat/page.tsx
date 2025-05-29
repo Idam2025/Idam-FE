@@ -122,7 +122,9 @@ export default function ChatPage() {
   useEffect(() => {
     const fetchChats = async () => {
       try {
-        const res = await fetch("/api/chat/rooms"); // ✅ 실제 API
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/chat/rooms`
+        );
         if (!res.ok) throw new Error("채팅방 목록 로딩 실패");
         const data = await res.json();
 
