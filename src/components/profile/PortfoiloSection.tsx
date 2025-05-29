@@ -29,10 +29,13 @@ export default function PortfolioSection({
     formData.append("portfolio", file);
 
     try {
-      const res = await fetch("/api/profile/student/portfolios", {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/profile/student/portfolios`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
       if (!res.ok) throw new Error("업로드 실패");
       const data = await res.json();
 
@@ -49,11 +52,14 @@ export default function PortfolioSection({
     if (!newPortfolioLink) return;
 
     try {
-      const res = await fetch("/api/profile/student/portfolios", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ portfolio: newPortfolioLink }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/profile/student/portfolios`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ portfolio: newPortfolioLink }),
+        }
+      );
       if (!res.ok) throw new Error("링크 업로드 실패");
       const data = await res.json();
 

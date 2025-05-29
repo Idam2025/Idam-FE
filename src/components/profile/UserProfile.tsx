@@ -12,12 +12,12 @@ const mockUser: UserProfile = {
   major: "컴퓨터공학과",
   nickname: "webdev123",
   profile_image: "/profile/default.png",
-  profileImage: "/profile/default.png", // ✅ 추가
+  profileImage: "/profile/default.png",
   email: "test@example.com",
   phone: "010-1234-5678",
   portfolios: [],
-  categoryId: 1, // ✅ 추가
-  gender: "남자", // 선택 필드지만 테스트용으로도 넣어두는 게 좋습니다
+  categoryId: 1,
+  gender: "남자",
 };
 
 export default function UserProfilePage() {
@@ -31,12 +31,16 @@ export default function UserProfilePage() {
 
   useEffect(() => {
     if (!userId) return;
+
     const fetchUserProfile = async () => {
       try {
-        const res = await fetch(`/api/students/${userId}/profile`, {
-          method: "GET",
-          credentials: "include",
-        });
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/students/${userId}/profile`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
         const json = await res.json();
         if (!json.success) throw new Error("프로필 조회 실패");
         setUser(json.data);
@@ -44,6 +48,7 @@ export default function UserProfilePage() {
         console.error("프로필 불러오기 실패:", err);
       }
     };
+
     fetchUserProfile();
   }, [userId]);
 

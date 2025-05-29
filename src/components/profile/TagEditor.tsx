@@ -30,9 +30,12 @@ export default function TagEditorModal({ userId, onClose }: Props) {
     if (!token) return alert("로그인이 필요합니다.");
 
     try {
-      const res = await fetch(`/api/categories/${id}/tags`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/categories/${id}/tags`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const json = await res.json();
       if (!json.success) throw new Error();
       setTags(json.data);
@@ -56,7 +59,7 @@ export default function TagEditorModal({ userId, onClose }: Props) {
 
     try {
       const res = await fetch(
-        `/api/students/${userId}/categories/${categoryId}/tags`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/students/${userId}/categories/${categoryId}/tags`,
         {
           method: "PUT",
           headers: {

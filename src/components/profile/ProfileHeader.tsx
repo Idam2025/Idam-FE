@@ -24,20 +24,24 @@ export default function ProfileHeader({
   setEditMode,
 }: ProfileHeaderProps) {
   const [showTagEditor, setShowTagEditor] = useState(false);
+  const userId =
+    typeof window !== "undefined" ? localStorage.getItem("userId") || "" : "";
 
   const handleProfileUpdate = async () => {
-    const userId = localStorage.getItem("userId");
     if (!user || !userId) return;
 
     try {
-      const res = await fetch(`/api/students/${userId}/profile`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          nickname: user.nickname,
-          gender: user.gender,
-        }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/students/${userId}/profile`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            nickname: user.nickname,
+            gender: user.gender,
+          }),
+        }
+      );
       const result = await res.json();
       if (!res.ok || !result.success) throw new Error("프로필 수정 실패");
 
@@ -71,7 +75,7 @@ export default function ProfileHeader({
 
       {showTagEditor && (
         <TagEditorModal
-          userId={localStorage.getItem("userId") || ""}
+          userId={userId}
           onClose={() => setShowTagEditor(false)}
         />
       )}
