@@ -21,11 +21,12 @@ export default function PortfolioSection({
   setNewPortfolioLink,
   setPdfModalUrl,
 }: Props) {
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL;
   const accessToken =
     typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
+  const userId =
+    typeof window !== "undefined" ? localStorage.getItem("userId") : null;
 
-  const appendPortfolio = (newItem: any) => {
+  const appendPortfolio = (newItem: { id: number; url: string }) => {
     setUser((prev) =>
       prev ? { ...prev, portfolios: [...prev.portfolios, newItem] } : prev
     );
@@ -33,23 +34,27 @@ export default function PortfolioSection({
 
   const handlePdfUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file || file.type !== "application/pdf" || !accessToken) return;
+    if (!file || file.type !== "application/pdf" || !accessToken || !userId)
+      return;
 
     const formData = new FormData();
-    formData.append("portfolio", file);
+    formData.append("portfolioFile", file);
 
     try {
-      const res = await fetch(`${API_BASE}/api/profile/student/portfolios`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: formData,
-      });
+      const res = await fetch(
+        `https://www.smini.site/api/students/${userId}/portfolios`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: formData,
+        }
+      );
 
       if (!res.ok) throw new Error("PDF 업로드 실패");
       const data = await res.json();
-      appendPortfolio(data);
+      appendPortfolio(data.data);
     } catch (err) {
       console.error("파일 업로드 오류:", err);
       alert("PDF 업로드에 실패했습니다.");
@@ -57,21 +62,38 @@ export default function PortfolioSection({
   };
 
   const handleLinkSubmit = async () => {
-    if (!newPortfolioLink || !accessToken) return;
+    if (!newPortfolioLink || !accessToken || !userId) return;
 
     try {
-      const res = await fetch(`${API_BASE}/api/profile/student/portfolios`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ portfolio: newPortfolioLink }),
-      });
+      new URL(newPortfolioLink); // 링크 유효성 검증
+    } catch {
+      alert("올바른 링크를 입력해주세요 (http/https 포함)");
+      return;
+    }
 
-      if (!res.ok) throw new Error("링크 업로드 실패");
+    const formData = new FormData();
+    formData.append("portfolioUrl", newPortfolioLink);
+
+    try {
+      const res = await fetch(
+        `https://www.smini.site/api/students/${userId}/portfolios`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: formData,
+        }
+      );
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("❌ 서버 응답:", errorText);
+        throw new Error("링크 업로드 실패");
+      }
+
       const data = await res.json();
-      appendPortfolio(data);
+      appendPortfolio(data.data);
       setNewPortfolioLink("");
     } catch (err) {
       console.error("링크 업로드 오류:", err);
@@ -80,56 +102,76 @@ export default function PortfolioSection({
   };
 
   const handleDelete = (id: number) => {
-    if (!confirm("정말 삭제하시겠어요?")) return;
-    setUser((prev) =>
-      prev
-        ? {
-            ...prev,
-            portfolios: prev.portfolios.filter(
-              (portfolio) => portfolio.portfolio_id !== id
-            ),
-          }
-        : prev
-    );
+    if (!confirm("정말 삭제하시겠어요?") || !accessToken || !userId) return;
+
+    fetch(`https://www.smini.site/api/students/${userId}/portfolios/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("삭제 실패");
+        return res.json();
+      })
+      .then(() => {
+        setUser((prev) =>
+          prev
+            ? {
+                ...prev,
+                portfolios: prev.portfolios.filter(
+                  (portfolio) => portfolio.id !== id
+                ),
+              }
+            : prev
+        );
+      })
+      .catch((err) => {
+        console.error("삭제 오류:", err);
+        alert("삭제에 실패했습니다.");
+      });
   };
 
   return (
     <div className={styles.portfolioSection}>
       <h3 className={styles.portfolioTitle}>📁 내 포트폴리오</h3>
+
       <div className={styles.portfolioList}>
-        {user.portfolios.map((item) => (
-          <div key={item.portfolio_id} className={styles.portfolioItemBox}>
-            {item.portfolio.endsWith(".pdf") ? (
-              <div
-                className={styles.pdfPreviewContainer}
-                onClick={() => setPdfModalUrl(item.portfolio)}
+        {user.portfolios.map((item) =>
+          item?.url ? (
+            <div key={item.id} className={styles.portfolioItemBox}>
+              {item.url.endsWith(".pdf") ? (
+                <div
+                  className={styles.pdfPreviewContainer}
+                  onClick={() => setPdfModalUrl(item.url)}
+                >
+                  <iframe
+                    src={item.url}
+                    width="100%"
+                    height="160"
+                    className={styles.pdfPreview}
+                  />
+                  <div className={styles.overlay}>🔍 클릭하여 크게 보기</div>
+                </div>
+              ) : (
+                <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.portfolioItem}
+                >
+                  🔗 {item.url}
+                </a>
+              )}
+              <button
+                className={styles.deleteBtn}
+                onClick={() => handleDelete(item.id)}
               >
-                <iframe
-                  src={item.portfolio}
-                  width="100%"
-                  height="160"
-                  className={styles.pdfPreview}
-                />
-                <div className={styles.overlay}>🔍 클릭하여 크게 보기</div>
-              </div>
-            ) : (
-              <a
-                href={item.portfolio}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.portfolioItem}
-              >
-                🔗 {item.portfolio}
-              </a>
-            )}
-            <button
-              className={styles.deleteBtn}
-              onClick={() => handleDelete(item.portfolio_id)}
-            >
-              ❌ 삭제
-            </button>
-          </div>
-        ))}
+                ❌ 삭제
+              </button>
+            </div>
+          ) : null
+        )}
       </div>
 
       {editMode && (

@@ -3,15 +3,18 @@
 import { useRouter } from "next/navigation";
 import style from "./mainNavigationbar.module.css";
 import { useAccessToken } from "@/hooks/useAccessToken";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function NavigationBar() {
   const router = useRouter();
   const { isLoggedIn, removeToken, setIsLoggedIn } = useAccessToken();
+  const [isAuthReady, setIsAuthReady] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
+    const token =
+      typeof window !== "undefined" && localStorage.getItem("accessToken");
     setIsLoggedIn(!!token);
+    setIsAuthReady(true);
   }, [setIsLoggedIn]);
 
   const handleLogin = () => router.push("/join");
@@ -43,7 +46,7 @@ export default function NavigationBar() {
         throw new Error(data?.message || "로그아웃 실패");
       }
 
-      removeToken(); // ✅ 상태도 갱신됨
+      removeToken();
       alert("로그아웃 성공!");
       router.push("/");
     } catch (err: any) {
@@ -79,11 +82,12 @@ export default function NavigationBar() {
         </div>
       </div>
       <div className={style.login_container}>
-        {isLoggedIn ? (
-          <NavItem text="Logout" onClick={handleLogout} />
-        ) : (
-          <NavItem text="Login" onClick={handleLogin} />
-        )}
+        {isAuthReady &&
+          (isLoggedIn ? (
+            <NavItem text="Logout" onClick={handleLogout} />
+          ) : (
+            <NavItem text="Login" onClick={handleLogin} />
+          ))}
         <NavItem text="프로필" onClick={handleEditProfile} />
       </div>
     </div>

@@ -11,7 +11,6 @@ const mockUser: UserProfile = {
   name: "홍길동",
   major: "컴퓨터공학과",
   nickname: "webdev123",
-  profile_image: "/profile/default.png",
   profileImage: "/profile/default.png",
   email: "test@example.com",
   phone: "010-1234-5678",
@@ -20,7 +19,7 @@ const mockUser: UserProfile = {
   gender: "남자",
 };
 
-export default function UserProfilePage() {
+export default function StudentProfilePage() {
   const [user, setUser] = useState<UserProfile | null>(mockUser);
   const [editMode, setEditMode] = useState(false);
   const [pdfModalUrl, setPdfModalUrl] = useState<string | null>(null);
@@ -71,7 +70,10 @@ export default function UserProfilePage() {
     <div className={styles.bg}>
       <div className={styles.container}>
         <ProfileHeader
-          user={user}
+          user={{
+            ...user,
+            profileImage: user.profileImage ?? "/profile/default.png", // null이면 기본 이미지
+          }}
           setUser={setUser}
           editMode={editMode}
           setEditMode={setEditMode}

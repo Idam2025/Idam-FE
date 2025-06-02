@@ -366,3 +366,27 @@ d .email {
   width: 100%;
   height: 100%;
 }
+
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.tag {
+  background-color: #f0f0f0;
+  color: #333 !important;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+.image {
+  width: 100%;
+  max-width: 400px; /* ✅ 원하는 최대 크기 설정 */
+  height: auto; /* ✅ 비율 유지 */
+  border-radius: 8px; /* optional: 둥글게 */
+  object-fit: cover; /* optional: 이미지 잘리는 경우 대비 */
+  display: block;
+  margin: 0 auto; /* 가운데 정렬 */
+}

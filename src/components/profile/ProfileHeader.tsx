@@ -3,7 +3,13 @@
 import Image from "next/image";
 import styles from "./UserProfile.module.css";
 import { UserProfile } from "@/types/user";
-import { Dispatch, SetStateAction, ChangeEvent, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  ChangeEvent,
+  useEffect,
+  useState,
+} from "react";
 import TagEditorModal from "./TagEditor";
 
 interface ProfileHeaderProps {
@@ -11,6 +17,8 @@ interface ProfileHeaderProps {
     gender?: string;
     categoryId: number;
     profileImage: string;
+    tags?: string[];
+    portfolios?: any[];
   };
   setUser: Dispatch<SetStateAction<UserProfile | null>>;
   editMode: boolean;
@@ -24,17 +32,47 @@ export default function ProfileHeader({
   setEditMode,
 }: ProfileHeaderProps) {
   const [showTagEditor, setShowTagEditor] = useState(false);
-  const userId =
-    typeof window !== "undefined" ? localStorage.getItem("userId") || "" : "";
-  const accessToken =
-    typeof window !== "undefined"
-      ? localStorage.getItem("accessToken") || ""
-      : "";
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [uploadFile, setUploadFile] = useState<File | null>(null);
+  const [userId, setUserId] = useState("");
+  const [accessToken, setAccessToken] = useState("");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const storedUserId = localStorage.getItem("userId") || "";
+    const storedAccessToken = localStorage.getItem("accessToken") || "";
+    setUserId(storedUserId);
+    setAccessToken(storedAccessToken);
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   const handleProfileUpdate = async () => {
     if (!user || !userId || !accessToken) return;
 
     try {
+      if (uploadFile) {
+        const formData = new FormData();
+        formData.append("profileImage", uploadFile);
+
+        const uploadRes = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/students/${userId}/profile/image`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+            body: formData,
+          }
+        );
+
+        const uploadJson = await uploadRes.json();
+        if (!uploadRes.ok || !uploadJson.success) {
+          throw new Error(uploadJson.message || "프로필 이미지 업로드 실패");
+        }
+      }
+
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/students/${userId}/profile`,
         {
@@ -49,11 +87,34 @@ export default function ProfileHeader({
           }),
         }
       );
-      const result = await res.json();
-      if (!res.ok || !result.success) throw new Error("프로필 수정 실패");
+
+      const json = await res.json();
+      if (!res.ok || !json.success)
+        throw new Error(json.message || "프로필 수정 실패");
 
       alert("프로필이 성공적으로 수정되었습니다.");
       setEditMode(false);
+      setUploadFile(null);
+      setPreviewImage(null);
+
+      const refetch = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/students/${userId}/profile`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          credentials: "include",
+        }
+      );
+
+      const result = await refetch.json();
+      if (result.success) {
+        setUser({
+          ...result.data,
+          portfolios: result.data.portfolios ?? [],
+        });
+      }
     } catch (err) {
       console.error("프로필 수정 오류:", err);
       alert("프로필 수정에 실패했습니다.");
@@ -91,7 +152,11 @@ export default function ProfileHeader({
         {editMode ? (
           <label htmlFor="profileImage" className={styles.avatarLabel}>
             <Image
-              src={user.profileImage?.trim() || "/profile/default.png"}
+              src={
+                previewImage ||
+                user.profileImage?.trim() ||
+                "/profile/default.png"
+              }
               alt="프로필 이미지"
               width={120}
               height={120}
@@ -106,17 +171,16 @@ export default function ProfileHeader({
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 const file = e.target.files?.[0];
                 if (file) {
+                  setUploadFile(file);
                   const url = URL.createObjectURL(file);
-                  setUser((prev) =>
-                    prev ? { ...prev, profileImage: url } : prev
-                  );
+                  setPreviewImage(url);
                 }
               }}
             />
           </label>
         ) : (
           <Image
-            src={user.profileImage}
+            src={user.profileImage?.trim() || "/profile/default.png"}
             alt="프로필 이미지"
             width={120}
             height={120}
@@ -177,6 +241,16 @@ export default function ProfileHeader({
             <p className={styles.textRow}>
               <span>전공:</span> {user.major}
             </p>
+            <div className={styles.textRow}>
+              <span>태그:</span>
+              <div className={styles.tagList}>
+                {user.tags?.map((tag, idx) => (
+                  <span key={idx} className={styles.tag}>
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            </div>
           </>
         )}
       </div>
