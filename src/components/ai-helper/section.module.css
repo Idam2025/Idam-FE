@@ -1,16 +1,22 @@
 .section {
   width: 100%;
-  height: 70%;
+  height: 100vh;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
+  background: rgba(10, 10, 20, 0.6);
+  backdrop-filter: blur(1px);
+  padding: 0 24px;
 }
 
 .left {
   display: flex;
   flex-direction: column;
-  padding-left: 120px;
-  gap: 20px;
+  gap: 24px;
+  max-width: 640px;
+  width: 100%;
+  align-items: center;
+  text-align: center;
 }
 
 .titleBlock {
@@ -19,14 +25,13 @@
 }
 
 .title {
-  color: var(--Neutral-Colors-White, #fff);
-  font-feature-settings: "liga" off, "clig" off;
-  font-family: Futura;
-  font-size: 56px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 10px;
+  color: #ffffff;
+  font-family: Futura, sans-serif;
+  font-size: 42px;
+  font-weight: 600;
+  line-height: 1.2;
   display: flex;
+  justify-content: center;
   align-items: center;
 }
 
@@ -34,50 +39,48 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  opacity: 0.85;
+  padding: 0 12px;
 }
 
 .quote {
-  color: var(--Color, #c3c3c3);
-  font-feature-settings: "liga" off, "clig" off;
-  font-family: Futura-Light;
-  font-size: 18px;
-  font-style: normal;
+  color: #d4d4d4;
+  font-family: "DM Sans", sans-serif;
+  font-size: 16px;
   font-weight: 300;
   line-height: 24px;
 }
 
 .buttonGroup {
   display: flex;
-  gap: 24px;
+  gap: 16px;
+  justify-content: center;
+}
+
+.primaryBtn,
+.secondaryBtn {
+  text-decoration: none;
+  padding: 14px 24px;
+  border-radius: 36px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.25s ease-in-out;
 }
 
 .primaryBtn {
-  text-decoration: none;
-  color: #5d5a88;
-  display: flex;
-  padding: 24px 36px;
-  align-items: center;
-  gap: 8px;
-  border-radius: 40px;
-  background: var(--Neutral-Colors-White, #fff);
-  font-family: "DM Sans";
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 18px;
+  color: #3b3b6d;
+  background-color: #ffffff;
+}
+
+.primaryBtn:hover,
+.secondaryBtn:hover {
+  background-color: #f4f4f4;
+  transform: translateY(-1px);
 }
 
 .secondaryBtn {
-  display: flex;
-  padding: 24px 36px;
-  align-items: center;
-  gap: 8px;
-  border-radius: 36.55px;
-  border: 1.5px solid var(--Neutral-Colors-White, #fff);
-  box-shadow: 0px 4px 10px 0px rgba(20, 20, 43, 0.04);
-  color: var(--Neutral-Colors-White, #fff);
-  font-family: "DM Sans";
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 18px;
-  text-decoration: none;
+  color: #ffffff;
+  border: 1.3px solid #ffffff;
+  background: #ffffff;
 }

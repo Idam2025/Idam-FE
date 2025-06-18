@@ -7,7 +7,6 @@ export default function Page() {
       <div className={style.container}>
         <Section />
       </div>
-      <div className={style.footer}></div>
     </>
   );
 }
