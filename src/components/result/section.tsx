@@ -22,10 +22,10 @@ export default function ResultSection({ data }: { data: any[] }) {
     <>
       <div className={styles.container}>
         <div className={styles.textContainer}>
-          <div className={styles.font1}>Meet our team members</div>
+          <div className={styles.font1}>Meet our team members at IDam</div>
           <div className={styles.font2}>
-            Lorem ipsum dolor sit amet consectetur adipiscing elit volutpat
-            gravida malesuada quam commodo id integer nam.
+            They are passionate and skilled professionals, ready to bring your
+            vision to life through creativity, technology, and collaboration.
           </div>
           <div className={styles.group}>
             <div className={styles.font3}>See more</div>

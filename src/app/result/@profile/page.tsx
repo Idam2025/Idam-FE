@@ -17,7 +17,6 @@ const dummyStudents: Student[] = [
     profileImage: "/profiles/john.png",
     score: 93,
   },
-  // 다른 더미 데이터도 동일하게 수정
 ];
 
 export default function ProfileModal() {
@@ -25,7 +24,6 @@ export default function ProfileModal() {
   const router = useRouter();
   const id = searchParams.get("profile");
 
-  // userId는 number이므로 id를 숫자로 변환
   const student = dummyStudents.find((s) => s.userId === Number(id));
 
   if (!student) return null;

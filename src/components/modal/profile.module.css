@@ -1,21 +1,21 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 9999;
+  backdrop-filter: blur(4px);
 }
 
-/* profile.module.css */
 .modal {
   background: white;
   width: 800px;
   padding: 60px;
-  border-radius: 12px;
+  border-radius: 20px;
   text-align: center;
-
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   transform: scale(0.95);
   opacity: 0;
   animation: popIn 0.3s ease-out forwards;
@@ -33,7 +33,7 @@
 }
 
 .title {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 700;
   color: #3f497f;
   margin-bottom: 12px;
@@ -41,60 +41,77 @@
 
 .subtitle {
   color: #7e84a3;
-  font-size: 15px;
-  line-height: 1.6;
-  max-width: 500px;
+  font-size: 16px;
+  line-height: 1.7;
+  max-width: 520px;
   margin: 0 auto 40px;
 }
 
 .cardRow {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 24px;
   margin-bottom: 40px;
 }
 
 .card {
   width: 200px;
   height: 260px;
-  background: #f5f5fa;
-  border-radius: 12px;
+  background: #f0f1f8;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(63, 73, 127, 0.1);
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(63, 73, 127, 0.2);
 }
 
 .active {
-  background: #e7e6f6;
+  background: linear-gradient(135deg, #e7e6f6, #f7f6fd);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  border: 2px solid #a5a2e0;
 }
 
 .profileImg {
-  width: 60px;
-  height: 60px;
-  border-radius: 9999px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
   background: #d2d2e9;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
+  object-fit: cover;
+  box-shadow: 0 0 0 3px white, 0 0 10px rgba(163, 162, 220, 0.5);
 }
 
 .name {
   font-weight: 700;
-  font-size: 16px;
+  font-size: 17px;
   color: #3f497f;
 }
 
 .role {
-  font-size: 13px;
-  color: #a1a4be;
-  letter-spacing: 1px;
-  margin-top: 4px;
+  font-size: 14px;
+  color: #7a7fa3;
+  margin-top: 6px;
+  letter-spacing: 0.8px;
 }
 
 .moveProfile {
   margin-top: 10px;
-  font-size: 14px;
+  font-size: 15px;
   border: none;
   background: transparent;
-  color: #3f497f;
+  color: #5c63b2;
+  font-weight: 600;
   cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.moveProfile:hover {
+  color: #3f497f;
+  text-decoration: underline;
 }
