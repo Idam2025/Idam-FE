@@ -4,22 +4,22 @@ import Link from "next/link";
 
 const categories = [
   {
-    img: "/ImgContainer/adobe.svg",
-    alt: "adobe",
-    label: "Design",
+    img: "/ImgContainer/design.avif",
+    alt: "디자인",
+    label: "디자인",
     desc: "디자인 카테고리로 검색을 시도합니다.",
   },
   {
-    img: "/ImgContainer/photo.png",
-    alt: "photography",
-    label: "Translation",
-    desc: "번역 카테고리로 검색을 시도합니다.",
-  },
-  {
-    img: "/ImgContainer/adobeps.svg",
-    alt: "adobePs",
+    img: "/ImgContainer/programming.jpg",
+    alt: "프로그래밍",
     label: "IT·프로그래밍",
     desc: "IT 카테고리로 검색을 시도합니다.",
+  },
+  {
+    img: "/ImgContainer/marketing.jpg",
+    alt: "마케팅",
+    label: "마케팅",
+    desc: "마케팅 카테고리로 검색을 시도합니다.",
   },
   {
     img: "/ImgContainer/adobeae.svg",
@@ -59,7 +59,7 @@ export default function Img() {
       {categories.map((cat) => (
         <div className={style.element} key={cat.label}>
           <Link
-            href={`/ai-helper/next/choice?domain=${encodeURIComponent(
+            href={`/ai-helper/next/AIchat?domain=${encodeURIComponent(
               cat.label
             )}`}
           >

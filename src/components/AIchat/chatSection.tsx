@@ -14,6 +14,11 @@ export default function ChatInput() {
 
   const domain = searchParams.get("domain");
 
+  useEffect(() => {
+    autoResize();
+    console.log("📦 searchParams domain:", domain); // 디버깅용
+  }, [domain]);
+
   const autoResize = () => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "40px";
@@ -32,15 +37,18 @@ export default function ChatInput() {
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) throw new Error("Access Token이 없습니다.");
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/ai-match`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      credentials: "include",
-      body: JSON.stringify({ domain, prompt: input }),
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/matching/by-ai`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        credentials: "include",
+        body: JSON.stringify({ domain, prompt: input }),
+      }
+    );
 
     if (!res.ok) {
       const err = await res.json();
@@ -54,10 +62,14 @@ export default function ChatInput() {
   const handleSend = async () => {
     setErrorMsg("");
 
-    if (!input.trim()) return;
+    if (!input.trim()) {
+      setErrorMsg("프롬프트 내용을 입력해주세요.");
+      return;
+    }
+
     if (!domain) {
       setErrorMsg("도메인 정보가 없습니다. 다시 선택해주세요.");
-      router.push("/ai-helper/next/choice");
+      router.push("/ai-helper/next");
       return;
     }
 
@@ -66,7 +78,6 @@ export default function ChatInput() {
 
     setIsLoading(true);
     try {
-      // 여기에 API 요청 제거
       router.push(
         `/result?domain=${encodeURIComponent(
           domain
@@ -92,10 +103,6 @@ export default function ChatInput() {
       handleSend();
     }
   };
-
-  useEffect(() => {
-    autoResize();
-  }, []);
 
   return (
     <div className={styles.container}>

@@ -34,3 +34,4 @@ yarn-error.log*
 # ✅ optional: 이미지 편집기 캐시
 *.psd
 *.xcf
+.vercel

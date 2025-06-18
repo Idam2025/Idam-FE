@@ -1,14 +1,15 @@
 import ClientResultPage from "@/components/result/ClientResultPage";
 
-export default function ResultPage({
+export default async function ResultPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: { domain?: string; prompt?: string };
 }) {
-  const domain =
-    typeof searchParams.domain === "string" ? searchParams.domain : "";
-  const prompt =
-    typeof searchParams.prompt === "string" ? searchParams.prompt : "";
+  const domainParam = await searchParams.domain;
+  const promptParam = await searchParams.prompt;
+
+  const domain = typeof domainParam === "string" ? domainParam : "";
+  const prompt = typeof promptParam === "string" ? promptParam : "";
 
   return <ClientResultPage domain={domain} prompt={prompt} />;
 }

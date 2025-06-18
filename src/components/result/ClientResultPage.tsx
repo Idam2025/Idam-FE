@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import ResultSection from "@/components/result/section";
 import SuspensePage from "@/components/result/suspense";
 
+import styles from "./section.module.css";
+
 type Props = {
   domain: string;
   prompt: string;
@@ -14,23 +16,22 @@ export default function ClientResultPage({ domain, prompt }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  console.log("✅ domain:", domain);
-  console.log("✅ prompt:", prompt);
-
   useEffect(() => {
-    const fetchAiTag = async () => {
+    const fetchAiMatchResult = async () => {
+      if (!domain || !prompt) {
+        setError("❗ 도메인 또는 프롬프트 누락");
+        setLoading(false);
+        return;
+      }
+
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        setError("❗ 로그인 정보가 없습니다.");
+        setLoading(false);
+        return;
+      }
+
       try {
-        if (!domain || !prompt) {
-          setError("도메인 또는 프롬프트 누락");
-          return;
-        }
-
-        const accessToken = localStorage.getItem("accessToken");
-        if (!accessToken) {
-          setError("Access Token이 없습니다.");
-          return;
-        }
-
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/api/matching/by-ai`,
           {
@@ -44,29 +45,30 @@ export default function ClientResultPage({ domain, prompt }: Props) {
         );
 
         if (!res.ok) {
-          const err = await res.text();
-          console.error("API Error Response:", err);
-          setError("AI 매칭 API 호출 실패");
+          const errText = await res.text();
+          console.error("🚨 API Error Response:", errText);
+          setError("❗ AI 매칭 요청 실패");
           return;
         }
 
         const result = await res.json();
+        console.log("✅ AI 매칭 결과:", result.data);
         setData(result.data);
-        console.log(data);
       } catch (err: any) {
-        console.error(err);
-        setError(err.message || "에러 발생");
+        console.error("🚨 예외 발생:", err);
+        setError(err.message || "❗ 알 수 없는 에러 발생");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchAiTag();
+    fetchAiMatchResult();
   }, [domain, prompt]);
 
   if (loading) return <SuspensePage />;
-  if (error) return <div style={{ color: "red" }}>{error}</div>;
-  if (!data) return <div>결과 없음</div>;
+  if (error) return <div className={styles.errorMessage}>{error}</div>;
+  if (!data || data.length === 0)
+    return <div className={styles.emptyMessage}>매칭 결과가 없습니다.</div>;
 
   return <ResultSection data={data} />;
 }
