@@ -6,6 +6,7 @@ import ProfileHeader from "./ProfileHeader";
 import PortfolioSection from "./PortfoiloSection";
 import PdfModal from "./PdfModal";
 import { UserProfile } from "@/types/user";
+import { motion } from "framer-motion";
 
 const mockUser: UserProfile = {
   name: "홍길동",
@@ -28,8 +29,6 @@ export default function StudentProfilePage() {
   const userId =
     typeof window !== "undefined" ? localStorage.getItem("userId") : null;
 
-  console.log(userId);
-
   useEffect(() => {
     if (!userId) return;
 
@@ -51,7 +50,6 @@ export default function StudentProfilePage() {
         const json = await res.json();
         if (!json.success) throw new Error("프로필 조회 실패");
 
-        // ✅ portfolios 기본값 처리
         setUser({
           ...json.data,
           portfolios: json.data.portfolios ?? [],
@@ -64,34 +62,56 @@ export default function StudentProfilePage() {
     fetchUserProfile();
   }, [userId]);
 
-  if (!user) return <div>불러오는 중...</div>;
+  if (!user) return <div className={styles.loading}>불러오는 중...</div>;
 
   return (
-    <div className={styles.bg}>
-      <div className={styles.container}>
+    <motion.div
+      className={styles.bg}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <motion.div
+        className={styles.container}
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+      >
         <ProfileHeader
           user={{
             ...user,
-            profileImage: user.profileImage ?? "/profile/default.png", // null이면 기본 이미지
+            profileImage: user.profileImage ?? "/profile/default.png",
           }}
           setUser={setUser}
           editMode={editMode}
           setEditMode={setEditMode}
         />
 
-        <PortfolioSection
-          user={user}
-          setUser={setUser}
-          editMode={editMode}
-          newPortfolioLink={newPortfolioLink}
-          setNewPortfolioLink={setNewPortfolioLink}
-          setPdfModalUrl={setPdfModalUrl}
-        />
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          <PortfolioSection
+            user={user}
+            setUser={setUser}
+            editMode={editMode}
+            newPortfolioLink={newPortfolioLink}
+            setNewPortfolioLink={setNewPortfolioLink}
+            setPdfModalUrl={setPdfModalUrl}
+          />
+        </motion.div>
 
         {pdfModalUrl && (
-          <PdfModal url={pdfModalUrl} onClose={() => setPdfModalUrl(null)} />
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <PdfModal url={pdfModalUrl} onClose={() => setPdfModalUrl(null)} />
+          </motion.div>
         )}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

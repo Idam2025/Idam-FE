@@ -6,14 +6,14 @@ import CompanyProfilePage from "@/components/profile/CompanyProfilePage";
 
 export default function ProfilePage() {
   const [userType, setUserType] = useState<string | null>(null);
-  const [mounted, setMounted] = useState(false); // SSR 방지용
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem("userType");
       console.log("🔍 userType:", stored);
       setUserType(stored);
-      setMounted(true); // 클라이언트 마운트 완료
+      setMounted(true);
     }
   }, []);
 

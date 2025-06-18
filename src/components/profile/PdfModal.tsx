@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "./UserProfile.module.css";
+import styles from "./PdfModal.module.css";
 
 interface PdfModalProps {
   url: string;

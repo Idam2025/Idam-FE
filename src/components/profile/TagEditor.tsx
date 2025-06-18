@@ -1,6 +1,8 @@
 "use client";
 
+import styles from "./TagEditor.module.css";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Tag {
   id: number;
@@ -23,6 +25,7 @@ export default function TagEditorModal({ userId, onClose }: Props) {
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [tags, setTags] = useState<Tag[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
+  const [search, setSearch] = useState("");
 
   const token =
     typeof window !== "undefined"
@@ -34,17 +37,17 @@ export default function TagEditorModal({ userId, onClose }: Props) {
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/categories/${id}/tags`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/categories/${id}/tags?page=0&size=500`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
       const json = await res.json();
       if (!json.success) throw new Error("태그 불러오기 실패");
-
       setCategoryId(id);
       setTags(json.data);
-      setSelected([]); // 태그 초기화
+      setSelected([]);
+      setSearch("");
       setStep("tags");
     } catch (err) {
       alert((err as Error).message);
@@ -58,10 +61,8 @@ export default function TagEditorModal({ userId, onClose }: Props) {
   };
 
   const handleSubmit = async () => {
-    if (!token || !categoryId) {
-      alert("카테고리 또는 로그인 정보가 없습니다.");
-      return;
-    }
+    if (!token || !categoryId)
+      return alert("카테고리 또는 로그인 정보가 없습니다.");
 
     try {
       const res = await fetch(
@@ -85,74 +86,107 @@ export default function TagEditorModal({ userId, onClose }: Props) {
     }
   };
 
-  return (
-    <div style={{ border: "1px solid #ccc", padding: "16px" }}>
-      {step === "category" && (
-        <div>
-          <h3>카테고리를 선택하세요</h3>
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => handleCategorySelect(cat.id)}
-              style={{
-                margin: "8px",
-                padding: "8px 12px",
-                backgroundColor: categoryId === cat.id ? "#d0e7ff" : "#fff",
-                border:
-                  categoryId === cat.id
-                    ? "2px solid #0070f3"
-                    : "1px solid #ccc",
-                borderRadius: "8px",
-                cursor: "pointer",
-              }}
-            >
-              {cat.name}
-            </button>
-          ))}
-        </div>
-      )}
+  const filteredTags = tags.filter((tag) =>
+    tag.tagName.toLowerCase().includes(search.toLowerCase())
+  );
 
-      {step === "tags" && (
-        <div>
-          <h3>태그를 선택하세요</h3>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
-            {tags.map((tag) => (
-              <button
-                key={tag.id}
-                onClick={() => toggle(tag.tagName)}
-                style={{
-                  padding: "6px 12px",
-                  borderRadius: "20px",
-                  border: selected.includes(tag.tagName)
-                    ? "2px solid #0070f3"
-                    : "1px solid #ccc",
-                  background: selected.includes(tag.tagName)
-                    ? "#e6f0ff"
-                    : "#fff",
-                  color: selected.includes(tag.tagName) ? "#0070f3" : "#333",
-                  cursor: "pointer",
-                }}
-              >
-                {tag.tagName}
-              </button>
-            ))}
-          </div>
-          <button
-            onClick={handleSubmit}
-            style={{
-              marginTop: "16px",
-              padding: "8px 16px",
-              backgroundColor: "#0070f3",
-              color: "white",
-              border: "none",
-              borderRadius: "6px",
-              cursor: "pointer",
-            }}
+  return (
+    <motion.div
+      className={styles.container}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <AnimatePresence mode="wait">
+        {step === "category" && (
+          <motion.div
+            key="category"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.25 }}
           >
-            완료
-          </button>
-        </div>
-      )}
-    </div>
+            <h3 className={styles.categoryTitle}>카테고리를 선택하세요</h3>
+            {CATEGORIES.map((cat) => (
+              <motion.button
+                key={cat.id}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => handleCategorySelect(cat.id)}
+                className={`${styles.categoryButton} ${
+                  categoryId === cat.id ? styles.active : ""
+                }`}
+              >
+                {cat.name}
+              </motion.button>
+            ))}
+          </motion.div>
+        )}
+
+        {step === "tags" && (
+          <motion.div
+            key="tags"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.25 }}
+          >
+            <h3 className={styles.tagTitle}>태그를 선택하세요</h3>
+
+            <input
+              type="text"
+              placeholder="태그 검색"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className={styles.searchInput}
+            />
+
+            {selected.length > 0 && (
+              <div className={styles.selectedPreview}>
+                <strong>선택된 태그:</strong>
+                <div className={styles.selectedTagList}>
+                  {selected.map((tag) => (
+                    <motion.span
+                      key={tag}
+                      className={styles.selectedTag}
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0.8, opacity: 0 }}
+                    >
+                      {tag}
+                    </motion.span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className={styles.tagContainer}>
+              {filteredTags.map((tag) => (
+                <motion.button
+                  key={tag.id}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => toggle(tag.tagName)}
+                  className={`${styles.tagButton} ${
+                    selected.includes(tag.tagName) ? styles.selected : ""
+                  }`}
+                >
+                  {tag.tagName}
+                </motion.button>
+              ))}
+            </div>
+
+            <motion.button
+              onClick={handleSubmit}
+              className={styles.submitButton}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              완료
+            </motion.button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }

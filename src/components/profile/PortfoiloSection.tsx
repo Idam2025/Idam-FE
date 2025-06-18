@@ -3,6 +3,7 @@
 import styles from "./UserProfile.module.css";
 import { UserProfile } from "@/types/user";
 import { Dispatch, SetStateAction, ChangeEvent } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Props {
   user: UserProfile;
@@ -134,50 +135,61 @@ export default function PortfolioSection({
 
   return (
     <div className={styles.portfolioSection}>
-      <h3 className={styles.portfolioTitle}>📁 내 포트폴리오</h3>
+      <h3 className={styles.portfolioTitle}>내 포트폴리오</h3>
 
       <div className={styles.portfolioList}>
-        {user.portfolios.map((item) =>
-          item?.url ? (
-            <div key={item.id} className={styles.portfolioItemBox}>
-              {item.url.endsWith(".pdf") ? (
-                <div
-                  className={styles.pdfPreviewContainer}
-                  onClick={() => setPdfModalUrl(item.url)}
-                >
-                  <iframe
-                    src={item.url}
-                    width="100%"
-                    height="160"
-                    className={styles.pdfPreview}
-                  />
-                  <div className={styles.overlay}>🔍 클릭하여 크게 보기</div>
-                </div>
-              ) : (
-                <a
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.portfolioItem}
-                >
-                  🔗 {item.url}
-                </a>
-              )}
-              <button
-                className={styles.deleteBtn}
-                onClick={() => handleDelete(item.id)}
+        <AnimatePresence>
+          {user.portfolios.map((item) =>
+            item?.url ? (
+              <motion.div
+                key={item.id}
+                className={styles.portfolioItemBox}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3 }}
               >
-                ❌ 삭제
-              </button>
-            </div>
-          ) : null
-        )}
+                {item.url.endsWith(".pdf") ? (
+                  <div
+                    className={styles.pdfPreviewContainer}
+                    onClick={() => setPdfModalUrl(item.url)}
+                  >
+                    <iframe
+                      src={item.url}
+                      width="100%"
+                      height="160"
+                      className={styles.pdfPreview}
+                    />
+                    <div className={styles.overlay}>클릭하여 크게 보기</div>
+                  </div>
+                ) : (
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.portfolioItem}
+                  >
+                    🔗 {item.url}
+                  </a>
+                )}
+                {editMode && (
+                  <button
+                    className={styles.deleteBtn}
+                    onClick={() => handleDelete(item.id)}
+                  >
+                    ❌ 삭제
+                  </button>
+                )}
+              </motion.div>
+            ) : null
+          )}
+        </AnimatePresence>
       </div>
 
       {editMode && (
         <>
           <form className={styles.uploadForm}>
-            <label htmlFor="pdfUpload">📎 PDF 추가:</label>
+            <label htmlFor="pdfUpload">PDF 추가:</label>
             <input
               type="file"
               id="pdfUpload"
@@ -187,7 +199,7 @@ export default function PortfolioSection({
           </form>
 
           <div className={styles.linkForm}>
-            <label htmlFor="portfolioLink">🔗 링크 추가:</label>
+            <label htmlFor="portfolioLink">링크 추가:</label>
             <input
               type="url"
               id="portfolioLink"

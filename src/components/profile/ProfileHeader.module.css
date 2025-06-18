@@ -1,0 +1,226 @@
+.profile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+  background: transparent;
+  border-radius: 1rem;
+  padding: 2rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.avatarWrapper {
+  width: 120px;
+  height: 120px;
+  position: relative;
+  display: inline-block;
+  border-radius: 9999px;
+  background: #fff;
+  box-shadow: 0 0 0 3px #819ddb;
+  transition: transform 0.3s ease;
+}
+
+.avatarWrapper:hover {
+  transform: scale(1.05);
+}
+
+.avatarLabel {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.avatarPlus {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: #60a5fa;
+  color: white;
+  border-radius: 50%;
+  font-size: 14px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+  transition: background-color 0.3s ease;
+}
+
+.avatarPlus:hover {
+  background-color: #3b82f6;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.nickname {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0.5rem 0;
+}
+
+.email {
+  font-size: 14px;
+  color: #a5b4fc;
+  margin-bottom: 1rem;
+}
+
+.textRow {
+  font-size: 15px;
+  color: #d1d5db;
+  margin-top: 4px;
+  line-height: 1.6;
+}
+
+.textRow span {
+  font-weight: 600;
+  color: #ffffff;
+  margin-right: 5px;
+}
+
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.tag {
+  background-color: transparent;
+  color: #e0edff;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.buttonRow {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.editBtn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  z-index: 10;
+}
+
+.editBtn:hover {
+  background-color: #2563eb;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.inputGroup label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.input {
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  border: 1px solid #94a3b8;
+  background-color: #1e293b;
+  color: white;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.info {
+  width: 100%;
+  max-width: 420px;
+}
+
+.portfolioItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 12px;
+  background-color: #f3f4f6;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.portfolioAddSection {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.portfolioInput {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.addBtn {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.addBtn:hover {
+  background-color: #2563eb;
+}
+
+.tagEditorBtn {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tagEditorBtn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  color: #000;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}

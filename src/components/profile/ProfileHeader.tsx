@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import styles from "./UserProfile.module.css";
+import styles from "./ProfileHeader.module.css";
 import { UserProfile } from "@/types/user";
 import {
   Dispatch,
@@ -123,7 +123,8 @@ export default function ProfileHeader({
 
   return (
     <div className={styles.profile}>
-      <div className={styles.buttonRow}>
+      {/* 우측 상단 버튼들 */}
+      <div className={styles.topRightButtons}>
         <button
           className={styles.editBtn}
           onClick={() => {
@@ -137,7 +138,12 @@ export default function ProfileHeader({
           {editMode ? "✅ 저장" : "✏️ 프로필 수정"}
         </button>
         {editMode && (
-          <button onClick={() => setShowTagEditor(true)}>📌 태그 조회</button>
+          <button
+            onClick={() => setShowTagEditor(true)}
+            className={styles.tagEditorBtn}
+          >
+            📌 태그 조회
+          </button>
         )}
       </div>
 

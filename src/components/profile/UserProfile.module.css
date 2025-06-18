@@ -6,387 +6,198 @@
   background-position: center;
   background-repeat: no-repeat;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   backdrop-filter: blur(6px);
   background-color: rgba(0, 0, 0, 0.4);
 }
 
+.overlay {
+  cursor: pointer;
+}
+
 .container {
   width: 100%;
-  max-width: 640px;
-  background-color: rgba(0, 0, 0, 0.35);
-  border-radius: 24px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
-  padding: 40px;
-  backdrop-filter: blur(14px) saturate(180%);
-  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  max-width: 680px;
+  background-color: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #f1f5f9;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  padding: 32px;
+  margin: auto;
+  backdrop-filter: blur(10px) saturate(180%);
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
 }
 
 .profile {
-  position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
   gap: 16px;
-  text-align: center;
+  margin-bottom: 24px;
 }
 
-.avatar {
-  width: 120px;
-  height: 120px;
+.avatarWrapper {
+  width: 96px;
+  height: 96px;
   border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #819ddb;
+  overflow: hidden;
+  border: 2px solid #819ddb;
+  flex-shrink: 0;
 }
 
 .nickname {
-  font-size: 26px;
-  font-weight: 800;
-  color: #cbdfff;
-}
-d .email {
-  font-size: 14px;
-  color: #d6e5ff;
+  font-size: 22px;
+  font-weight: 700;
+  color: #e0edff;
 }
 
 .textRow {
-  font-size: 15px;
-  color: #e0edff;
-  margin-top: 4px;
-}
-
-.textRow span {
-  font-weight: 600;
-  color: #ffffff;
+  font-size: 14px;
+  color: #dbeafe;
 }
 
 .portfolioSection {
-  margin-top: 40px;
+  margin-top: 28px;
 }
 
 .portfolioTitle {
-  font-size: 18px;
-  font-weight: 700;
-  color: #d0e7ff;
-  margin-bottom: 20px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #cddfff;
+  margin-bottom: 16px;
   text-align: center;
 }
 
 .portfolioList {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
 }
 
 .portfolioItemBox {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 12px;
   padding: 12px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 240px;
-  box-sizing: border-box;
-  backdrop-filter: blur(10px) saturate(160%);
-  -webkit-backdrop-filter: blur(10px) saturate(160%);
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: #eef4ff;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  transition: transform 0.2s ease;
 }
 
-.portfolioItem {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 16px 20px;
-  background-color: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 12px;
-  font-size: 14px;
-  color: #dbeafe;
-  text-decoration: none;
-  transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-.portfolioItem:hover {
-  background-color: rgba(255, 255, 255, 0.3);
+.portfolioItemBox:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  background-color: rgba(255, 255, 255, 0.12);
 }
 
 .uploadForm {
-  margin-top: 32px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-}
-
-.uploadForm label {
-  font-size: 15px;
-  font-weight: 500;
-  color: #cbd5e1;
-}
-
-.uploadForm input[type="file"] {
-  font-size: 14px;
-  background-color: rgba(255, 255, 255, 0.1);
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #e2e8f0;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.uploadForm input[type="file"]:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-.pdfPreview {
-  border-radius: 8px;
-  border: 1px solid #cbd5e1;
-}
-
-.deleteBtn {
-  margin-top: 8px;
-  font-size: 13px;
-  background-color: rgba(255, 71, 71, 0.2);
-  color: #f87171;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.deleteBtn:hover {
-  background-color: rgba(255, 71, 71, 0.3);
-}
-
-.editBtn {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  font-size: 14px;
-  background-color: rgba(0, 160, 255, 0.2);
-  color: #38bdf8;
-  padding: 8px 14px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  z-index: 2;
-}
-
-.editBtn:hover {
-  background-color: rgba(0, 160, 255, 0.3);
-}
-
-.pdfPreviewContainer {
-  position: relative;
-  cursor: pointer;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid #cbd5e1;
-  transition: box-shadow 0.2s ease;
-}
-
-.pdfPreviewContainer:hover {
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.overlay {
-  position: absolute;
-  bottom: 6px;
-  right: 10px;
-  font-size: 12px;
-  background: rgba(0, 0, 0, 0.6);
-  color: #fff;
-  padding: 4px 8px;
-  border-radius: 4px;
-}
-
-.modalBackdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 9999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modalContent {
-  background: rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(14px) saturate(180%);
-  -webkit-backdrop-filter: blur(14px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #f1f5f9;
-  width: 90%;
-  height: 80%;
-  max-width: 900px;
-  border-radius: 12px;
-  padding: 20px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-}
-
-.closeBtn {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  font-size: 14px;
-  padding: 6px 10px;
-  border: none;
-  border-radius: 6px;
-  background-color: #f87171;
-  color: white;
-  cursor: pointer;
-  z-index: 1;
-}
-
-.avatarLabel {
-  display: inline-block;
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.linkForm {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 24px;
-  align-items: center;
+  gap: 10px;
 }
 
 .input {
-  width: 100%;
-  max-width: 400px;
-  padding: 10px 12px;
+  padding: 8px 12px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.08);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #f1f5f9;
 }
 
 .linkSubmitBtn {
-  margin-top: 8px;
-  background-color: rgba(0, 160, 255, 0.2);
-  color: #38bdf8;
+  background-color: #3b82f6;
+  color: white;
   padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
   border: none;
-  border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
 
 .linkSubmitBtn:hover {
-  background-color: rgba(0, 160, 255, 0.35);
-}
-
-.avatarWrapper {
-  width: 126px;
-  height: 126px;
-  position: relative;
-  display: inline-block; /* block이면 더 안정적 */
-}
-
-.avatarLabel {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.avatarPlus {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background-color: #3b82f6; /* Tailwind blue-500 */
-  color: white;
-  border-radius: 9999px;
-  font-size: 16px;
-  padding: 4px 8px;
-  cursor: pointer;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
-  z-index: 2;
-}
-
-.tagBtn {
-  margin-left: 8px;
-  padding: 6px 12px;
-  font-size: 14px;
-  background-color: #eff5ff;
-  border: 1px solid #a4c3ff;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.modalBackdrop {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modalContent {
-  width: 80%;
-  height: 80%;
-  background: white;
-  border-radius: 8px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-}
-
-.closeBtn {
-  position: absolute;
-  top: 10px;
-  right: 12px;
-  background: transparent;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-.modalIframe {
-  border: none;
-  width: 100%;
-  height: 100%;
+  background-color: #2563eb;
 }
 
 .tagList {
+  margin-top: 8px;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 4px;
+  gap: 6px;
+  justify-content: center;
 }
 
 .tag {
-  background-color: #f0f0f0;
-  color: #333 !important;
+  font-size: 12px;
   padding: 4px 8px;
   border-radius: 8px;
-  font-size: 0.875rem;
+  background-color: #e2e8f0;
+  color: #334155;
 }
-.image {
-  width: 100%;
-  max-width: 400px; /* ✅ 원하는 최대 크기 설정 */
-  height: auto; /* ✅ 비율 유지 */
-  border-radius: 8px; /* optional: 둥글게 */
-  object-fit: cover; /* optional: 이미지 잘리는 경우 대비 */
-  display: block;
-  margin: 0 auto; /* 가운데 정렬 */
+
+.uploadForm,
+.linkForm {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: rgba(246, 245, 245, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.uploadForm label,
+.linkForm label {
+  font-weight: 500;
+  color: #ffffffcc;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.uploadForm input[type="file"],
+.linkForm .input {
+  flex: 1;
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  outline: none;
+}
+
+.linkForm .linkSubmitBtn {
+  background-color: #6c63ff;
+  color: white;
+  font-weight: 500;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.linkForm .linkSubmitBtn:hover {
+  background-color: #5751e0;
+}
+
+.deleteBtn {
+  background-color: transparent;
+  border: none;
+  color: #ef4444;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.deleteBtn:hover {
+  background-color: transparent;
+  transform: scale(1.1);
 }

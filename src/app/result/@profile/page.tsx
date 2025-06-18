@@ -1,31 +1,38 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import ProfileClientModal from "@/components/modal/ProfileClientModal";
 import { Student } from "@/types/student";
-
-const dummyStudents: Student[] = [
-  {
-    userId: 1,
-    name: "Sophie Moore",
-    profileImage: "/profiles/sophie.png",
-    score: 87,
-  },
-  {
-    userId: 2,
-    name: "John Smith",
-    profileImage: "/profiles/john.png",
-    score: 93,
-  },
-];
 
 export default function ProfileModal() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const id = searchParams.get("profile");
 
-  const student = dummyStudents.find((s) => s.userId === Number(id));
+  const [student, setStudent] = useState<Student | null>(null);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchStudent = async () => {
+      try {
+        const res = await fetch(`/api/students/${id}/profile`);
+        if (!res.ok) throw new Error("Failed to fetch student");
+        const data = await res.json();
+        setStudent(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStudent();
+  }, [id]);
+
+  if (!id || loading) return null;
   if (!student) return null;
 
   return <ProfileClientModal student={student} onClose={() => router.back()} />;
