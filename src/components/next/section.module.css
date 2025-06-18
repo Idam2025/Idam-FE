@@ -1,91 +1,94 @@
 .container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: auto;
+  align-items: center;
+  min-height: 100vh;
+  padding: 100px 20px 60px;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(4px);
 }
 
 .content {
   display: flex;
   flex-direction: column;
-  margin-top: 150px;
+  align-items: center;
+  width: 100%;
+  max-width: 1280px;
 }
 
 .heading {
   text-align: center;
   font-feature-settings: "liga" off, "clig" off;
-  font-family: Futura;
-  font-size: 36px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 46px;
-  background: var(--main, linear-gradient(90deg, #d838c9 0%, #482cbb 100%));
+  font-family: Futura, sans-serif;
+  font-size: 40px;
+  font-weight: 600;
+  background: linear-gradient(90deg, #d838c9 0%, #482cbb 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
 }
 
 .description {
-  color: var(--Neutral-Colors-Text-Gray, #c4c2ea);
+  color: #c4c2ea;
   text-align: center;
-  font-feature-settings: "liga" off, "clig" off;
-  font-family: Futura-Light;
+  font-family: "DM Sans", sans-serif;
   font-size: 18px;
-  font-style: normal;
   font-weight: 300;
-  line-height: 30px;
-  margin-top: 21px;
+  line-height: 28px;
+  max-width: 720px;
+  margin-bottom: 50px;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(2, auto);
-  gap: 50px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 40px;
   width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
+  max-width: 1000px;
 }
 
 .element {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s ease;
 }
 
-.cardTitle {
-  color: rgb(214, 199, 247);
-  text-align: center;
-  font-feature-settings: "liga" off, "clig" off;
-  font-family: "DM Sans";
-  font-size: 28px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 38px;
-  margin-top: 12px;
-}
-
-.cardDesc {
-  color: var(--Neutral-Colors-Color-900, #8d8ba7);
-  text-align: center;
-  font-feature-settings: "liga" off, "clig" off;
-  font-family: "DM Sans";
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 18px;
-  margin-top: 2px;
+.element:hover {
+  transform: translateY(-6px);
 }
 
 .element img {
-  width: 180px; /* 동일 크기 */
-  height: 180px; /* 동일 크기 */
-  object-fit: cover; /* 이미지 왜곡 없이 채움 */
-  border-radius: 16px; /* 모서리 둥글게 */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 선택사항: 살짝 그림자 */
-  transition: transform 0.2s ease; /* 선택사항: hover 효과 부드럽게 */
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
 }
 
 .element img:hover {
-  transform: scale(1.05); /* 선택사항: hover 시 확대 효과 */
+  transform: scale(1.06);
+}
+
+.cardTitle {
+  color: #e8e4ff;
+  text-align: center;
+  font-family: "DM Sans", sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  margin-top: 14px;
+}
+
+.cardDesc {
+  color: #aaa8c5;
+  text-align: center;
+  font-family: "DM Sans", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  margin-top: 6px;
 }

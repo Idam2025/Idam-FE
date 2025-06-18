@@ -8,11 +8,10 @@ export default function NextSection() {
       <div className={style.content}>
         <div className={style.heading}>
           <Image src="/usual/AI2.svg" alt="AI" width={37} height={37} />
-          Choose Work Type / Design Tool
+          Choose Work Type
         </div>
         <div className={style.description}>
-          Lorem ipsum dolor sit amet consectetur adipiscing elit volutpat
-          gravida malesuada quam commodo id integer nam.
+          Find the right talent. IDam connects you to skilled students.
         </div>
         <div className={style.grid}>
           <Img />
