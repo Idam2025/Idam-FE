@@ -93,7 +93,7 @@ export default function ChatInput() {
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     setInput(value);
-    inputRef.current = value; // 항상 최신 문자열 저장
+    inputRef.current = value;
     autoResize();
   };
 
@@ -119,7 +119,6 @@ export default function ChatInput() {
     setIsLoading(true);
     resetInput();
 
-    // 상태 업데이트 및 리렌더링 후 300ms 기다린 뒤 push
     setTimeout(() => {
       const encodedPrompt = encodeURIComponent(trimmed);
       const encodedDomain = encodeURIComponent(domain);

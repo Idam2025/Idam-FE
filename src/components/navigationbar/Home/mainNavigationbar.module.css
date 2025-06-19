@@ -9,10 +9,10 @@
 .title {
   color: var(--Neutral-8, #7b95b7);
   font-family: "DM Sans";
-  font-size: 20px;
-  font-style: normal;
+  font-size: 28px;
   font-weight: 700;
-  line-height: 24px; /* 120% */
+  line-height: 34px;
+  cursor: pointer;
 }
 
 .font_container > .row {
@@ -27,12 +27,11 @@
   color: var(--Neutral-10, #486284);
   text-align: center;
 
-  /* body/small */
   font-family: "DM Sans";
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
-  line-height: 24px; /* 150% */
+  line-height: 24px;
   cursor: pointer;
 }
 
@@ -41,6 +40,7 @@
   justify-content: center;
   align-items: center;
   gap: 15px;
+  margin-right: -50px;
 }
 
 @keyframes fadeSlideDown {
@@ -56,92 +56,30 @@
 
 .container {
   display: flex;
-  width: auto;
-  padding: 25px 98px;
   justify-content: space-between;
   align-items: center;
-  gap: 20px;
-
-  animation: fadeSlideDown 0.6s ease-in-out;
+  padding: 12px 64px;
+  background: linear-gradient(90deg, #eef3fa, #f5f8fc);
+  transition: all 0.3s ease;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  animation: fadeSlideDown 0.5s ease-in-out;
+  backdrop-filter: blur(6px);
 }
 
-/* 슬라이딩 밑줄 애니메이션 */
-.font {
-  position: relative;
-  width: auto;
-  color: var(--Neutral-10, #486284);
-  text-align: center;
-  font-family: "DM Sans";
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 24px;
-  cursor: pointer;
-  transition: color 0.3s;
+.scrolled {
+  padding: 12px 64px;
+  background: transparent;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(10px);
 }
 
-.font::after {
-  content: "";
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background-color: #486284;
-  transition: width 0.3s ease-in-out;
-}
-
-.font:hover::after {
-  width: 100%;
-}
-
-.font:hover {
-  color: #30445f;
-}
-
-/* 로그인 hover 효과 */
-.login_container .font:hover {
-  color: #6c7bff;
-  transition: color 0.3s;
-}
-
-.profileDropdownWrapper {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-}
-
-.dropdownMenu {
-  position: absolute;
-  top: 100%; /* 텍스트 바로 아래 */
-  right: 0;
-  margin-top: 6px;
-  background-color: white;
-  color: #111;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  z-index: 50;
-  width: 140px;
-  padding: 8px 0;
-}
-
-.dropdownItem {
-  padding: 10px 16px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.dropdownItem:hover {
-  background-color: #f3f4f6;
-}
-
-@keyframes dropdownFadeIn {
+/* 기존 애니메이션 */
+@keyframes fadeSlideDown {
   0% {
     opacity: 0;
-    transform: translateY(-4px);
+    transform: translateY(-20px);
   }
   100% {
     opacity: 1;
@@ -149,61 +87,101 @@
   }
 }
 
+.profile {
+  padding: 8px 16px;
+  font-weight: 600;
+  background-color: transparent;
+  border-radius: 999px;
+  font-size: 17px;
+  transition: all 0.2s ease;
+}
+
+.profile:hover {
+  background-color: #e2e8f0;
+  color: #1a202c;
+}
+
+/* 알림 크게 */
+.notificationWrapper {
+  width: 44px;
+  height: 44px;
+  background-color: transparent;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+  cursor: pointer;
+}
+
+.notificationWrapper:hover {
+  background-color: #dbe4ef;
+}
+
+.notificationIcon {
+  width: 28px;
+  height: 28px;
+  animation: blink 1.2s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.4;
+  }
+}
+
 .dropdownMenu {
   position: absolute;
   top: 100%;
   right: 0;
-  margin-top: 6px;
-  background-color: white;
-  color: #111;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  z-index: 50;
-  width: 140px;
-  padding: 8px 0;
+  margin-top: 8px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  padding: 10px 0;
+  min-width: 160px;
+  z-index: 1000;
   animation: dropdownFadeIn 0.2s ease-out;
 }
-.profileWrapper {
-  position: relative;
-  display: inline-block;
-}
 
-.dropdownMenu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  margin-top: 8px;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: opacity 0.25s ease, transform 0.25s ease;
-  z-index: 10;
-  min-width: 140px;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.profileWrapper:hover .dropdownMenu {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
+@keyframes dropdownFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .dropdownItem {
-  padding: 10px 16px;
-  font-size: 14px;
-  color: #e2e8f0;
-  cursor: pointer;
-  background: rgba(255, 255, 255, 0.05); /* 반투명 */
-  border-radius: 6px;
-  transition: background 0.3s, color 0.3s;
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  font-size: 15px;
   font-weight: 500;
+  color: #2d3748;
+  background-color: transparent;
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease;
+  white-space: nowrap;
 }
 
 .dropdownItem:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  background-color: #f5f8fc;
+  color: #1a202c;
+}
+
+.navList {
+  cursor: pointer;
+  padding-left: 10px;
+  padding-right: 20px;
+  width: 40px;
+  height: 40px;
+}
+
+.navList:hover {
+  color: #7b95b7;
 }
