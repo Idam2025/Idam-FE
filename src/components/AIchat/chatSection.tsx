@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { flushSync } from "react-dom";
 import { useRouter, useSearchParams } from "next/navigation";
 import styles from "./ChatSection.module.css";
 
@@ -16,7 +17,7 @@ export default function ChatInput() {
 
   useEffect(() => {
     autoResize();
-    console.log("📦 searchParams domain:", domain); // 디버깅용
+    console.log("📦 searchParams domain:", domain);
   }, [domain]);
 
   const autoResize = () => {
@@ -35,32 +36,10 @@ export default function ChatInput() {
 
   const postPrompt = async () => {
     const accessToken = localStorage.getItem("accessToken");
-    if (!accessToken) throw new Error("Access Token이 없습니다.");
-
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/matching/by-ai`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        credentials: "include",
-        body: JSON.stringify({ domain, prompt: input }),
-      }
-    );
-
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err?.message || "AI 매칭 요청 실패");
+    if (!accessToken) {
+      setErrorMsg("Access Token이 없습니다.");
+      return;
     }
-
-    const data = await res.json();
-    router.push("/result");
-  };
-
-  const handleSend = async () => {
-    setErrorMsg("");
 
     if (!input.trim()) {
       setErrorMsg("프롬프트 내용을 입력해주세요.");
@@ -78,23 +57,75 @@ export default function ChatInput() {
 
     setIsLoading(true);
     try {
-      router.push(
-        `/result?domain=${encodeURIComponent(
-          domain
-        )}&prompt=${encodeURIComponent(input)}`
+      const promptToSend = input.trim();
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/matching/by-ai`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          credentials: "include",
+          body: JSON.stringify({ domain, prompt: promptToSend }),
+        }
       );
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err?.message || "AI 매칭 요청 실패");
+      }
+
+      const encodedDomain = encodeURIComponent(domain);
+      const encodedPrompt = encodeURIComponent(promptToSend);
+      router.push(`/result?domain=${encodedDomain}&prompt=${encodedPrompt}`);
     } catch (err: any) {
       console.error(err);
-      setErrorMsg(err.message || "페이지 이동 중 오류 발생");
+      setErrorMsg(err.message || "AI 요청 처리 중 오류 발생");
     } finally {
       setIsLoading(false);
       resetInput();
     }
   };
 
+  const inputRef = useRef("");
+
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInput(e.target.value);
+    const value = e.target.value;
+    setInput(value);
+    inputRef.current = value; // 항상 최신 문자열 저장
     autoResize();
+  };
+
+  const handleSend = async () => {
+    setErrorMsg("");
+
+    const trimmed = input.trim();
+
+    if (!trimmed) {
+      setErrorMsg("프롬프트 내용을 입력해주세요.");
+      return;
+    }
+
+    if (!domain) {
+      setErrorMsg("도메인 정보가 없습니다. 다시 선택해주세요.");
+      router.push("/ai-helper/next");
+      return;
+    }
+
+    const confirmed = confirm("AI 검색을 시작할까요?");
+    if (!confirmed) return;
+
+    setIsLoading(true);
+    resetInput();
+
+    // 상태 업데이트 및 리렌더링 후 300ms 기다린 뒤 push
+    setTimeout(() => {
+      const encodedPrompt = encodeURIComponent(trimmed);
+      const encodedDomain = encodeURIComponent(domain);
+      router.push(`/result?domain=${encodedDomain}&prompt=${encodedPrompt}`);
+      setIsLoading(false);
+    }, 300);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
