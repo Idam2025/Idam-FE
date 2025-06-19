@@ -1,6 +1,30 @@
 .container {
-  width: auto;
-  height: 5067px;
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("/usual/resized_image.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+
+.content {
+  position: relative;
+  z-index: 10;
   display: flex;
   flex-direction: column;
+  padding-top: 100px;
+  padding-bottom: 300px;
+  gap: 100px;
 }

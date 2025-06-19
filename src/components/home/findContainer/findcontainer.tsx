@@ -1,75 +1,96 @@
+"use client";
 import Image from "next/image";
 import style from "./findContainer.module.css";
+import { motion } from "framer-motion";
 
 const sections = [
   {
-    title: "Graphic Design",
+    title: "IT·프로그래밍",
     description:
-      "Welcome to Burger Bliss, where we take your cravings to a whole new level! Our mouthwatering burgers are made from 100% beef and are served on freshly baked buns.",
+      "전문 백엔드부터 프론트엔드까지 다양한 개발 인재를 찾을 수 있어요.",
     images: [
-      "/Home/graphic/graphic1.png",
-      "/Home/graphic/graphic2.gif",
-      "/Home/graphic/graphic3.webp",
+      "/profile/default.png",
+      "/profile/default.png",
+      "/profile/default.png",
+      "/profile/default.png",
     ],
+    direction: "left",
   },
   {
-    title: "3D/Modeling",
+    title: "디자인",
     description:
-      "Welcome to Burger Bliss, where we take your cravings to a whole new level! Our mouthwatering burgers are made from 100% beef and are served on freshly baked buns.",
-    images: ["/Home/3D/3D1.jpg", "/Home/3D/3D2.jpeg", "/Home/3D/3D3.jpg"],
+      "UX/UI부터 브랜드 디자인까지 감각적인 디자이너들을 만나보세요.",
+    images: [
+      "/profile/default.png",
+      "/profile/default.png",
+      "/profile/default.png",
+      "/profile/default.png",
+    ],
+    direction: "right",
   },
   {
-    title: "IT/Programming",
+    title: "마케팅",
     description:
-      "Welcome to Burger Bliss, where we take your cravings to a whole new level! Our mouthwatering burgers are made from 100% beef and are served on freshly baked buns.",
-    images: ["/Home/IT/IT.webp", "/Home/IT/IT2.jpeg", "/Home/IT/IT3.jpg"],
+      "콘텐츠 기획, 광고 전략 등 실전 마케팅 경험을 갖춘 인재들이 모였어요.",
+    images: [
+      "/profile/default.png",
+      "/profile/default.png",
+      "/profile/default.png",
+      "/profile/default.png",
+    ],
+    direction: "left",
   },
 ];
+
+type SectionProps = {
+  title: string;
+  description: string;
+  images: string[];
+  direction: string;
+};
+
+function Section({ title, description, images, direction }: SectionProps) {
+  const moveX = direction === "left" ? -20 : 20;
+
+  return (
+    <motion.div
+      className={style.card}
+      initial={{ x: moveX, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ duration: 1.5, ease: "easeOut" }}
+    >
+      <div className={style.left}>
+        <div className={style.sectionTitle}>{title}</div>
+        <div className={style.sectionDesc}>{description}</div>
+      </div>
+      <div className={style.right}>
+        {images.slice(0, 4).map((src, idx) => (
+          <Image
+            key={idx}
+            src={src}
+            alt={`example-${idx}`}
+            width={200}
+            height={200}
+            className={style.image}
+          />
+        ))}
+      </div>
+    </motion.div>
+  );
+}
 
 export default function FindContainer() {
   return (
     <div className={style.findContainerWrapper}>
-      <div className={style.header}>
-        <div className={style.headerText}>원하는 인재 찾기</div>
-      </div>
-
       {sections.map((section, idx) => (
         <Section
           key={idx}
           title={section.title}
           description={section.description}
           images={section.images}
+          direction={section.direction}
         />
       ))}
-    </div>
-  );
-}
-
-type SectionProps = {
-  title: string;
-  description: string;
-  images: string[];
-};
-
-function Section({ title, description, images }: SectionProps) {
-  return (
-    <div className={style.section}>
-      <div className={style.left}>
-        <div className={style.sectionTitle}>{title}</div>
-        <div className={style.sectionDesc}>{description}</div>
-      </div>
-      <div className={style.right}>
-        {images.map((src, idx) => (
-          <Image
-            key={idx}
-            src={src}
-            alt={`example-${idx}`}
-            width={330}
-            height={0} // 비율 유지되게
-            style={{ height: "auto" }}
-          />
-        ))}
-      </div>
     </div>
   );
 }

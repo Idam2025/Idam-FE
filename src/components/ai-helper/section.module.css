@@ -66,6 +66,7 @@
   font-size: 15px;
   font-weight: 500;
   transition: all 0.25s ease-in-out;
+  color: #454dc7 !important;
 }
 
 .primaryBtn {
@@ -80,7 +81,7 @@
 }
 
 .secondaryBtn {
-  color: #ffffff;
+  color: #454dc7;
   border: 1.3px solid #ffffff;
   background: #ffffff;
 }

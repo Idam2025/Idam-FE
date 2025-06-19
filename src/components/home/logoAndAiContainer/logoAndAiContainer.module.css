@@ -1,19 +1,24 @@
-.logo_container {
-  margin-top: 200px;
-  width: 100%;
-  height: 400px;
+.container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+}
+
+.logo_container {
+  margin-top: 200px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
 }
 
 .logo_container > .font1 {
   color: #fff;
-  text-align: center;
-  font-family: Futura;
+  font-family: Futura, sans-serif;
   font-size: 60px;
-  font-style: normal;
   font-weight: 500;
   line-height: 76px;
   letter-spacing: 0.5px;
@@ -21,10 +26,8 @@
 
 .logo_container > .font2 {
   color: #fff;
-  text-align: center;
-  font-family: "SUIT Variable";
+  font-family: "SUIT Variable", sans-serif;
   font-size: 20px;
-  font-style: normal;
   font-weight: 400;
   line-height: 32px;
   letter-spacing: 0.5px;
@@ -32,7 +35,7 @@
 
 .ai_container {
   width: 100%;
-  height: 300px;
+  height: 250px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -40,22 +43,28 @@
 }
 
 .ai_container > .textArea {
-  margin-top: 10px;
-  display: inline-flex;
-  padding: 12px 20px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
+  margin-top: 16px;
+  padding: 12px 28px;
   border-radius: 50px;
-  border: 1px solid #fff;
+  border: none;
+  background: linear-gradient(90deg, #d450fc, #ebeaea);
+  color: rgb(46, 47, 136);
+  font-family: "SUIT Variable", "Pretendard", sans-serif;
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: 0.6px;
+  text-decoration: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ai_container > .textArea:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .ai_container > .textArea > .font {
-  color: #fff;
-  font-family: "DM Sans";
-  font-size: 15px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 24px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
   letter-spacing: 0.5px;
 }

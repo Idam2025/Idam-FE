@@ -6,18 +6,8 @@ import LogoAndAiContainer from "@/components/home/logoAndAiContainer/logoAndAiCo
 import style from "./home.module.css";
 import { motion } from "framer-motion";
 
-const backgroundVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      duration: 0.6,
-    },
-  },
-};
-
 const itemVariants = (delay: number) => ({
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 10 },
   visible: {
     opacity: 1,
     y: 0,
@@ -30,22 +20,31 @@ const itemVariants = (delay: number) => ({
 
 export default function Page() {
   return (
-    <motion.div
-      className={style.container}
-      variants={backgroundVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      {/* 요소들은 배경 위에 순차적으로 등장 */}
-      <motion.div variants={itemVariants(0.4)}>
-        <LogoAndAiContainer />
+    <div className={style.container}>
+      <div className={style.background} />
+
+      <motion.div
+        className={style.content}
+        initial="hidden"
+        animate="visible"
+        variants={{
+          visible: {
+            transition: {
+              staggerChildren: 0.2,
+            },
+          },
+        }}
+      >
+        <motion.div variants={itemVariants(0.2)}>
+          <LogoAndAiContainer />
+        </motion.div>
+        <motion.div variants={itemVariants(0.4)}>
+          <FindContainer />
+        </motion.div>
+        <motion.div variants={itemVariants(0.6)}>
+          <CompanyInfo />
+        </motion.div>
       </motion.div>
-      <motion.div variants={itemVariants(0.6)}>
-        <FindContainer />
-      </motion.div>
-      <motion.div variants={itemVariants(0.8)}>
-        <CompanyInfo />
-      </motion.div>
-    </motion.div>
+    </div>
   );
 }

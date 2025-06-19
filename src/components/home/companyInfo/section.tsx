@@ -1,32 +1,35 @@
 import Image from "next/image";
 import style from "./companyInfo.module.css";
-export default function Section() {
-  return (
-    <>
-      <div className={style.section}>
-        <div className={style.left}>
-          <div className={style.font1}>Best burger in town</div>
-          <div className={style.font2}>
-            Welcome to Burger Bliss, where we take your cravings to a whole new
-            level! Our mouthwatering burgers are made from 100% beef and are
-            served on freshly baked buns.
-          </div>
-          <div className={style.button}>
-            <div className={style.font}>Idam</div>
-          </div>
-        </div>
 
-        <div className={style.right}>
-          <div className={style.imgStyle}>
-            <Image
-              src="/Home/company/company1.png"
-              alt="example"
-              fill
-              style={{ objectFit: "contain" }}
-            />
-          </div>
+type CompanyInfoProps = {
+  title: string;
+  description: string;
+  imageSrc: string;
+};
+
+export default function CompanyInfo({
+  title,
+  description,
+  imageSrc,
+}: CompanyInfoProps) {
+  return (
+    <div className={style.section}>
+      <div className={style.left}>
+        <div className={style.font1}>{title}</div>
+        <div className={style.font2}>{description}</div>
+      </div>
+
+      <div className={style.right}>
+        <div className={style.imgStyle}>
+          <Image
+            src={imageSrc}
+            alt="company"
+            fill
+            style={{ objectFit: "contain" }}
+            sizes="(max-width: 768px) 100vw, 500px"
+          />
         </div>
       </div>
-    </>
+    </div>
   );
 }

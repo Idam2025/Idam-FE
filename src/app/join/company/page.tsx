@@ -2,8 +2,11 @@
 
 import { useState } from "react";
 import styles from "./businessJoin.module.css";
+import { useRouter } from "next/navigation";
 
 export default function BusinessJoinPage() {
+  const router = useRouter(); // ✅ 컴포넌트 최상단에서 호출
+
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -45,7 +48,7 @@ export default function BusinessJoinPage() {
       }
 
       alert("회원가입 성공!");
-      // TODO: 로그인 페이지로 이동 등
+      router.push("/join"); // ✅ 정상적으로 홈으로 이동
     } catch (err: any) {
       console.error("회원가입 에러:", err);
       alert(err.message || "오류 발생");
