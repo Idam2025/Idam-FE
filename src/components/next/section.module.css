@@ -2,14 +2,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 100vh;
-  padding: 100px 20px 60px;
+  height: 100vh;
   background: rgba(255, 255, 255, 0.02);
   backdrop-filter: blur(4px);
 }
 
 .content {
   display: flex;
+  padding-top: 200px;
   flex-direction: column;
   align-items: center;
   width: 100%;

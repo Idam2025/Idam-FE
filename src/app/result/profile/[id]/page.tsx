@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import styles from "@/components/result/profile/profile.module.css";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
+import PdfModal from "@/components/profile/PdfModal";
 
 interface StudentProfile {
   name: string;
@@ -26,11 +27,13 @@ export default function Page() {
   const id = pathname.split("/").pop();
 
   const [student, setStudent] = useState<StudentProfile | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [projectName, setProjectName] = useState("");
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null); // PDF 모달 상태
 
   useEffect(() => {
     const fetchProfile = async () => {
       if (!id) return;
-
       const accessToken = localStorage.getItem("accessToken");
       if (!accessToken) return;
 
@@ -58,7 +61,6 @@ export default function Page() {
 
   const moveChat = async () => {
     if (!id) return;
-
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
       alert("로그인이 필요합니다.");
@@ -74,12 +76,13 @@ export default function Page() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
           },
+          body: JSON.stringify({ projectName }),
         }
       );
 
-      if (!res.ok) throw new Error("채팅방 생성 실패");
-
       const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "채팅방 생성 실패");
+
       if (data.roomId) router.push(`/chat/${data.roomId}`);
     } catch (error) {
       console.error("채팅방 이동 오류:", error);
@@ -106,7 +109,10 @@ export default function Page() {
             <div className={styles.profile_font_container}>
               <div className={styles.profile_font}>{student?.name}</div>
               <div className={styles.profile_font2}>{student?.email}</div>
-              <button onClick={moveChat} className={styles.fancyButton}>
+              <button
+                onClick={() => setShowModal(true)}
+                className={styles.fancyButton}
+              >
                 Chat
               </button>
             </div>
@@ -147,36 +153,60 @@ export default function Page() {
             </div>
           </div>
 
-          {student?.portfolios && student.portfolios.length > 0 && (
-            <div className={styles.portfolioSection}>
-              <h3>포트폴리오</h3>
-              <div className={styles.portfolioGrid}>
-                {student.portfolios.map((p, i) => (
-                  <div key={i} className={styles.portfolioCard}>
-                    <div className={styles.portfolioTitle}>{p.title}</div>
-                    {p.url.endsWith(".pdf") ? (
-                      <iframe
-                        src={p.url}
-                        className={styles.portfolioPreview}
-                        title={p.title}
-                      />
-                    ) : (
-                      <a
-                        href={p.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={styles.portfolioLink}
+          {Array.isArray(student?.portfolios) &&
+            student.portfolios.length > 0 && (
+              <div className={styles.portfolioSection}>
+                <h3>포트폴리오</h3>
+                <div className={styles.portfolioGrid}>
+                  {student.portfolios.map((p, i) => (
+                    <div key={i} className={styles.portfolioCard}>
+                      <div className={styles.portfolioTitle}>{p.title}</div>
+                      <div
+                        onClick={() => setPdfUrl(p.url)}
+                        className={styles.portfolioPreviewWrapper}
                       >
-                        {p.url}
-                      </a>
-                    )}
-                  </div>
-                ))}
+                        {p.url.endsWith(".pdf") ? (
+                          <iframe
+                            src={p.url}
+                            className={styles.portfolioPreview}
+                            title={p.title}
+                          />
+                        ) : (
+                          <img
+                            src={p.url}
+                            alt={p.title}
+                            className={styles.portfolioPreview}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
       </div>
+
+      {showModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <h2>프로젝트명을 입력해주세요</h2>
+            <input
+              type="text"
+              value={projectName}
+              onChange={(e) => setProjectName(e.target.value)}
+              className={styles.modalInput}
+              placeholder="예: 반응형 웹 리뉴얼"
+            />
+            <div className={styles.modalButtons}>
+              <button onClick={() => setShowModal(false)}>취소</button>
+              <button onClick={moveChat}>확인</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {pdfUrl && <PdfModal url={pdfUrl} onClose={() => setPdfUrl(null)} />}
     </div>
   );
 }
