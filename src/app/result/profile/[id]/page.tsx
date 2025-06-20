@@ -29,7 +29,7 @@ export default function Page() {
   const [student, setStudent] = useState<StudentProfile | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [projectName, setProjectName] = useState("");
-  const [pdfUrl, setPdfUrl] = useState<string | null>(null); // PDF 모달 상태
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProfile = async () => {

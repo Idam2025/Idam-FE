@@ -148,7 +148,7 @@ export default function StudentJoinPage() {
             className={styles.selectField}
             required
           >
-            <option value="">관심 카테고리 선택</option>
+            <option value="">자신이 속한 전공 카테고리 선택</option>
             <option value="IT·프로그래밍">IT·프로그래밍</option>
             <option value="디자인">디자인</option>
             <option value="마케팅">마케팅</option>

@@ -197,3 +197,11 @@
   transform: translateY(-4px);
   color: #7b95b7;
 }
+
+.loginItem {
+  font-size: 20px !important;
+  color: #ffffff !important;
+  font-weight: 500 !important;
+  margin-right: 30px !important;
+  cursor: pointer;
+}
