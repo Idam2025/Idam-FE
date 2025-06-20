@@ -42,6 +42,17 @@
   gap: 10px;
   width: 100%;
 }
+.chatListBox {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  width: 360px;
+  min-height: 300px;
+  overflow: hidden;
+  transition: height 0.5s ease;
+}
 
 .chatItemBox {
   display: flex;
@@ -237,4 +248,106 @@
   outline: none;
   border-color: #4a90e2;
   background-color: #2a2a2a;
+}
+
+.page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: url("/chat/galaxy.gif") center/cover no-repeat;
+  z-index: 0;
+  animation: pulse 30s infinite linear;
+  opacity: 0.9;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  100% {
+    transform: scale(1.05) rotate(0.3deg);
+  }
+}
+
+.chatListBox {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  width: 380px;
+  height: 80vh;
+  overflow-y: auto;
+}
+
+.title {
+  color: white;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.chatList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.chatItem {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.chatItem:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.avatar {
+  border-radius: 50%;
+}
+
+.name {
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.lastMessage {
+  color: #dddddd;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.chatViewBox {
+  position: relative;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  width: 100%;
+  height: 100vh;
+  background: rgba(30, 30, 40, 0.95);
+  border-radius: 24px 24px 0 0;
+  padding: 20px;
+  box-shadow: 0px -4px 20px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
 }

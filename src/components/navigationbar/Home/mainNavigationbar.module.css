@@ -24,15 +24,20 @@
 
 .font {
   width: 50px;
-  color: var(--Neutral-10, #486284);
+  color: var(--Neutral-10, #6686b0);
   text-align: center;
 
   font-family: "DM Sans";
   font-size: 16px;
   font-style: normal;
-  font-weight: 400;
+  font-weight: bold;
   line-height: 24px;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+.font:hover {
+  background-color: transparent;
+  transform: translateY(-4px);
 }
 
 .login_container {

@@ -49,10 +49,10 @@ export default function NavigationBar() {
     try {
       const accessToken = localStorage.getItem("accessToken");
       const deviceId = localStorage.getItem("deviceId");
-      if (!accessToken || !deviceId)
-        return alert(
-          "\uB85C\uADF8\uC544\uC6C3 \uC815\uBCF4\uAC00 \uBD80\uC871\uD569\uB2C8\uB2E4."
-        );
+      if (!accessToken || !deviceId) {
+        return alert("로그아웃 정보가 부족합니다.");
+      }
+
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/logout`, {
         method: "POST",
         headers: {
@@ -62,19 +62,17 @@ export default function NavigationBar() {
         credentials: "include",
         body: JSON.stringify({ deviceId }),
       });
+
       const data = await res.json();
-      if (!res.ok || !data.success)
-        throw new Error(
-          data?.message || "\uB85C\uADF8\uC544\uC6C3 \uC2E4\uD328"
-        );
+      if (!res.ok || !data.success) {
+        throw new Error(data?.message || "로그아웃 실패");
+      }
+
       removeToken();
-      alert("\uB85C\uADF8\uC544\uC6C3 \uC131\uACF5!");
+      alert("로그아웃 성공!");
       router.push("/");
     } catch (err: any) {
-      alert(
-        err.message ||
-          "\uB85C\uADF8\uC544\uC6C3 \uC911 \uC624\uB958 \uBC1C\uC0DD"
-      );
+      alert(err.message || "로그아웃 중 오류 발생");
     }
   };
 
@@ -104,18 +102,13 @@ export default function NavigationBar() {
           {text}
         </div>
       );
-    } else {
-      return (
-        <div
-          className={`${style.font} ${
-            text === "\uD504\uB85C\uD544" ? style.profile : ""
-          }`}
-          onClick={onClick}
-        >
-          {text}
-        </div>
-      );
     }
+
+    return (
+      <div className={style.font} onClick={onClick}>
+        {text}
+      </div>
+    );
   };
 
   const Dropdown = ({
@@ -159,13 +152,13 @@ export default function NavigationBar() {
           (isLoggedIn ? (
             <>
               <div className="profileWrapper">
-                <NavItem
-                  text="\uD504\uB85C\uD544"
-                  onClick={toggleProfileDropdown}
-                />
+                <NavItem text="프로필" onClick={toggleProfileDropdown} />
                 <Dropdown
-                  isOpen={showMenuDropdown}
-                  items={[{ label: "채팅방 이동", onClick: handleChat }]}
+                  isOpen={showProfileDropdown}
+                  items={[
+                    { label: "내 정보 수정", onClick: handleEditProfile },
+                    { label: "로그아웃", onClick: handleLogout },
+                  ]}
                 />
               </div>
 
@@ -175,7 +168,7 @@ export default function NavigationBar() {
               >
                 <img
                   src="/usual/logo.svg"
-                  alt="\uC54C\uB9BC"
+                  alt="알림"
                   className={style.notificationIcon}
                 />
               </div>
@@ -190,7 +183,7 @@ export default function NavigationBar() {
                   isOpen={showMenuDropdown}
                   items={[
                     {
-                      label: "\uCC44\uD305\uBC29 \uC774\uB3D9",
+                      label: "채팅방",
                       onClick: handleChat,
                     },
                   ]}

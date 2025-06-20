@@ -1,162 +1,127 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import styles from "@/components/chat/chat.module.css";
-import ChatView from "@/components/chat/ChatView";
-import { useChatStore } from "@/stores/useChatStore";
+import { useState, useRef } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import styles from "@/components/chat/chat.module.css";
 
 interface ChatItem {
   id: number;
   name: string;
-  lastMessage: string;
   avatar: string;
 }
 
-function Sidebar({
-  chats,
-  onSelectChat,
-}: {
-  chats: ChatItem[];
-  onSelectChat: (chat: ChatItem) => void;
-}) {
-  const router = useRouter();
-  const lastMessages = useChatStore((s) => s.lastMessagesByChatId);
-
-  return (
-    <div className={styles.sidebar}>
-      <div className={styles.fontSpace}>
-        <input
-          type="text"
-          placeholder="채팅 검색"
-          className={styles.searchInput}
-        />
-        <div className={styles.chatList}>
-          {chats.map((chat) => (
-            <div
-              key={chat.id}
-              className={styles.chatItemBox}
-              onClick={() => onSelectChat(chat)}
-            >
-              <Image
-                src={chat.avatar}
-                alt={chat.name}
-                width={32}
-                height={32}
-                className={styles.chatAvatarRounded}
-              />
-              <div className={styles.chatTextBright}>
-                <div className={styles.chatName}>{chat.name}</div>
-                <div className={styles.chatLast}>
-                  {lastMessages[chat.id] ??
-                    chat.lastMessage ??
-                    "대화를 시작해보세요!"}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className={styles.lowfontSpace}>
-        <div className={styles.font1}>설정</div>
-        <div className={styles.font1} onClick={() => router.push(`/chat`)}>
-          뒤로가기
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function EmptyChatView() {
-  return (
-    <div className={styles.container_right}>
-      <div className={styles.container_right_up}></div>
-      <div className={styles.chatPlace}>
-        <Image src="/usual/logo.svg" alt="로고" width={61} height={57} />
-        <div className={styles.comment}>
-          {["Chats", "Star", "ShieldWarning"].map((icon, i) => (
-            <div className={styles.frame} key={icon + i}>
-              <div className={styles.top}>
-                <Image
-                  src={`/chatplace/${icon}.svg`}
-                  alt={icon}
-                  width={32}
-                  height={32}
-                />
-                {[1, 2, 3].map((n) => (
-                  <div key={n} className={styles.fontFrame}>
-                    "Got any creative ideas for a 10 year old's birthday?"
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className={styles.chatBarPlace}>
-        <div className={styles.chatBar}>
-          <Image
-            src="/chatplace/Image.svg"
-            alt="image"
-            width={20}
-            height={20}
-          />
-          <input placeholder="message" className={styles.darkInput} />
-        </div>
-      </div>
-    </div>
-  );
-}
+const dummyChat: ChatItem = {
+  id: 1,
+  name: "SpaceBot",
+  avatar: "/profile/default.png",
+};
 
 export default function ChatPage() {
-  const [chatList, setChatList] = useState<ChatItem[]>([]);
   const [selectedChat, setSelectedChat] = useState<ChatItem | null>(null);
+  const subscriptionRef = useRef<any>(null);
 
-  useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    const userType = localStorage.getItem("userType");
-    if (!accessToken || !userType) return;
+  const subscribeToRoom = (roomId: number) => {
+    if (!(window as any).stompClient?.connected) {
+      console.warn("❌ 웹소켓 연결 안 됨");
+      return;
+    }
 
-    const fetchChats = async () => {
-      try {
-        const endpoint =
-          userType === "STUDENT"
-            ? "/api/chat/rooms/student"
-            : "/api/chat/rooms/company";
+    if (subscriptionRef.current) {
+      subscriptionRef.current.unsubscribe();
+      console.log("🔄 이전 구독 해제");
+    }
 
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}${endpoint}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-
-        if (!res.ok) throw new Error("채팅방 목록 로딩 실패");
-
-        const data = await res.json();
-        const chats = data.map((item: any) => ({
-          id: item.roomId,
-          name: item.opponentName,
-          lastMessage: item.lastMessage || "새로운 채팅입니다",
-          avatar: item.opponentProfileImage || "/profile/default.png",
-        }));
-
-        setChatList(chats);
-      } catch (err) {
-        console.error(err);
+    const subscription = (window as any).stompClient.subscribe(
+      `/sub/chat/room/${roomId}`,
+      (message: any) => {
+        const parsed = JSON.parse(message.body);
+        console.log(`📩 [room ${roomId}] 새 메시지:`, parsed);
       }
-    };
+    );
 
-    fetchChats();
-  }, []);
+    subscriptionRef.current = subscription;
+    console.log(`✅ roomId: ${roomId} 구독 완료`);
+  };
+
+  const handleClick = (chat: ChatItem) => {
+    subscribeToRoom(chat.id); // ✅ STOMP 구독
+    setSelectedChat(chat); // ✅ SPA 화면 전환
+  };
 
   return (
-    <div className={styles.container}>
-      <Sidebar chats={chatList} onSelectChat={setSelectedChat} />
-      {selectedChat ? <ChatView chat={selectedChat} /> : <EmptyChatView />}
+    <div className={styles.page}>
+      <div className={styles.background} />
+
+      {/* 채팅 목록 */}
+      <motion.div
+        className={styles.chatListBox}
+        animate={{
+          x: selectedChat ? "-30vw" : "0vw",
+          height: selectedChat ? "100vh" : "200px",
+        }}
+        transition={{ duration: 0.5 }}
+      >
+        <h2 className={styles.title}>채팅 목록</h2>
+        <motion.div
+          key={dummyChat.id}
+          className={styles.chatItem}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={() => handleClick(dummyChat)} // ✅ 페이지 이동 제거
+        >
+          <Image
+            src={dummyChat.avatar}
+            alt={dummyChat.name}
+            width={40}
+            height={40}
+            className={styles.avatar}
+          />
+          <div>
+            <div className={styles.name}>{dummyChat.name}</div>
+            <div className={styles.lastMessage}>우주에 대해 알려줘!</div>
+          </div>
+        </motion.div>
+      </motion.div>
+
+      {/* 채팅창 뷰 */}
+      <AnimatePresence>
+        {selectedChat && (
+          <motion.div
+            key="chatView"
+            className={styles.chatViewBox}
+            initial={{ y: 200, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 200, opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className={styles.chatHeader}>
+              <Image
+                src={selectedChat.avatar}
+                alt={selectedChat.name}
+                width={36}
+                height={36}
+                className={styles.avatar}
+              />
+              <span className={styles.name}>{selectedChat.name}</span>
+            </div>
+
+            <div className={styles.chatMessages}>
+              {/* 메시지 예시 */}
+              <div className={styles.theirMessage}>안녕하세요!</div>
+              <div className={styles.myMessage}>안녕 SpaceBot!</div>
+            </div>
+
+            <div className={styles.chatInputBar}>
+              <input
+                className={styles.chatInput}
+                placeholder="메시지를 입력하세요"
+              />
+              <button className={styles.sendBtn}>전송</button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
