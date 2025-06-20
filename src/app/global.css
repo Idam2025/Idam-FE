@@ -11,10 +11,9 @@ body {
   margin: 0;
   padding: 0;
   background: url("/usual/resized_image.png") no-repeat center center fixed;
-  background-size: cover; /* 이미지 로딩 전 기본 배경 */
+  background-size: cover;
   color: white;
   font-family: "DM Sans", sans-serif;
-  overflow-y: scroll;
 }
 
 main {
