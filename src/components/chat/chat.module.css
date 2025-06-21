@@ -7,7 +7,7 @@
 
 .background {
   position: absolute;
-  inset: 0; /* top: 0; right: 0; bottom: 0; left: 0; 와 동일 */
+  inset: 0;
   background-image: url("/usual/resized_image.png");
   background-position: center;
   background-size: cover;
@@ -17,7 +17,7 @@
   opacity: 0.9;
   will-change: transform;
   transform-origin: center;
-  pointer-events: none; /* 불필요한 클릭 방지 */
+  pointer-events: none;
   height: 100%;
 }
 
@@ -182,4 +182,27 @@
   color: white;
   border: none;
   cursor: pointer;
+}
+
+.chatListBox::-webkit-scrollbar,
+.chatMessages::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chatListBox::-webkit-scrollbar-track,
+.chatMessages::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 8px;
+}
+
+.chatListBox::-webkit-scrollbar-thumb,
+.chatMessages::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+
+.chatListBox::-webkit-scrollbar-thumb:hover,
+.chatMessages::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
 }

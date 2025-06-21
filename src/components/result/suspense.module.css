@@ -1,141 +1,132 @@
 .container {
-  width: auto;
+  width: 100%;
   height: 100vh;
-  background-image: url("/usual/resultPage.png");
-  background-size: cover;
-  overflow: hidden;
-  background-position: center;
-  background-repeat: repeat;
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+    url("/usual/resultPage.png") center/cover no-repeat;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  padding: 80px;
+  box-sizing: border-box;
 }
 
 .textContainer {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding-left: 150px;
-  gap: 50px;
-  margin-top: -300px;
-  margin: auto 0;
+  gap: 40px;
+  color: white;
 }
 
-.textContainer > .font1 {
-  color: #fff;
-  font-feature-settings: "liga" off, "clig" off;
-  font-family: Futura-Heavy;
-  font-size: 36px;
-  font-style: normal;
+.font1 {
+  display: flex;
+  align-items: center;
+  font-family: Futura-Heavy, sans-serif;
+  font-size: 38px;
   font-weight: 900;
-  line-height: 46px; /* 127.778% */
+  gap: 15px;
 }
 
-.textContainer > .font2 {
-  color: var(--Color, #c3c3c3);
-  font-feature-settings: "liga" off, "clig" off;
-
-  /* Body/Default */
-  font-family: "DM Sans";
+.font2 {
+  color: #c3c3c3;
+  font-family: "DM Sans", sans-serif;
   font-size: 18px;
-  font-style: normal;
   font-weight: 400;
-  line-height: 30px; /* 166.667% */
+  line-height: 30px;
 }
 
-.textContainer > .button {
-  padding-top: 400px;
-  color: #fff5f5;
-  font-feature-settings: "liga" off, "clig" off;
-
-  /* Text single/200/Bold */
-  font-family: "DM Sans";
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 18px; /* 100% */
-  justify-content: center;
-  align-items: center;
+.button {
+  margin-top: 20px;
 }
 
 .group {
-  display: flex;
-  justify-content: center;
+  display: inline-flex;
   align-items: center;
-  pointer-events: auto;
-  z-index: 100;
+  gap: 10px;
+  padding: 12px 20px;
+  background-color: #7f72f5;
+  color: white;
+  border-radius: 8px;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.imgContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: auto 0;
-  margin-right: 100px;
-}
-
-.imgContainer > .imgSample {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 328.395px;
-  height: 415.966px;
-  flex-shrink: 0;
-  border-radius: 15.922px;
-  background: var(--Neutral-Colors-Color-300, #f9f9ff);
-}
-
-.imgContainer > .font {
-  color: var(--Neutral-Colors-Headings-Black, #5d5a88);
-  font-feature-settings: "liga" off, "clig" off;
-
-  /* Special headings/Display 4 */
-  font-family: "DM Sans";
-  font-size: 28px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 38px; /* 135.714% */
-  margin-right: auto;
-  margin-top: 20px;
+.group:hover {
+  background-color: #645cc6;
 }
 
 .right {
   display: flex;
-  margin-left: auto;
+  gap: 40px;
+}
+
+.imgLine1,
+.imgLine2 {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  animation: float 4s ease-in-out infinite alternate;
 }
 
 .imgLine1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: -200px;
-  animation: moveUpDown1 4s ease-in-out infinite alternate;
+  animation: flowUp 10s linear infinite;
 }
 
 .imgLine2 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 200px;
-  animation: moveUpDown2 4s ease-in-out infinite alternate;
+  animation: flowDown 10s linear infinite;
 }
 
-@keyframes moveUpDown1 {
+.imgContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.imgSample {
+  width: 328px;
+  height: 416px;
+  background-color: #f9f9ff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.imgSample:hover {
+  transform: scale(1.03);
+}
+
+.font {
+  margin-top: 16px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #fff;
+}
+
+@keyframes flowUp {
   0% {
-    transform: translateY(0);
+    transform: translateY(100vh);
   }
   100% {
-    transform: translateY(-30px);
+    transform: translateY(-100vh);
   }
 }
 
-@keyframes moveUpDown2 {
+/* 위에서 아래로 (Line2) */
+@keyframes flowDown {
   0% {
-    transform: translateY(0);
+    transform: translateY(-100vh);
   }
   100% {
-    transform: translateY(30px);
+    transform: translateY(100vh);
   }
 }

@@ -31,6 +31,54 @@ const dummyChats: ChatItem[] = [
     project: "AI 자동분류기",
     avatar: "/profile/default.png",
   },
+  {
+    id: 3,
+    name: "박유니",
+    project: "AI 자동분류기",
+    avatar: "/profile/default.png",
+  },
+  {
+    id: 3,
+    name: "박유니",
+    project: "AI 자동분류기",
+    avatar: "/profile/default.png",
+  },
+  {
+    id: 3,
+    name: "박유니",
+    project: "AI 자동분류기",
+    avatar: "/profile/default.png",
+  },
+  {
+    id: 3,
+    name: "박유니",
+    project: "AI 자동분류기",
+    avatar: "/profile/default.png",
+  },
+  {
+    id: 3,
+    name: "박유니",
+    project: "AI 자동분류기",
+    avatar: "/profile/default.png",
+  },
+  {
+    id: 3,
+    name: "박유니",
+    project: "AI 자동분류기",
+    avatar: "/profile/default.png",
+  },
+  {
+    id: 3,
+    name: "박유니",
+    project: "AI 자동분류기",
+    avatar: "/profile/default.png",
+  },
+  {
+    id: 3,
+    name: "박유니",
+    project: "AI 자동분류기",
+    avatar: "/profile/default.png",
+  },
 ];
 
 export default function ChatPage() {

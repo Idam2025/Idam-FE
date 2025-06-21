@@ -4,19 +4,19 @@ import Link from "next/link";
 
 const categories = [
   {
-    img: "/ImgContainer/design.avif",
+    img: "/imgContainer/design.avif",
     alt: "디자인",
     label: "디자인",
     desc: "디자인 카테고리로 검색을 시도합니다.",
   },
   {
-    img: "/ImgContainer/programming.jpg",
+    img: "/imgContainer/programming.jpg",
     alt: "프로그래밍",
     label: "IT·프로그래밍",
     desc: "IT 카테고리로 검색을 시도합니다.",
   },
   {
-    img: "/ImgContainer/marketing.jpg",
+    img: "/imgContainer/marketing.jpg",
     alt: "마케팅",
     label: "마케팅",
     desc: "마케팅 카테고리로 검색을 시도합니다.",

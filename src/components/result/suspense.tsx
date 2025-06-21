@@ -7,7 +7,7 @@ export default function SuspensePage() {
   const router = useRouter();
   const moveHome = () => {
     console.log("clicked");
-    router.push("/");
+    router.push("/ai-helper");
   };
   const Left = () => {
     return (
@@ -16,10 +16,9 @@ export default function SuspensePage() {
           <Image src="/usual/AI.svg" alt="AI" width={51} height={51} /> Working
           ...
         </div>
-        <div className={style.font2}>로딩중</div>
         <div className={style.button}>
           <div className={style.group} onClick={moveHome}>
-            Home
+            Cancel
             <Image src="/usual/arrow.svg" alt="arrow" width={20} height={20} />
           </div>
         </div>
@@ -27,13 +26,13 @@ export default function SuspensePage() {
     );
   };
 
-  const imgSample = (text: string, hide: boolean) => {
+  const imgSample = (text: string, hide: boolean, imgAddress: string) => {
     if (hide) return null;
 
     return (
       <div className={style.imgContainer}>
         <div className={style.imgSample}>
-          <Image src="/usual/example2.svg" alt="ex" width={92} height={81} />
+          <Image src={imgAddress} alt="ex" width={328.395} height={415.966} />
         </div>
         <div className={style.font}>{text}</div>
       </div>
@@ -46,12 +45,12 @@ export default function SuspensePage() {
         {Left()}
         <div className={style.right}>
           <div className={style.imgLine1}>
-            {imgSample("John Carther", false)}
-            {imgSample("John Carther", false)}
+            {imgSample("John Carther", false, "/suspense/suspenseImg1.png")}
+            {imgSample("John Carther", false, "/suspense/suspenseImg2.png")}
           </div>
           <div className={style.imgLine2}>
-            {imgSample("하주", false)}
-            {imgSample("하주", false)}
+            {imgSample("아아", false, "/suspense/suspenseImg3.png")}
+            {imgSample("하주", false, "/suspense/suspenseImg4.png")}
           </div>
         </div>
       </div>
