@@ -5,10 +5,30 @@ import { motion } from "framer-motion";
 import styles from "./section.module.css";
 import ProfileClientModal from "@/components/modal/ProfileClientModal";
 import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function ResultSection({ data }: { data: any[] }) {
   const fallback = "/profile/default.png";
   const sortedStudents = [...(data ?? [])].sort((a, b) => b.score - a.score);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [isLoading, setIsLoading] = useState(false);
+  const handleSeeMore = () => {
+    const domain = searchParams.get("domain");
+    const prompt = searchParams.get("prompt");
+
+    console.log("🔁 See more clicked!", { domain, prompt });
+
+    if (!domain || !prompt) {
+      alert("❗ 도메인 또는 프롬프트 정보가 없습니다.");
+      router.push("/ai-helper/next");
+      return;
+    }
+
+    const encodedDomain = encodeURIComponent(domain);
+    const encodedPrompt = encodeURIComponent(prompt);
+    router.push(`/suspense?domain=${encodedDomain}&prompt=${encodedPrompt}`);
+  };
 
   const rankedStudents = sortedStudents.map((student, index) => ({
     ...student,
@@ -27,14 +47,27 @@ export default function ResultSection({ data }: { data: any[] }) {
             They are passionate and skilled professionals, ready to bring your
             vision to life through creativity, technology, and collaboration.
           </div>
-          <div className={styles.group}>
-            <div className={styles.font3}>See more</div>
-            <Image
-              src="/usual/arrow2.svg"
-              alt="arrow2"
-              width={20}
-              height={20}
-            />
+          <div
+            className={styles.group}
+            onClick={handleSeeMore}
+            style={{
+              opacity: isLoading ? 0.6 : 1,
+              pointerEvents: isLoading ? "none" : "auto",
+            }}
+          >
+            {isLoading ? (
+              <div className={styles.loader}></div>
+            ) : (
+              <>
+                <div className={styles.font3}>See more</div>
+                <Image
+                  src="/usual/arrow2.svg"
+                  alt="arrow2"
+                  width={20}
+                  height={20}
+                />
+              </>
+            )}
           </div>
         </div>
 

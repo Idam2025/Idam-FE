@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import ResultSection from "@/components/result/section";
 import SuspensePage from "@/components/result/suspense";
-
+import { useRouter } from "next/navigation";
 import styles from "./section.module.css";
 
 type Props = {
@@ -13,21 +13,21 @@ type Props = {
 
 export default function ClientResultPage({ domain, prompt }: Props) {
   const [data, setData] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchAiMatchResult = async () => {
       if (!domain || !prompt) {
-        setError("❗ 도메인 또는 프롬프트 누락");
-        setLoading(false);
+        alert("❗ 도메인 또는 프롬프트가 누락되었습니다.");
+        router.push("/");
         return;
       }
 
       const accessToken = localStorage.getItem("accessToken");
       if (!accessToken) {
-        setError("❗ 로그인 정보가 없습니다.");
-        setLoading(false);
+        alert("❗ 로그인 정보가 없습니다. 홈으로 이동합니다.");
+        router.push("/");
         return;
       }
 
@@ -47,7 +47,8 @@ export default function ClientResultPage({ domain, prompt }: Props) {
         if (!res.ok) {
           const errText = await res.text();
           console.error("🚨 API Error Response:", errText);
-          setError("❗ AI 매칭 요청 실패");
+          alert("❗ AI 매칭 요청에 실패했습니다. 홈으로 이동합니다.");
+          router.push("/");
           return;
         }
 
@@ -56,17 +57,19 @@ export default function ClientResultPage({ domain, prompt }: Props) {
         setData(result.data);
       } catch (err: any) {
         console.error("🚨 예외 발생:", err);
-        setError(err.message || "❗ 알 수 없는 에러 발생");
+        alert(
+          err.message || "❗ 알 수 없는 오류가 발생했습니다. 홈으로 이동합니다."
+        );
+        router.push("/");
       } finally {
         setLoading(false);
       }
     };
 
     fetchAiMatchResult();
-  }, [domain, prompt]);
+  }, [domain, prompt, router]);
 
   if (loading) return <SuspensePage />;
-  if (error) return <div className={styles.errorMessage}>{error}</div>;
   if (!data || data.length === 0)
     return <div className={styles.emptyMessage}>매칭 결과가 없습니다.</div>;
 

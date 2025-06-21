@@ -1,14 +1,12 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { flushSync } from "react-dom";
 import { useRouter, useSearchParams } from "next/navigation";
 import styles from "./ChatSection.module.css";
 
 export default function ChatInput() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -37,17 +35,18 @@ export default function ChatInput() {
   const postPrompt = async () => {
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
-      setErrorMsg("Access Token이 없습니다.");
+      alert("Access Token이 없습니다. 홈으로 이동합니다.");
+      router.push("/");
       return;
     }
 
     if (!input.trim()) {
-      setErrorMsg("프롬프트 내용을 입력해주세요.");
+      alert("요청사항을 입력해주세요.");
       return;
     }
 
     if (!domain) {
-      setErrorMsg("도메인 정보가 없습니다. 다시 선택해주세요.");
+      alert("카테고리 정보가 없습니다. 카테고리 선택 창으로 이동합니다.");
       router.push("/ai-helper/next");
       return;
     }
@@ -73,7 +72,9 @@ export default function ChatInput() {
 
       if (!response.ok) {
         const err = await response.json();
-        throw new Error(err?.message || "AI 매칭 요청 실패");
+        alert(err?.message || "AI 매칭 요청 실패. 홈으로 이동합니다.");
+        router.push("/");
+        return;
       }
 
       const encodedDomain = encodeURIComponent(domain);
@@ -81,7 +82,8 @@ export default function ChatInput() {
       router.push(`/result?domain=${encodedDomain}&prompt=${encodedPrompt}`);
     } catch (err: any) {
       console.error(err);
-      setErrorMsg(err.message || "AI 요청 처리 중 오류 발생");
+      alert(err.message || "AI 요청 처리 중 오류 발생. 홈으로 이동합니다.");
+      router.push("/");
     } finally {
       setIsLoading(false);
       resetInput();
@@ -98,17 +100,17 @@ export default function ChatInput() {
   };
 
   const handleSend = async () => {
-    setErrorMsg("");
-
     const trimmed = input.trim();
 
     if (!trimmed) {
-      setErrorMsg("프롬프트 내용을 입력해주세요.");
+      alert("요청사항을 입력해주세요.");
       return;
     }
 
     if (!domain) {
-      setErrorMsg("도메인 정보가 없습니다. 다시 선택해주세요.");
+      alert(
+        "카테고리를 선택하지 않으셨습니다. 카테고리 선택 창으로 이동합니다."
+      );
       router.push("/ai-helper/next");
       return;
     }
@@ -136,8 +138,6 @@ export default function ChatInput() {
 
   return (
     <div className={styles.container}>
-      {errorMsg && <div className={styles.error}>{errorMsg}</div>}
-
       <div className={styles.inputBox}>
         <textarea
           ref={textareaRef}
