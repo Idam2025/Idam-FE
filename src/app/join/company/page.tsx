@@ -5,7 +5,7 @@ import styles from "./businessJoin.module.css";
 import { useRouter } from "next/navigation";
 
 export default function BusinessJoinPage() {
-  const router = useRouter(); // ✅ 컴포넌트 최상단에서 호출
+  const router = useRouter();
 
   const [form, setForm] = useState({
     email: "",
@@ -48,7 +48,7 @@ export default function BusinessJoinPage() {
       }
 
       alert("회원가입 성공!");
-      router.push("/join"); // ✅ 정상적으로 홈으로 이동
+      router.push("/join");
     } catch (err: any) {
       console.error("회원가입 에러:", err);
       alert(err.message || "오류 발생");
@@ -120,14 +120,7 @@ export default function BusinessJoinPage() {
             onChange={handleChange}
             className={styles.inputField}
           />
-          <input
-            type="text"
-            name="profileImage"
-            placeholder="프로필 이미지 URL"
-            value={form.profileImage}
-            onChange={handleChange}
-            className={styles.inputField}
-          />
+
           <button type="submit" className={styles.submitButton}>
             회원가입
           </button>

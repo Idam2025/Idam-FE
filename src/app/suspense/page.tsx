@@ -1,6 +1,10 @@
-"use client";
-import SuspensePage from "@/components/result/suspense";
+import { Suspense } from "react";
+import SuspenseClient from "@/components/result/suspense";
 
 export default function Page() {
-  return <SuspensePage />;
+  return (
+    <Suspense fallback={<div>로딩 중...</div>}>
+      <SuspenseClient />
+    </Suspense>
+  );
 }

@@ -37,10 +37,10 @@
   position: relative;
   width: 500px;
   padding: 48px 32px;
-  background: rgba(255, 255, 255, 0.92);
+  background: linear-gradient(rgba(112, 72, 132, 0.254), transparent);
   backdrop-filter: blur(8px);
   border-radius: 16px;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+  box-shadow: 1px 1px 80px rgb(192, 176, 209);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -54,7 +54,7 @@
 .font1 {
   font-size: 28px;
   font-weight: 800;
-  color: #3f497f;
+  color: #ffffff;
 }
 
 .font2 {
@@ -149,4 +149,8 @@
 
 .signupButton:hover {
   color: #4a5de1;
+}
+
+.signupText {
+  color: #888;
 }

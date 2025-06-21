@@ -109,7 +109,7 @@ export default function Page() {
           </button>
         </form>
         <div className={style.signupBox}>
-          <span>계정이 없으신가요?</span>
+          <span className={style.signupText}>계정이 없으신가요?</span>
           <button onClick={moveSignup} className={style.signupButton}>
             회원가입
           </button>

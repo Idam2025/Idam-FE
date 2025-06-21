@@ -10,17 +10,18 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-color: rgba(0, 0, 0, 0.4); /* 어두운 오버레이 효과 */
-  backdrop-filter: blur(2px); /* 흐림 효과 */
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
 }
 
 .container {
-  width: 500px;
+  width: 30%;
+  height: 70vh;
   margin: 0 auto;
   padding: 40px 30px;
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: linear-gradient(transparent, rgb(162, 47, 215));
   border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
 }
 
 .title {
@@ -28,13 +29,39 @@
   font-weight: 700;
   margin-bottom: 24px;
   text-align: center;
-  color: #2c2c2c;
+  color: #ffffff;
 }
 
 .form {
   display: flex;
   flex-direction: column;
   gap: 18px;
+  height: 80%;
+  width: 100%;
+  overflow-y: auto;
+}
+/* 전체 스크롤바 스타일 */
+.form::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* 스크롤 트랙(배경) */
+.form::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+/* 스크롤 핸들(움직이는 부분) */
+.form::-webkit-scrollbar-thumb {
+  background-color: rgba(121, 120, 157, 0.835); /* 보라색 계열 반투명 */
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* 스크롤 핸들 hover 시 */
+.form::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(76, 74, 124, 0.9);
 }
 
 .inputField {
@@ -60,9 +87,10 @@
 }
 
 .submitButton {
-  background-color: #4c4a7c;
+  background-color: #9790f5;
   color: #ffffff;
   padding: 14px;
+  padding-bottom: 10px;
   border: none;
   font-weight: 600;
   border-radius: 10px;
@@ -71,5 +99,5 @@
 }
 
 .submitButton:hover {
-  background-color: #3b3966;
+  background-color: #826fff;
 }
