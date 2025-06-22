@@ -24,7 +24,7 @@ interface StudentProfile {
 export default function Page() {
   const router = useRouter();
   const pathname = usePathname();
-  const id = pathname.split("/").pop();
+  const id = pathname ? pathname.split("/").pop() ?? "" : "";
 
   const [student, setStudent] = useState<StudentProfile | null>(null);
   const [showModal, setShowModal] = useState(false);

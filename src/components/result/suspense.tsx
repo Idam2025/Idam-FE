@@ -9,8 +9,8 @@ export default function SuspensePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const domain = searchParams.get("domain");
-  const prompt = searchParams.get("prompt");
+  const domain = searchParams?.get("domain") ?? "";
+  const prompt = searchParams?.get("prompt") ?? "";
 
   useEffect(() => {
     if (!domain || !prompt) {

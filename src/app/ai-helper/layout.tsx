@@ -7,8 +7,8 @@ import { ReactNode, Suspense } from "react";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-
-  const hideNavbar = pathname.startsWith("/ai-helper/next");
+  const hideNavbar =
+    pathname !== null && pathname.startsWith("/ai-helper/next");
 
   return (
     <div>

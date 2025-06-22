@@ -5,6 +5,7 @@ import style from "@/components/join/join.module.css";
 import { useRouter } from "next/navigation";
 import { useDeviceId } from "@/hooks/useDeviceId";
 import { useAccessToken } from "@/hooks/useAccessToken";
+import { jwtDecode } from "jwt-decode";
 
 export default function Page() {
   const router = useRouter();
@@ -42,10 +43,24 @@ export default function Page() {
         const errorData = await res.json();
         throw new Error(errorData?.message || "로그인 실패");
       }
+
       const data = await res.json();
       console.log("전체 응답 데이터:", data);
+
+      // accessToken 저장
       saveToken(data.accessToken);
       document.cookie = `accessToken=${data.accessToken}; path=/; SameSite=Lax`;
+
+      // tokenExp 저장 (accessToken을 디코딩)
+      try {
+        const decoded = jwtDecode<{ exp: number }>(data.accessToken);
+        const exp = decoded.exp * 1000; // 초 → 밀리초
+        localStorage.setItem("tokenExp", exp.toString());
+        console.log("🔐 tokenExp 설정 완료:", exp);
+      } catch (e) {
+        console.error("⚠️ AccessToken 디코딩 실패:", e);
+      }
+
       if (data.userId) {
         localStorage.setItem("userId", data.userId);
       } else {

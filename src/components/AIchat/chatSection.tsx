@@ -11,7 +11,7 @@ export default function ChatInput() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const domain = searchParams.get("domain");
+  const domain = searchParams?.get("domain") ?? "";
 
   useEffect(() => {
     autoResize();

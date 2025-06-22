@@ -14,8 +14,8 @@ export default function ResultSection({ data }: { data: any[] }) {
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const handleSeeMore = () => {
-    const domain = searchParams.get("domain");
-    const prompt = searchParams.get("prompt");
+    const domain = searchParams?.get("domain") ?? "";
+    const prompt = searchParams?.get("prompt") ?? "";
 
     console.log("🔁 See more clicked!", { domain, prompt });
 

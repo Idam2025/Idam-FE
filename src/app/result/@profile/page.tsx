@@ -8,7 +8,7 @@ import { Student } from "@/types/student";
 export default function ProfileModal() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const id = searchParams.get("profile");
+  const id = searchParams?.get("profile") ?? "";
 
   const [student, setStudent] = useState<Student | null>(null);
   const [loading, setLoading] = useState(true);
