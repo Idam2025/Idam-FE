@@ -37,7 +37,7 @@ export default function TagEditorModal({ userId, onClose }: Props) {
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/categories/${id}/tags?page=0&size=500`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/categories/${id}/tags`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -61,6 +61,8 @@ export default function TagEditorModal({ userId, onClose }: Props) {
   };
 
   const handleSubmit = async () => {
+    console.log("선택된 태그:", selected);
+
     if (!token || !categoryId)
       return alert("카테고리 또는 로그인 정보가 없습니다.");
 
@@ -73,7 +75,7 @@ export default function TagEditorModal({ userId, onClose }: Props) {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ tags: selected }),
+          body: JSON.stringify({ selected }),
         }
       );
       const json = await res.json();

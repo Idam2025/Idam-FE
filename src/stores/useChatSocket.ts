@@ -50,12 +50,19 @@ export function useChatSocket({
       reconnectDelay: 5000,
       debug: (msg: string) => console.log("[STOMP DEBUG]", msg),
 
+      connectHeaders: {
+        Authorization: `Bearer ${token}`,
+      },
+
       onConnect: () => {
         console.log(`✅ 연결 완료: roomId = ${roomId}`);
         clientRef.current = client;
         (window as any).stompClient = client;
 
+        // ✅ 이전 구독 제거
         subscriptionRef.current?.unsubscribe();
+
+        // ✅ 새 구독 설정
         subscriptionRef.current = client.subscribe(
           `/sub/chat/room/${roomId}`,
           (message: IMessage) => {
@@ -97,5 +104,27 @@ export function useChatSocket({
       subscriptionRef.current?.unsubscribe();
       client.deactivate();
     };
-  }, [roomId, token]); // ✅ 함수는 dependency에서 제외
+  }, [roomId, token]);
+
+  const sendMessage = (payload: {
+    roomId: number;
+    senderId: number;
+    content: string;
+  }) => {
+    if (clientRef.current && clientRef.current.connected) {
+      clientRef.current.publish({
+        destination: "/pub/chat/send",
+        body: JSON.stringify(payload),
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } else {
+      console.warn("❌ WebSocket 연결되지 않음 → 메시지 전송 실패");
+    }
+  };
+
+  return {
+    sendMessage,
+  };
 }

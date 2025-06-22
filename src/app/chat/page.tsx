@@ -4,12 +4,22 @@ import { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import styles from "@/components/chat/chat.module.css";
+import { useChatSocket } from "@/stores/useChatSocket";
 
 interface ChatItem {
   id: number;
   name: string;
   project: string;
   avatar: string;
+}
+
+interface ChatMessage {
+  messageId: number;
+  senderId: number;
+  senderName: string;
+  content: string;
+  sentAt: string;
+  read: boolean;
 }
 
 const dummyChats: ChatItem[] = [
@@ -31,58 +41,63 @@ const dummyChats: ChatItem[] = [
     project: "AI 자동분류기",
     avatar: "/profile/default.png",
   },
-  {
-    id: 3,
-    name: "박유니",
-    project: "AI 자동분류기",
-    avatar: "/profile/default.png",
-  },
-  {
-    id: 3,
-    name: "박유니",
-    project: "AI 자동분류기",
-    avatar: "/profile/default.png",
-  },
-  {
-    id: 3,
-    name: "박유니",
-    project: "AI 자동분류기",
-    avatar: "/profile/default.png",
-  },
-  {
-    id: 3,
-    name: "박유니",
-    project: "AI 자동분류기",
-    avatar: "/profile/default.png",
-  },
-  {
-    id: 3,
-    name: "박유니",
-    project: "AI 자동분류기",
-    avatar: "/profile/default.png",
-  },
-  {
-    id: 3,
-    name: "박유니",
-    project: "AI 자동분류기",
-    avatar: "/profile/default.png",
-  },
-  {
-    id: 3,
-    name: "박유니",
-    project: "AI 자동분류기",
-    avatar: "/profile/default.png",
-  },
-  {
-    id: 3,
-    name: "박유니",
-    project: "AI 자동분류기",
-    avatar: "/profile/default.png",
-  },
 ];
 
 export default function ChatPage() {
   const [selectedChat, setSelectedChat] = useState<ChatItem | null>(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [input, setInput] = useState("");
+
+  const handleSendMessage = () => {
+    if (!input.trim() || !selectedChat) return;
+
+    sendMessage({
+      roomId: selectedChat.id,
+      senderId: myUserId,
+      content: input.trim(),
+    });
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        messageId: Date.now(),
+        senderId: myUserId,
+        senderName: "나",
+        content: input.trim(),
+        sentAt: new Date().toISOString(),
+        read: true,
+      },
+    ]);
+
+    setInput("");
+    alert("📨 송신이 완료되었습니다!");
+  };
+
+  const myUserId =
+    typeof window !== "undefined"
+      ? Number(localStorage.getItem("userId")) ?? 0
+      : 0;
+
+  const accessToken =
+    typeof window !== "undefined"
+      ? localStorage.getItem("accessToken") ?? ""
+      : "";
+
+  const { sendMessage } = useChatSocket(
+    selectedChat
+      ? {
+          roomId: selectedChat.id,
+          token: accessToken,
+          onMessage: (msg) => {
+            setMessages((prev) => [...prev, msg]);
+          },
+          onConnect: () => {
+            alert("🟢 웹소켓 연결 완료!");
+          },
+        }
+      : // selectedChat이 null이면 훅을 실행하지 않도록 처리
+        ({ roomId: -1, token: "", onMessage: () => {} } as any)
+  );
 
   return (
     <div className={styles.page}>
@@ -97,6 +112,7 @@ export default function ChatPage() {
       </div>
 
       <div className={styles.chatContainer}>
+        {/* ✅ 채팅 목록 */}
         <motion.div className={styles.chatListBox}>
           <h2 className={styles.title}>채팅 목록</h2>
           {dummyChats.map((chat) => (
@@ -105,7 +121,10 @@ export default function ChatPage() {
               className={styles.chatItem}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => setSelectedChat(chat)}
+              onClick={() => {
+                setSelectedChat(chat);
+                setMessages([]);
+              }}
             >
               <Image
                 src={chat.avatar}
@@ -125,9 +144,9 @@ export default function ChatPage() {
         <motion.div
           key={selectedChat?.id || "empty"}
           className={styles.chatViewBox}
-          initial={{ y: "100%", opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.4 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
           {selectedChat ? (
             <>
@@ -145,10 +164,18 @@ export default function ChatPage() {
               </div>
 
               <div className={styles.chatMessages}>
-                <div className={styles.theirMessage}>안녕하세요!</div>
-                <div className={styles.myMessage}>
-                  안녕 {selectedChat.name}!
-                </div>
+                {messages.map((msg) => (
+                  <div
+                    key={msg.messageId}
+                    className={
+                      msg.senderId === myUserId
+                        ? styles.myMessage
+                        : styles.theirMessage
+                    }
+                  >
+                    {msg.content}
+                  </div>
+                ))}
               </div>
             </>
           ) : (
@@ -160,8 +187,37 @@ export default function ChatPage() {
               <input
                 className={styles.chatInput}
                 placeholder="메시지를 입력하세요"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (
+                    e.key === "Enter" &&
+                    !e.shiftKey &&
+                    !e.nativeEvent.isComposing
+                  ) {
+                    e.preventDefault();
+                    handleSendMessage();
+                  }
+                }}
               />
-              <button className={styles.sendBtn}>전송</button>
+
+              <button
+                className={styles.sendBtn}
+                onClick={() => {
+                  if (!input.trim()) return;
+
+                  sendMessage({
+                    roomId: selectedChat.id,
+                    senderId: myUserId,
+                    content: input.trim(),
+                  });
+
+                  alert("📨 송신이 완료되었습니다!");
+                  setInput("");
+                }}
+              >
+                전송
+              </button>
             </div>
           )}
         </motion.div>

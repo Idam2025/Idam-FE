@@ -37,7 +37,7 @@ const TagButton: FC<Props> = ({ categoryId }) => {
       alert(`태그 목록: ${tagList}`);
     } catch (err) {
       console.error("태그 조회 오류:", err);
-      alert("태그 조회에 실패했습니다.");
+      alert("자신의 전공 태그만 수정 가능합니다.");
     }
   };
 
