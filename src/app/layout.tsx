@@ -1,6 +1,6 @@
 import "./global.css";
 import { ReactNode } from "react";
-import SessionChecker from "@/components/SessionChecker"; // 경로 확인해서 수정 필요
+import SessionChecker from "@/components/SessionChecker";
 
 export const metadata = {
   title: "Idam",

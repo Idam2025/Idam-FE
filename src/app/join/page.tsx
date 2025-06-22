@@ -47,7 +47,6 @@ export default function Page() {
       const data = await res.json();
       console.log("전체 응답 데이터:", data);
 
-      // accessToken 저장
       saveToken(data.accessToken);
       document.cookie = `accessToken=${data.accessToken}; path=/; SameSite=Lax`;
 
