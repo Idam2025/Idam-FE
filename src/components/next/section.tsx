@@ -1,6 +1,7 @@
 import Image from "next/image";
 import style from "./section.module.css";
 import Img from "./imgcontainer";
+import BackButton from "@/components/next/BackButton";
 
 export default function NextSection() {
   return (
@@ -17,6 +18,7 @@ export default function NextSection() {
           <Img />
         </div>
       </div>
+      <BackButton />
     </div>
   );
 }

@@ -55,6 +55,7 @@
   letter-spacing: 0.6px;
   text-decoration: none;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
 }
 
 .ai_container > .textArea:hover {

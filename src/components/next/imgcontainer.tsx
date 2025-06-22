@@ -16,7 +16,7 @@ const categories = [
     desc: "IT 카테고리로 검색을 시도합니다.",
   },
   {
-    img: "/imgContainer/marketing.jpg",
+    img: "/imgContainer/marketing.jpeg",
     alt: "마케팅",
     label: "마케팅",
     desc: "마케팅 카테고리로 검색을 시도합니다.",

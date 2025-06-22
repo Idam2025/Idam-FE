@@ -20,7 +20,7 @@ export default function SessionChecker() {
         localStorage.setItem("lastActive", now.toString());
       }
 
-      if (lastActive && now - parseInt(lastActive) > 30 * 60 * 1000) {
+      if (lastActive && now - parseInt(lastActive) > 1 * 60 * 1000) {
         localStorage.clear();
         alert("세션 만료");
         router.push("/login");

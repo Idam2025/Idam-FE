@@ -1,10 +1,13 @@
 .container {
-  height: auto;
-  width: auto;
+  height: 100vh; /* 브라우저 화면 기준으로 고정 */
+  width: 100%;
+  overflow: hidden;
+
   background-image: url("/usual/resized_image.png");
   background-size: cover;
   background-position: center;
   background-repeat: repeat;
+
   display: flex;
   flex-direction: column;
 }

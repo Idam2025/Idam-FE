@@ -45,11 +45,32 @@ function LogoSection() {
 }
 
 function AiMatchSection() {
+  const handleClick = () => {
+    if (typeof window === "undefined") return;
+
+    const token = localStorage.getItem("accessToken");
+    const userType = localStorage.getItem("userType");
+
+    if (!token) {
+      alert("로그인 후, 사용 가능한 서비스입니다.");
+      window.location.href = "/join";
+      return;
+    }
+
+    if (userType === "STUDENT") {
+      alert("해당 서비스는 기업 회원만 이용 가능합니다.");
+      return;
+    }
+
+    // 기업 로그인 시
+    window.location.href = "/ai-helper";
+  };
+
   return (
     <div className={style.ai_container}>
-      <Link href="/ai-helper" className={style.textArea}>
+      <button className={style.textArea} onClick={handleClick}>
         <div className={style.font}>작업 의뢰</div>
-      </Link>
+      </button>
     </div>
   );
 }
