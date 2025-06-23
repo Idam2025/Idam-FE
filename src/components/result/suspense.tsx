@@ -1,29 +1,12 @@
+// components/result/suspense/SuspensePage.tsx
 "use client";
 
 import Image from "next/image";
 import style from "./suspense.module.css";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function SuspensePage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-
-  const domain = searchParams?.get("domain") ?? "";
-  const prompt = searchParams?.get("prompt") ?? "";
-
-  useEffect(() => {
-    if (!domain || !prompt) {
-      alert("잘못된 접근입니다.");
-      router.push("/");
-      return;
-    }
-
-    const encodedDomain = encodeURIComponent(domain);
-    const encodedPrompt = encodeURIComponent(prompt);
-
-    router.replace(`/result?domain=${encodedDomain}&prompt=${encodedPrompt}`);
-  }, [domain, prompt, router]);
 
   const moveHome = () => {
     router.push("/");

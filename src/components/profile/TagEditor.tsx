@@ -75,7 +75,7 @@ export default function TagEditorModal({ userId, onClose }: Props) {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ selected }),
+          body: JSON.stringify({ tags: selected }),
         }
       );
       const json = await res.json();

@@ -65,6 +65,7 @@ export default function NavigationBar() {
 
       const data = await res.json();
       if (!res.ok || !data.success) {
+        router.push("/join");
         throw new Error(data?.message || "로그아웃 실패");
       }
 

@@ -22,6 +22,7 @@ interface StudentProfile {
 }
 
 export default function Page() {
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const id = pathname ? pathname.split("/").pop() ?? "" : "";
@@ -60,14 +61,21 @@ export default function Page() {
   }, [id]);
 
   const moveChat = async () => {
-    if (!id) return;
+    if (isLoading || !id) return;
+
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
       alert("로그인이 필요합니다.");
       return;
     }
 
+    if (!projectName.trim()) {
+      alert("프로젝트명을 입력해주세요.");
+      return;
+    }
+
     try {
+      setIsLoading(true); // ✅ 중복 방지
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/chat/room?targetUserId=${id}`,
         {
@@ -76,17 +84,21 @@ export default function Page() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
           },
-          body: JSON.stringify({ projectName }),
+          body: JSON.stringify({ projectTitle: projectName.trim() }),
         }
       );
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "채팅방 생성 실패");
 
-      if (data.roomId) router.push(`/chat/${data.roomId}`);
+      if (data.roomId) {
+        router.push(`/chat`);
+      }
     } catch (error) {
       console.error("채팅방 이동 오류:", error);
       alert("채팅방 생성에 실패했습니다.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -195,12 +207,19 @@ export default function Page() {
               type="text"
               value={projectName}
               onChange={(e) => setProjectName(e.target.value)}
+              onKeyUp={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  moveChat();
+                }
+              }}
               className={styles.modalInput}
-              placeholder="예: 반응형 웹 리뉴얼"
             />
             <div className={styles.modalButtons}>
               <button onClick={() => setShowModal(false)}>취소</button>
-              <button onClick={moveChat}>확인</button>
+              <button onClick={moveChat} disabled={isLoading}>
+                확인
+              </button>
             </div>
           </div>
         </div>

@@ -37,6 +37,7 @@ export default function Page() {
           password,
           deviceId,
         }),
+        credentials: "include", // ✅ refreshToken용 HttpOnly 쿠키를 받기 위해 필요
       });
 
       if (!res.ok) {
@@ -47,13 +48,13 @@ export default function Page() {
       const data = await res.json();
       console.log("전체 응답 데이터:", data);
 
-      saveToken(data.accessToken);
-      document.cookie = `accessToken=${data.accessToken}; path=/; SameSite=Lax`;
+      saveToken(data.accessToken); // 👉 accessToken은 localStorage 등에서 관리
+      console.log("accessToken:", data.accessToken);
 
-      // tokenExp 저장 (accessToken을 디코딩)
+      // tokenExp 저장 (accessToken을 디코딩해서 유효시간 계산)
       try {
         const decoded = jwtDecode<{ exp: number }>(data.accessToken);
-        const exp = decoded.exp * 1000; // 초 → 밀리초
+        const exp = decoded.exp * 1000;
         localStorage.setItem("tokenExp", exp.toString());
         console.log("🔐 tokenExp 설정 완료:", exp);
       } catch (e) {
@@ -68,11 +69,7 @@ export default function Page() {
 
       localStorage.setItem("userType", data.userType);
       localStorage.setItem("deviceId", deviceId);
-      console.log("accessToken:", data.accessToken);
-      console.log("userType:", data.userType);
-      console.log("deviceId:", deviceId);
 
-      alert("로그인 성공!");
       router.push("/");
     } catch (err: any) {
       console.error("로그인 오류:", err);

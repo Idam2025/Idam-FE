@@ -5,7 +5,6 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import style from "./findContainer.module.css";
 
-// 타입 정의
 type Student = {
   userId: number;
   name: string;
@@ -31,56 +30,69 @@ const categoryMap: Record<number, Omit<SectionData, "students">> = {
   2: {
     title: "디자인",
     description:
-      "UX/UI부터 브랜드 디자인까지 감각적인 디자이너들을 만나보세요.",
+      "UX/UI부터 브랜드 디자인까지 감각적인 디자이너들을 만날 수 있어요.",
     direction: "right",
   },
   3: {
     title: "마케팅",
     description:
-      "콘텐츠 기획, 광고 전략 등 실전 마케팅 경험을 갖춘 인재들이 모였어요.",
+      "컨텐츠 기획, 광고 전략 등 실전 마케팅까지 경험을 가지고 있는 인재들이 모여있어요.",
     direction: "left",
   },
 };
 
 export default function FindContainer() {
   const [sections, setSections] = useState<SectionData[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/students/preview`)
-      .then((res) => res.json())
-      .then((res) => {
-        const categorized: Record<number, Student[]> = {
-          1: [],
-          2: [],
-          3: [],
-        };
+    const fetchData = () => {
+      setIsLoading(true);
+      const loadingStart = Date.now();
 
-        // 전체 순회하면서 각 카테고리에 맞게 4명까지 push
-        for (const student of res.data) {
-          const catId = student.categoryId;
-          if (categorized[catId] && categorized[catId].length < 4) {
-            categorized[catId].push(student);
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/students/preview`)
+        .then((res) => res.json())
+        .then((res) => {
+          const categorized: Record<number, Student[]> = {
+            1: [],
+            2: [],
+            3: [],
+          };
+          for (const student of res.data) {
+            const catId = student.categoryId;
+            if (categorized[catId] && categorized[catId].length < 4) {
+              categorized[catId].push(student);
+            }
+            if (
+              categorized[1].length >= 4 &&
+              categorized[2].length >= 4 &&
+              categorized[3].length >= 4
+            ) {
+              break;
+            }
           }
-
-          // 모두 다 찼으면 조기 종료 (성능 최적화)
-          if (
-            categorized[1].length >= 4 &&
-            categorized[2].length >= 4 &&
-            categorized[3].length >= 4
-          ) {
-            break;
+          const newSections: SectionData[] = Object.entries(categorized).map(
+            ([catId, students]) => ({
+              ...categoryMap[+catId],
+              students,
+            })
+          );
+          setSections(newSections);
+        })
+        .finally(() => {
+          const elapsed = Date.now() - loadingStart;
+          const remaining = 1000 - elapsed;
+          if (remaining > 0) {
+            setTimeout(() => setIsLoading(false), remaining);
+          } else {
+            setIsLoading(false);
           }
-        }
+        });
+    };
 
-        const newSections: SectionData[] = Object.entries(categorized).map(
-          ([catId, students]) => ({
-            ...categoryMap[+catId],
-            students,
-          })
-        );
-
-        setSections(newSections);
-      });
+    fetchData();
+    const interval = setInterval(fetchData, 15 * 1000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -99,16 +111,19 @@ export default function FindContainer() {
           </div>
           <div className={style.right}>
             {section.students.map((student, idx) => (
-              <div key={idx} className={style.profileWrapper}>
-                <Image
-                  src={student.profileImage || "/profile/default.png"}
-                  alt={student.name}
-                  width={100}
-                  height={100}
-                  className={style.image}
-                />
+              <div className={style.profileWrapper}>
+                <div className={style.imageWrapper}>
+                  <Image
+                    src={student.profileImage || "/profile/default.png"}
+                    alt={student.name || "프로필 이미지"}
+                    className={style.image}
+                    width={170}
+                    height={170}
+                  />
+                </div>
+                <div className={style.name}>{student.name}</div>
                 <div className={style.tagList}>
-                  {student.tags.slice(0, 5).map((tag, i) => (
+                  {student.tags.slice(0, 3).map((tag, i) => (
                     <span key={i} className={style.tag}>
                       #{tag}
                     </span>
