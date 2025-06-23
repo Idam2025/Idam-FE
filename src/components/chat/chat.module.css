@@ -338,3 +338,20 @@
 .chatItem.showDelete .deleteIcon {
   visibility: visible;
 }
+
+.unreadBadge {
+  background-color: red;
+  color: white;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 12px;
+  margin-top: 4px;
+  display: inline-block;
+  min-width: 20px;
+  text-align: center;
+}
+
+.row2 {
+  display: flex;
+  justify-content: space-between;
+}

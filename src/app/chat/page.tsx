@@ -22,6 +22,7 @@ interface ChatRoom {
   name: string;
   project: string;
   lastMessage?: ChatMessage;
+  unreadCount?: number;
 }
 
 export default function ChatPage() {
@@ -74,6 +75,7 @@ export default function ChatPage() {
             project: room.projectTitle,
             avatar: room.opponentProfileImage,
             lastMessage,
+            unreadCount: room.unreadCount,
           };
         })
       );
@@ -113,19 +115,28 @@ export default function ChatPage() {
       console.error("❌ 채팅방 삭제 오류:", error);
     }
   };
-
   const { sendMessage } = useChatSocket(
     selectedChat
       ? {
           roomId: selectedChat.id,
           token: accessToken,
-          onMessage: (msg) => setMessages((prev) => [...prev, msg]),
+          onMessage: (msg) => {
+            setMessages((prev) => [...prev, msg]);
+
+            setChatRooms((prevRooms) =>
+              prevRooms.map((room) =>
+                room.id === selectedChat?.id
+                  ? { ...room, lastMessage: msg }
+                  : room
+              )
+            );
+          },
           onConnect: () => console.log("🟢 웹소켓 연결 완료!"),
         }
       : ({ roomId: -1, token: "", onMessage: () => {} } as any)
   );
 
-  const handleSendMessage = (e?: React.FormEvent) => {
+  const handleSendMessage = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     const trimmed = input.trim();
     if (!trimmed || !selectedChat) return;
@@ -135,7 +146,13 @@ export default function ChatPage() {
       senderId: myUserId,
       content: trimmed,
     });
+
     setInput("");
+
+    // ✅ 서버에 메시지가 저장되었을 걸로 가정하고 다시 목록 fetch
+    setTimeout(() => {
+      fetchChatRooms(); // 또는 debounce / delay 조절
+    }, 500); // 0.5초 후에 목록 새로고침 (서버 반영 시간 고려)
   };
 
   useEffect(() => {
@@ -221,6 +238,7 @@ export default function ChatPage() {
                       <div className={styles.projectTitle}>
                         {chat.project} | {chat.name}
                       </div>
+
                       <div className={styles.lastTime}>
                         {chat.lastMessage?.sentAt &&
                           new Date(chat.lastMessage.sentAt).toLocaleTimeString(
@@ -232,8 +250,15 @@ export default function ChatPage() {
                           )}
                       </div>
                     </div>
-                    <div className={styles.lastMessage}>
-                      {chat.lastMessage?.content ?? ""}
+                    <div className={styles.row2}>
+                      <div className={styles.lastMessage}>
+                        {chat.lastMessage?.content ?? ""}
+                      </div>
+                      {chat.unreadCount && chat.unreadCount > 0 && (
+                        <div className={styles.unreadBadge}>
+                          {chat.unreadCount}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

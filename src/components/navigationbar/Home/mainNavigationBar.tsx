@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useAccessToken } from "@/hooks/useAccessToken";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { disconnectWebSocket } from "@/utils/wsClient";
 import style from "./mainNavigationbar.module.css";
 
 export default function NavigationBar() {
@@ -68,7 +69,7 @@ export default function NavigationBar() {
         router.push("/join");
         throw new Error(data?.message || "로그아웃 실패");
       }
-
+      disconnectWebSocket();
       removeToken();
       alert("로그아웃 성공!");
       router.push("/");

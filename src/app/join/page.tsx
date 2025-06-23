@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useDeviceId } from "@/hooks/useDeviceId";
 import { useAccessToken } from "@/hooks/useAccessToken";
 import { jwtDecode } from "jwt-decode";
+import { connectWebSocket } from "@/utils/wsClient";
 
 export default function Page() {
   const router = useRouter();
@@ -37,7 +38,7 @@ export default function Page() {
           password,
           deviceId,
         }),
-        credentials: "include", // ✅ refreshToken용 HttpOnly 쿠키를 받기 위해 필요
+        credentials: "include",
       });
 
       if (!res.ok) {
@@ -48,10 +49,9 @@ export default function Page() {
       const data = await res.json();
       console.log("전체 응답 데이터:", data);
 
-      saveToken(data.accessToken); // 👉 accessToken은 localStorage 등에서 관리
+      saveToken(data.accessToken);
       console.log("accessToken:", data.accessToken);
 
-      // tokenExp 저장 (accessToken을 디코딩해서 유효시간 계산)
       try {
         const decoded = jwtDecode<{ exp: number }>(data.accessToken);
         const exp = decoded.exp * 1000;
@@ -63,6 +63,7 @@ export default function Page() {
 
       if (data.userId) {
         localStorage.setItem("userId", data.userId);
+        connectWebSocket(data.userId);
       } else {
         console.warn("userId가 응답에 포함되지 않았습니다.", data);
       }
