@@ -5,6 +5,7 @@ type CompanyInfoProps = {
   title: string;
   description: string;
   imageSrc: string;
+  website: string;
 };
 
 export default function CompanyInfo({
@@ -24,9 +25,9 @@ export default function CompanyInfo({
           <Image
             src={imageSrc}
             alt="company"
-            fill
-            style={{ objectFit: "contain" }}
-            sizes="(max-width: 768px) 100vw, 500px"
+            width={500}
+            height={281}
+            unoptimized
           />
         </div>
       </div>
