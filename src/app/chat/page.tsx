@@ -6,6 +6,8 @@ import { motion } from "framer-motion";
 import styles from "@/components/chat/chat.module.css";
 import { useChatSocket } from "@/stores/useChatSocket";
 import { FaCog, FaTrash } from "react-icons/fa";
+import { Client } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
 
 interface ChatMessage {
   messageId: number;
@@ -32,6 +34,7 @@ export default function ChatPage() {
   const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
   const [showDeleteIcons, setShowDeleteIcons] = useState(false);
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const clientRef = useRef<Client | null>(null);
 
   const myUserId =
     typeof window !== "undefined"
@@ -86,6 +89,55 @@ export default function ChatPage() {
     }
   };
 
+  const handleSelectChat = (chat: ChatRoom) => {
+    setSelectedChat(chat);
+    setMessages([]);
+
+    if (clientRef.current) {
+      clientRef.current.publish({
+        destination: "/pub/chat/read",
+        body: JSON.stringify({ roomId: chat.id }),
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      clientRef.current.subscribe(
+        `/sub/chat/read/${chat.id}/${myUserId}`,
+        (message) => {
+          if (message.body === "read") {
+            console.log("📖 상대방이 내 메시지를 읽었음");
+
+            // 1. 메시지 목록 중 내가 보낸 read: false인 것만 true로 변경
+            setMessages((prev) =>
+              prev.map((msg) =>
+                msg.senderId === myUserId && !msg.read
+                  ? { ...msg, read: true }
+                  : msg
+              )
+            );
+
+            // 2. chatRooms 목록에서도 lastMessage가 내 메시지였다면 읽힘 처리
+            setChatRooms((prevRooms) =>
+              prevRooms.map((room) =>
+                room.id === selectedChat?.id &&
+                room.lastMessage?.senderId === myUserId &&
+                !room.lastMessage.read
+                  ? {
+                      ...room,
+                      lastMessage: {
+                        ...room.lastMessage,
+                        read: true,
+                      },
+                      unreadCount: 0,
+                    }
+                  : room
+              )
+            );
+          }
+        }
+      );
+    }
+  };
+
   useEffect(() => {
     fetchChatRooms();
   }, []);
@@ -97,9 +149,7 @@ export default function ChatPage() {
         ? `/api/chat/room/${roomId}/student`
         : `/api/chat/room/${roomId}/company`;
 
-    // 🔒 확인/취소 창
-    const confirmed = confirm("정말로 삭제하시겠습니까?");
-    if (!confirmed) return; // 취소 누르면 삭제 안 함
+    if (!confirm("정말로 삭제하시겠습니까?")) return;
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${endpoint}`, {
@@ -115,6 +165,7 @@ export default function ChatPage() {
       console.error("❌ 채팅방 삭제 오류:", error);
     }
   };
+
   const { sendMessage } = useChatSocket(
     selectedChat
       ? {
@@ -126,7 +177,7 @@ export default function ChatPage() {
             setChatRooms((prevRooms) =>
               prevRooms.map((room) =>
                 room.id === selectedChat?.id
-                  ? { ...room, lastMessage: msg }
+                  ? { ...room, lastMessage: msg, unreadCount: 0 }
                   : room
               )
             );
@@ -148,11 +199,7 @@ export default function ChatPage() {
     });
 
     setInput("");
-
-    // ✅ 서버에 메시지가 저장되었을 걸로 가정하고 다시 목록 fetch
-    setTimeout(() => {
-      fetchChatRooms(); // 또는 debounce / delay 조절
-    }, 500); // 0.5초 후에 목록 새로고침 (서버 반영 시간 고려)
+    setTimeout(fetchChatRooms, 500);
   };
 
   useEffect(() => {
@@ -176,8 +223,25 @@ export default function ChatPage() {
   }, [selectedChat]);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    const socket = new SockJS(
+      `${process.env.NEXT_PUBLIC_API_URL}/ws/chat?token=${accessToken}`
+    );
+    const client = new Client({
+      webSocketFactory: () => socket,
+      reconnectDelay: 5000,
+      connectHeaders: { Authorization: `Bearer ${accessToken}` },
+      onConnect: () => {
+        console.log("📡 WebSocket 연결됨");
+      },
+    });
+    client.activate();
+    clientRef.current = client;
+    return () => {
+      client.deactivate();
+    };
+  }, []);
+
+  useEffect(scrollToBottom, [messages]);
 
   return (
     <div className={styles.page}>
@@ -219,10 +283,7 @@ export default function ChatPage() {
               <div className={styles.chatItemRow}>
                 <div
                   className={styles.chatItemContent}
-                  onClick={() => {
-                    setSelectedChat(chat);
-                    setMessages([]);
-                  }}
+                  onClick={() => handleSelectChat(chat)}
                 >
                   <Image
                     src={
@@ -238,7 +299,6 @@ export default function ChatPage() {
                       <div className={styles.projectTitle}>
                         {chat.project} | {chat.name}
                       </div>
-
                       <div className={styles.lastTime}>
                         {chat.lastMessage?.sentAt &&
                           new Date(chat.lastMessage.sentAt).toLocaleTimeString(
@@ -254,7 +314,7 @@ export default function ChatPage() {
                       <div className={styles.lastMessage}>
                         {chat.lastMessage?.content ?? ""}
                       </div>
-                      {chat.unreadCount && chat.unreadCount > 0 && (
+                      {(chat.unreadCount ?? 0) > 0 && (
                         <div className={styles.unreadBadge}>
                           {chat.unreadCount}
                         </div>
@@ -309,7 +369,9 @@ export default function ChatPage() {
                         <>
                           <div className={styles.messageMeta}>
                             <span className={styles.readStatus}>
-                              {msg.read ? "" : "1"}
+                              {msg.senderId === myUserId && !msg.read
+                                ? "1"
+                                : ""}
                             </span>
                             <span className={styles.timestamp}>
                               {new Date(msg.sentAt).toLocaleTimeString(
@@ -344,7 +406,6 @@ export default function ChatPage() {
                     </div>
                   );
                 })}
-
                 <div ref={bottomRef} />
               </div>
 

@@ -8,6 +8,11 @@
   background-size: cover;
   background-position: center;
   background-repeat: repeat;
+  overflow-y: hidden;
+}
+
+.section {
+  overflow-y: hidden;
 }
 
 .textContainer {

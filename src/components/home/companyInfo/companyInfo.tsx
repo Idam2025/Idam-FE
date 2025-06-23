@@ -30,7 +30,11 @@ export default function CompanyInfo() {
       }
     };
 
-    fetchCompanies();
+    fetchCompanies(); // 초기 1회 실행
+
+    const intervalId = setInterval(fetchCompanies, 15000); // 15초마다 요청
+
+    return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 정리
   }, []);
 
   return (

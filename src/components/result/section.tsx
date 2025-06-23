@@ -59,7 +59,7 @@ export default function ResultSection({ data }: { data: any[] }) {
               <div className={styles.loader}></div>
             ) : (
               <>
-                <div className={styles.font3}>See more</div>
+                <div className={styles.font3}>Research</div>
                 <Image
                   src="/usual/arrow2.svg"
                   alt="arrow2"
@@ -93,8 +93,7 @@ export default function ResultSection({ data }: { data: any[] }) {
                     className={styles.profileImage}
                   />
                   <div className={styles.caption}>
-                    <div className={styles.name}>{student.name}</div>
-                    <div className={styles.score}>{student.score}점</div>
+                    <div className={styles.nickname}>{student.nickname}</div>
                     <div className={styles.rank}>
                       {student.rank === 1 && "👑 "}
                       {student.rank === 2 && "🥈 "}

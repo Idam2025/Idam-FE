@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import ResultSection from "@/components/result/section";
 import SuspensePage from "@/components/result/suspense";
 import { useRouter } from "next/navigation";
@@ -15,12 +15,21 @@ export default function ClientResultPage({ domain }: Props) {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const hasFetchedRef = useRef(false); // ✅ useRef로 변경
 
-  let hasFetched = false;
+  // 스크롤 막기
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflowY;
+    document.body.style.overflowY = "hidden";
+    return () => {
+      document.body.style.overflowY = originalOverflow;
+    };
+  }, []);
 
   useEffect(() => {
-    if (hasFetched) return;
-    hasFetched = true;
+    if (hasFetchedRef.current) return;
+    hasFetchedRef.current = true;
+
     const fetchAiMatchResult = async () => {
       if (!domain) {
         alert("❗ 도메인이 누락되었습니다.");
@@ -28,7 +37,6 @@ export default function ClientResultPage({ domain }: Props) {
         return;
       }
 
-      // ✅ prompt가 세팅될 때까지 기다리기
       let prompt: string | null = null;
       const maxRetries = 10;
       let retries = 0;
@@ -36,7 +44,7 @@ export default function ClientResultPage({ domain }: Props) {
       while (!prompt && retries < maxRetries) {
         prompt = sessionStorage.getItem("prompt");
         if (prompt) break;
-        await new Promise((resolve) => setTimeout(resolve, 50)); // 50ms 대기
+        await new Promise((resolve) => setTimeout(resolve, 50));
         retries++;
       }
 
@@ -95,9 +103,9 @@ export default function ClientResultPage({ domain }: Props) {
     return <div className={styles.emptyMessage}>매칭 결과가 없습니다.</div>;
 
   return (
-    <>
+    <div className={styles.section}>
       <NavigationBar />
       <ResultSection data={data} />
-    </>
+    </div>
   );
 }

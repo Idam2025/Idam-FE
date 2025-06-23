@@ -11,6 +11,7 @@ type Student = {
   profileImage: string | null;
   tags: string[];
   categoryId: number;
+  nickname: string;
 };
 
 type SectionData = {
@@ -121,7 +122,7 @@ export default function FindContainer() {
                     height={170}
                   />
                 </div>
-                <div className={style.name}>{student.name}</div>
+                <div className={style.name}>{student.nickname}</div>
                 <div className={style.tagList}>
                   {student.tags.slice(0, 3).map((tag, i) => (
                     <span key={i} className={style.tag}>
