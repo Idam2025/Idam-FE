@@ -75,7 +75,7 @@ export default function Page() {
     }
 
     try {
-      setIsLoading(true); // ✅ 중복 방지
+      setIsLoading(true);
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/chat/room?targetUserId=${id}`,
         {
@@ -106,12 +106,6 @@ export default function Page() {
     <div className={styles.container}>
       <div className={styles.profile_container}>
         <div className={styles.profile_content}>
-          <Image
-            src="/usual/profileBox.png"
-            alt="Rectangle"
-            width={1200}
-            height={95}
-          />
           <div className={styles.profile_content_Title}>
             <img
               className={styles.profile_image}

@@ -1,16 +1,18 @@
 export interface Portfolio {
-  id: number;
+  title: string; // ✅ 추가
   url: string;
 }
 
 export interface UserProfile {
   name: string;
-  major: string;
-  nickname: string;
   email: string;
+  nickname: string;
+  schoolName: string;
+  major: string;
+  schoolId: string; // ✅ 이 줄 추가
   phone: string;
-  gender: string;
-  categoryId: number;
-  profileImage: string | null;
-  portfolios: Portfolio[];
+  gender: "MALE" | "FEMALE";
+  profileImage: string;
+  tags: string[];
+  portfolios: { title: string; url: string }[];
 }

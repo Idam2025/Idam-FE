@@ -58,54 +58,15 @@ export default function ChatPage() {
     setSelectedChat(chat);
     setMessages([]);
 
+    // 읽음 처리 요청 (내가 읽었음을 서버에 알림)
     if (clientRef.current) {
       clientRef.current.publish({
         destination: "/pub/chat/read",
         body: JSON.stringify({ roomId: chat.id }),
         headers: { Authorization: `Bearer ${accessToken}` },
       });
-
-      clientRef.current.subscribe(
-        `/sub/chat/read/${chat.id}/${myUserId}`,
-        (message) => {
-          if (message.body === "read") {
-            console.log("📖 상대방이 내 메시지를 읽었음");
-
-            // 1. 메시지 목록 중 내가 보낸 read: false인 것만 true로 변경
-            setMessages((prev) =>
-              prev.map((msg) =>
-                msg.senderId === myUserId && !msg.read
-                  ? { ...msg, read: true }
-                  : msg
-              )
-            );
-
-            // 2. chatRooms 목록에서도 lastMessage가 내 메시지였다면 읽힘 처리
-            setChatRooms((prevRooms) =>
-              prevRooms.map((room) =>
-                room.id === selectedChat?.id &&
-                room.lastMessage?.senderId === myUserId &&
-                !room.lastMessage.read
-                  ? {
-                      ...room,
-                      lastMessage: {
-                        ...room.lastMessage,
-                        read: true,
-                      },
-                      unreadCount: 0,
-                    }
-                  : room
-              )
-            );
-          }
-        }
-      );
     }
   };
-
-  useEffect(() => {
-    fetchChatRooms();
-  }, []);
 
   const handleDeleteRoom = async (roomId: number) => {
     const userType = localStorage.getItem("userType");
@@ -168,9 +129,13 @@ export default function ChatPage() {
   };
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      if (!selectedChat) return;
+    fetchChatRooms();
+  }, []);
 
+  useEffect(() => {
+    if (!selectedChat) return;
+
+    const fetchMessages = async () => {
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/api/chat/room/${selectedChat.id}/messages`,
@@ -184,6 +149,7 @@ export default function ChatPage() {
         console.error("❌ 메시지 불러오기 실패:", error);
       }
     };
+
     fetchMessages();
   }, [selectedChat]);
 
@@ -195,12 +161,56 @@ export default function ChatPage() {
     setChatRooms,
   });
 
+  const subscribedSet = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    if (!clientRef.current || !myUserId) return;
+
+    const client = clientRef.current;
+
+    chatRooms.forEach((room) => {
+      const topic = `/sub/chat/read/${room.id}/${myUserId}`;
+      if (subscribedSet.current.has(topic)) return;
+
+      client.subscribe(topic, (message) => {
+        if (message.body === "read") {
+          console.log(`📖 채팅방 ${room.id}에서 상대방이 내 메시지를 읽음`);
+
+          if (selectedChat?.id === room.id) {
+            setMessages((prev) =>
+              prev.map((msg) =>
+                msg.senderId === myUserId && !msg.read
+                  ? { ...msg, read: true }
+                  : msg
+              )
+            );
+          }
+
+          setChatRooms((prevRooms) =>
+            prevRooms.map((r) =>
+              r.id === room.id &&
+              r.lastMessage?.senderId === myUserId &&
+              !r.lastMessage.read
+                ? {
+                    ...r,
+                    lastMessage: { ...r.lastMessage, read: true },
+                    unreadCount: 0,
+                  }
+                : r
+            )
+          );
+        }
+      });
+
+      subscribedSet.current.add(topic);
+    });
+  }, [chatRooms, clientRef.current, myUserId]);
+
   useEffect(scrollToBottom, [messages]);
 
   return (
     <div className={styles.page}>
       <ChatBackground />
-
       <div className={styles.chatContainer}>
         <ChatList
           chatRooms={chatRooms}
@@ -210,7 +220,6 @@ export default function ChatPage() {
           onDeleteRoom={handleDeleteRoom}
           selectedChatId={selectedChat?.id ?? null}
         />
-
         <ChatView
           selectedChat={selectedChat}
           messages={messages}

@@ -39,3 +39,23 @@ a:active {
 :root {
   --Neutral-Colors-Headings-Black: #5d5a88;
 }
+
+/* 전역 스크롤바 커스텀 */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #7b5cff, #5ac8fa);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #5a4cff, #2cc9ff);
+}

@@ -25,11 +25,10 @@
   border-radius: 36px;
   background: linear-gradient(transparent, rgb(143, 72, 223));
   box-shadow: 0px 4px 38px rgba(204, 194, 194, 0.623);
-  width: 100%;
+  width: auto;
   height: 80vh;
   max-width: 1200px;
   padding: 40px;
-  padding-right: 10px;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -37,16 +36,10 @@
 }
 
 .profile_content_Title {
+  margin-top: 20px;
   display: flex;
   align-items: center;
   gap: 20px;
-  border-radius: 20px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: linear-gradient(rgb(251, 154, 240), transparent);
-  padding: 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .profile_font_container {
@@ -75,13 +68,6 @@
   border-radius: 50%;
   object-fit: cover;
   background: #ccc;
-}
-.profile_button_container {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 20px;
 }
 
 .fancyButton {
@@ -150,7 +136,6 @@
 
 .portfolioSection {
   padding: 20px 0;
-  height: 1000px;
 }
 
 .portfolioSection h3 {
@@ -162,7 +147,7 @@
 
 .portfolioGrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 한 줄에 2개 고정 */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
 }
 
@@ -184,26 +169,18 @@
 }
 
 .portfolioPreview {
-  width: 40%;
+  width: 100%;
   height: 500px;
   border: none;
-  border-radius: 8px;
+  border-radius: 20px;
   object-fit: cover;
+  background-color: white;
 }
 
-.portfolioLink {
-  color: #707b88;
-  text-decoration: underline;
-  word-break: break-all;
-  font-size: 14px;
+.portfolioPreviewWrapper {
+  cursor: pointer;
 }
-.portfolioLink,
-.portfolioLink:visited,
-.portfolioLink:hover,
-.portfolioLink:active {
-  color: #0070f3; /* 원하는 색상으로 통일 */
-  text-decoration: underline;
-}
+
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -262,147 +239,10 @@
   color: #000;
 }
 
-.scrollContainer {
-  overflow: hidden; /* 스크롤바 잘림 방지 */
-  width: 99%;
-  height: 100%;
-}
-
-.scrollContent {
-  height: 100%;
-  overflow-y: auto;
-  padding-right: 5px;
-  width: 99%;
-}
-
-.buttonLikeLink {
-  display: inline-block;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #7b5cff, #5ac8fa);
+.loading {
   color: white;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
+  font-size: 24px;
+  font-weight: bold;
   text-align: center;
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-
-.buttonLikeLink:hover {
-  background: linear-gradient(135deg, #5a4cff, #2cc9ff);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.editForm {
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  gap: 16px;
-  background: #f7f9fc;
-  padding: 20px;
-  border-radius: 16px;
-  margin-top: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-}
-
-.editForm label {
-  font-weight: 500;
-  color: #344054;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.editForm input {
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid #d0d5dd;
-  font-size: 14px;
-  color: #344054;
-}
-
-.buttonRow {
-  display: flex;
-  gap: 12px;
-  margin-top: 12px;
-}
-
-.cancelButton {
-  background-color: #e5e7eb;
-  color: #111827;
-  padding: 8px 16px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.cancelButton:hover {
-  background-color: #d1d5db;
-}
-
-.editField {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 20px;
-}
-
-.editField label {
-  font-weight: 600;
-  color: #4a4a4a;
-  font-size: 14px;
-}
-
-.editInput {
-  padding: 10px;
-  border: 1px solid #d0d7de;
-  border-radius: 8px;
-  font-size: 14px;
-  outline: none;
-  transition: border 0.2s;
-}
-
-.editInput:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-}
-
-.fancyButton {
-  padding: 10px 18px;
-  border: none;
-  border-radius: 8px;
-  background: linear-gradient(to right, #4f46e5, #6366f1);
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.fancyButton:hover {
-  background: linear-gradient(to right, #4338ca, #4f46e5);
-}
-
-.cancelButton {
-  padding: 10px 18px;
-  border: none;
-  border-radius: 8px;
-  background-color: #f3f4f6;
-  color: #1f2937;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.cancelButton:hover {
-  background-color: #e5e7eb;
-}
-
-.buttonRow {
-  display: flex;
-  gap: 12px;
-  margin-top: 20px;
+  margin-top: 40vh;
 }

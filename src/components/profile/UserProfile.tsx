@@ -1,117 +1,208 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import styles from "./UserProfile.module.css";
-import ProfileHeader from "./ProfileHeader";
-import PortfolioSection from "./PortfoiloSection";
+import styles from "@/components/result/profile/profile.module.css";
 import PdfModal from "./PdfModal";
-import { UserProfile } from "@/types/user";
-import { motion } from "framer-motion";
-
-const mockUser: UserProfile = {
-  name: "홍길동",
-  major: "컴퓨터공학과",
-  nickname: "webdev123",
-  profileImage: "/profile/default.png",
-  email: "test@example.com",
-  phone: "010-1234-5678",
-  portfolios: [],
-  categoryId: 1,
-  gender: "남자",
-};
+import useStudentProfile from "@/hooks/profile/useStudentProfile";
+import { useState } from "react";
 
 export default function StudentProfilePage() {
-  const [user, setUser] = useState<UserProfile | null>(mockUser);
-  const [editMode, setEditMode] = useState(false);
-  const [pdfModalUrl, setPdfModalUrl] = useState<string | null>(null);
-  const [newPortfolioLink, setNewPortfolioLink] = useState("");
+  const {
+    student,
+    isLoading,
+    editMode,
+    setEditMode,
+    formData,
+    setFormData,
+    handleChange,
+    handleSave,
+    handlePreview,
+    pdfUrl,
+    showModal,
+    setShowModal,
+    fetchTags,
+  } = useStudentProfile();
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
+    null
+  );
+  const [showCategorySelect, setShowCategorySelect] = useState(false);
+  const [fetchedTags, setFetchedTags] = useState<string[]>([]);
 
-  const userId =
-    typeof window !== "undefined" ? localStorage.getItem("userId") : null;
-
-  useEffect(() => {
-    if (!userId) return;
-
-    const fetchUserProfile = async () => {
-      const token = localStorage.getItem("accessToken");
-      if (!token) return;
-
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/students/${userId}/profile`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            credentials: "include",
-          }
-        );
-        const json = await res.json();
-        if (!json.success) throw new Error("프로필 조회 실패");
-
-        setUser({
-          ...json.data,
-          portfolios: json.data.portfolios ?? [],
-        });
-      } catch (err) {
-        console.error("프로필 불러오기 실패:", err);
-      }
-    };
-
-    fetchUserProfile();
-  }, [userId]);
-
-  if (!user) return <div className={styles.loading}>불러오는 중...</div>;
+  if (isLoading || !student)
+    return <div className={styles.loading}>불러오는 중...</div>;
 
   return (
-    <motion.div
-      className={styles.bg}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
-      <motion.div
-        className={styles.container}
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-      >
-        <ProfileHeader
-          user={{
-            ...user,
-            profileImage: user.profileImage ?? "/profile/default.png",
-          }}
-          setUser={setUser}
-          editMode={editMode}
-          setEditMode={setEditMode}
-        />
+    <div className={styles.bg}>
+      <div className={styles.container}>
+        <div className={styles.profile_container}>
+          <div className={styles.scrollContainer}>
+            <div className={styles.scrollContent}>
+              <div className={styles.profile_content_Title}>
+                <img
+                  src={student.profileImage || "/default-profile.png"}
+                  alt="Profile"
+                  className={styles.profile_image}
+                />
+                <div className={styles.profile_font_container}>
+                  {editMode ? (
+                    <input
+                      type="text"
+                      name="nickname"
+                      value={formData.nickname}
+                      onChange={handleChange}
+                      className={styles.editInput}
+                    />
+                  ) : (
+                    <div className={styles.profile_font}>
+                      {student.nickname}
+                    </div>
+                  )}
+                  <div className={styles.profile_font2}>{student.email}</div>
+                </div>
+                <div className={styles.profile_button_container}>
+                  <button
+                    className={styles.fancyButton}
+                    onClick={editMode ? handleSave : () => setEditMode(true)}
+                  >
+                    {editMode ? "저장" : "수정"}
+                  </button>
+                  {editMode && (
+                    <>
+                      <button
+                        className={styles.fancyButton}
+                        onClick={() => setShowCategorySelect((prev) => !prev)}
+                      >
+                        태그 조회
+                      </button>
 
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <PortfolioSection
-            user={user}
-            setUser={setUser}
-            editMode={editMode}
-            newPortfolioLink={newPortfolioLink}
-            setNewPortfolioLink={setNewPortfolioLink}
-            setPdfModalUrl={setPdfModalUrl}
-          />
-        </motion.div>
+                      {showCategorySelect && (
+                        <div style={{ marginTop: "10px" }}>
+                          <select
+                            className={styles.editInput}
+                            onChange={(e) => {
+                              const categoryId = Number(e.target.value);
+                              setSelectedCategoryId(categoryId);
+                              fetchTags(categoryId);
+                            }}
+                          >
+                            <option value="">카테고리 선택</option>
+                            <option value="1">IT·프로그래밍</option>
+                            <option value="2">디자인</option>
+                            <option value="3">마케팅</option>
+                          </select>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
 
-        {pdfModalUrl && (
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            <PdfModal url={pdfModalUrl} onClose={() => setPdfModalUrl(null)} />
-          </motion.div>
-        )}
-      </motion.div>
-    </motion.div>
+              <div className={styles.detail_info_container}>
+                <div className={styles.infoBox}>
+                  <div>
+                    <strong>이름</strong>
+                    <p>{student.name}</p>
+                  </div>
+                  <div>
+                    <strong>학교</strong>
+                    <p>{student.schoolName}</p>
+                  </div>
+                  <div>
+                    <strong>학번</strong>
+                    <p>{student.schoolId}</p>
+                  </div>
+                  <div>
+                    <strong>전화번호</strong>
+                    {editMode ? (
+                      <input
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        className={styles.editInput}
+                      />
+                    ) : (
+                      <p>{student.phone}</p>
+                    )}
+                  </div>
+                  <div>
+                    <strong>성별</strong>
+                    <p>{student.gender === "MALE" ? "남성" : "여성"}</p>
+                    <br />
+                    <strong>학과</strong>
+                    {editMode ? (
+                      <input
+                        name="major"
+                        value={formData.major}
+                        onChange={handleChange}
+                        className={styles.editInput}
+                      />
+                    ) : (
+                      <p>{student.major}</p>
+                    )}
+                  </div>
+                  <div>
+                    <strong>기술 스택</strong>
+                    {editMode ? (
+                      <input
+                        name="tags"
+                        value={formData.tags}
+                        onChange={handleChange}
+                        className={styles.editInput}
+                      />
+                    ) : (
+                      <div className={styles.tagList}>
+                        {student.tags.map((tag, index) => (
+                          <span key={index} className={styles.tag}>
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.portfolioSection}>
+                <h3>포트폴리오</h3>
+                <div className={styles.portfolioGrid}>
+                  {student.portfolios.map((p, idx) => (
+                    <div key={idx} className={styles.portfolioCard}>
+                      <div className={styles.portfolioTitle}>{p.title}</div>
+                      {p.url.endsWith(".pdf") ? (
+                        <embed
+                          src={p.url}
+                          type="application/pdf"
+                          width="100%"
+                          height="200px"
+                          onClick={() => handlePreview(p.url)}
+                          style={{ cursor: "pointer" }}
+                        />
+                      ) : (
+                        <img
+                          src={p.url}
+                          alt={p.title}
+                          className={styles.portfolioImage}
+                          onClick={() => handlePreview(p.url)}
+                        />
+                      )}
+                      <a
+                        href={p.url}
+                        className={styles.buttonLikeLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        자세히 보기
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {showModal && pdfUrl && (
+        <PdfModal url={pdfUrl} onClose={() => setShowModal(false)} />
+      )}
+    </div>
   );
 }
