@@ -4,6 +4,7 @@ export interface Portfolio {
 }
 
 export interface UserProfile {
+  id: number;
   name: string;
   email: string;
   nickname: string;

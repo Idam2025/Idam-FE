@@ -63,7 +63,6 @@ export default function Page() {
 
       if (data.userId) {
         localStorage.setItem("userId", data.userId);
-        connectWebSocket(data.userId);
       } else {
         console.warn("userId가 응답에 포함되지 않았습니다.", data);
       }

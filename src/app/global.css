@@ -52,8 +52,7 @@ a:active {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #7b5cff, #5ac8fa);
-  border-radius: 10px;
+  background: linear-gradient(135deg, #7b5cff, #050505);
 }
 
 ::-webkit-scrollbar-thumb:hover {

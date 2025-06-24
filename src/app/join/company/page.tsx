@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 export default function BusinessJoinPage() {
   const router = useRouter();
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [form, setForm] = useState({
     email: "",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import styles from "@/components/chat/chat.module.css";
@@ -15,6 +15,7 @@ interface ChatViewProps {
   bottomRef: RefObject<HTMLDivElement | null>;
   onChangeInput: (val: string) => void;
   onSendMessage: () => void;
+  onTypingChange: (typing: boolean) => void; // 추가됨
 }
 
 export default function ChatView({
@@ -25,6 +26,7 @@ export default function ChatView({
   bottomRef,
   onChangeInput,
   onSendMessage,
+  onTypingChange, // 추가됨
 }: ChatViewProps) {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -43,17 +45,17 @@ export default function ChatView({
           <div className={styles.chatHeader}>
             <Image
               src={
-                selectedChat.avatar?.trim()
-                  ? selectedChat.avatar
+                selectedChat.opponentProfileImage?.trim()
+                  ? selectedChat.opponentProfileImage
                   : "/profile/default.png"
               }
-              alt={selectedChat.name}
+              alt={selectedChat.opponentName}
               width={36}
               height={36}
               className={styles.avatar}
             />
             <span className={styles.name}>
-              {selectedChat.project} | {selectedChat.name}
+              {selectedChat.project} | {selectedChat.opponentName}
             </span>
           </div>
 
@@ -105,6 +107,9 @@ export default function ChatView({
 
           <div className={styles.chatInputBar}>
             <input
+              type="text"
+              onFocus={() => onTypingChange(true)}
+              onBlur={() => onTypingChange(false)}
               className={styles.chatInput}
               placeholder="메시지를 입력하세요"
               value={input}

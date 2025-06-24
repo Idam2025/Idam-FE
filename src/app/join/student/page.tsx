@@ -30,6 +30,39 @@ export default function StudentJoinPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // 이메일 형식 검사
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email)) {
+      alert("올바른 이메일 형식을 입력해주세요.");
+      return;
+    }
+
+    // 비밀번호 최소 길이
+    if (form.password.length < 8) {
+      alert("비밀번호는 최소 8자 이상이어야 합니다.");
+      return;
+    }
+
+    // 휴대폰 번호: 숫자만, 10~11자리
+    const phoneDigits = form.phone.replace(/\D/g, "");
+    if (phoneDigits && (phoneDigits.length < 10 || phoneDigits.length > 11)) {
+      alert("휴대폰 번호는 10~11자리의 숫자여야 합니다.");
+      return;
+    }
+
+    // 성별 선택 여부
+    if (!form.gender) {
+      alert("성별을 선택해주세요.");
+      return;
+    }
+
+    // 카테고리 선택 여부
+    if (!form.categoryName) {
+      alert("전공 카테고리를 선택해주세요.");
+      return;
+    }
+
+    // 검증 통과 후 회원가입 요청
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/signup/student`,

@@ -1,5 +1,15 @@
 import styles from "./chat.module.css";
 import { RefObject } from "react";
+
+interface ChatMessage {
+  messageId: number;
+  senderId: number;
+  senderName: string;
+  content: string;
+  sentAt: string;
+  read: boolean;
+}
+
 interface ChatMessageListProps {
   messages: ChatMessage[];
   myUserId: number;

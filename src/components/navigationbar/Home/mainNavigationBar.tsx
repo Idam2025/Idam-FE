@@ -71,7 +71,7 @@ export default function NavigationBar() {
       }
       disconnectWebSocket();
       removeToken();
-      alert("로그아웃 성공!");
+
       router.push("/");
     } catch (err: any) {
       alert(err.message || "로그아웃 중 오류 발생");
