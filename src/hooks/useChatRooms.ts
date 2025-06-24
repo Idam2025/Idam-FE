@@ -20,21 +20,25 @@ export function useChatRooms(accessToken: string) {
 
       const rooms = await Promise.all(
         data.map(async (room: any) => {
+          // 방별 메시지 가져와서 마지막 메시지 추출
           const messageRes = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/api/chat/room/${room.roomId}/messages`,
             { headers: { Authorization: `Bearer ${accessToken}` } }
           );
           const messages = await messageRes.json();
-          const lastMessage = messages.at(-1);
+          const lastMsg = messages.at(-1);
 
+          // ChatRoom 타입에 맞게 필드 이름을 정확히 매핑
           return {
             id: room.roomId,
-            name: room.opponentName,
+            opponentId: room.opponentId,
+            opponentName: room.opponentName,
+            opponentProfileImage: room.opponentProfileImage,
             project: room.projectTitle,
-            avatar: room.opponentProfileImage,
-            lastMessage,
+            lastMessage: lastMsg?.content ?? "",
+            lastMessageAt: lastMsg?.sentAt ?? "",
             unreadCount: room.unreadCount,
-          };
+          } as ChatRoom;
         })
       );
 
@@ -45,8 +49,8 @@ export function useChatRooms(accessToken: string) {
   };
 
   useEffect(() => {
-    fetchChatRooms();
-  }, []);
+    if (accessToken) fetchChatRooms();
+  }, [accessToken]);
 
   return { chatRooms, setChatRooms, fetchChatRooms };
 }
