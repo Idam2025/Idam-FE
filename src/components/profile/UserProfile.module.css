@@ -201,3 +201,17 @@
   background-color: transparent;
   transform: scale(1.1);
 }
+
+#imageUpload {
+  cursor: pointer;
+}
+.settingIcon {
+  font-size: 20px;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.settingIcon:hover {
+  transform: rotate(30deg) scale(1.1);
+}

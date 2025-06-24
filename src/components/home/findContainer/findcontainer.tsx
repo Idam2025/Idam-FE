@@ -42,6 +42,22 @@ const categoryMap: Record<number, Omit<SectionData, "students">> = {
   },
 };
 
+const dummyStudents: Student[] = Array.from({ length: 4 }, (_, i) => ({
+  userId: -i,
+  name: `홍길동${i + 1}`,
+  profileImage: "/profile/default.png",
+  tags: ["포트폴리오 없음", "더미 데이터", "학생"],
+  categoryId: 0,
+  nickname: `학생${i + 1}`,
+}));
+
+const dummySections: SectionData[] = Object.entries(categoryMap).map(
+  ([catId, category]) => ({
+    ...category,
+    students: dummyStudents,
+  })
+);
+
 export default function FindContainer() {
   const [sections, setSections] = useState<SectionData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -59,26 +75,26 @@ export default function FindContainer() {
             2: [],
             3: [],
           };
-          for (const student of res.data) {
+
+          for (const student of res.data || []) {
             const catId = student.categoryId;
             if (categorized[catId] && categorized[catId].length < 4) {
               categorized[catId].push(student);
             }
-            if (
-              categorized[1].length >= 4 &&
-              categorized[2].length >= 4 &&
-              categorized[3].length >= 4
-            ) {
-              break;
-            }
           }
+
           const newSections: SectionData[] = Object.entries(categorized).map(
             ([catId, students]) => ({
               ...categoryMap[+catId],
-              students,
+              students: students.length === 4 ? students : dummyStudents,
             })
           );
+
           setSections(newSections);
+        })
+        .catch((err) => {
+          console.error("❌ 학생 데이터 불러오기 실패:", err);
+          setSections(dummySections); // 요청 실패 시 fallback
         })
         .finally(() => {
           const elapsed = Date.now() - loadingStart;
@@ -111,8 +127,8 @@ export default function FindContainer() {
             <div className={style.sectionDesc}>{section.description}</div>
           </div>
           <div className={style.right}>
-            {section.students.map((student, idx) => (
-              <div className={style.profileWrapper}>
+            {section.students.map((student) => (
+              <div key={student.userId} className={style.profileWrapper}>
                 <div className={style.imageWrapper}>
                   <Image
                     src={student.profileImage || "/profile/default.png"}
@@ -120,6 +136,7 @@ export default function FindContainer() {
                     className={style.image}
                     width={170}
                     height={170}
+                    priority
                   />
                 </div>
                 <div className={style.name}>{student.nickname}</div>

@@ -12,6 +12,23 @@ type Company = {
   website: string;
 };
 
+const dummyCompanies: Company[] = [
+  {
+    userId: -1,
+    companyName: "더미 컴퍼니",
+    profileImage: "/Home/white.webp",
+    companyDescription: "기업 소개 정보가 없습니다.",
+    website: "https://example.com",
+  },
+  {
+    userId: -2,
+    companyName: "가짜 주식회사",
+    profileImage: "/Home/white.webp",
+    companyDescription: "이곳은 더미 데이터를 보여주는 영역입니다.",
+    website: "https://dummycorp.dev",
+  },
+];
+
 export default function CompanyInfo() {
   const [companies, setCompanies] = useState<Company[]>([]);
 
@@ -24,17 +41,17 @@ export default function CompanyInfo() {
         if (!res.ok) throw new Error("기업 조회 실패");
 
         const json = await res.json();
-        setCompanies(json.data);
+        setCompanies(Array.isArray(json.data) ? json.data : dummyCompanies);
       } catch (err) {
         console.error("기업 불러오기 실패:", err);
+        setCompanies(dummyCompanies);
       }
     };
 
-    fetchCompanies(); // 초기 1회 실행
+    fetchCompanies();
 
-    const intervalId = setInterval(fetchCompanies, 15000); // 15초마다 요청
-
-    return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 정리
+    const intervalId = setInterval(fetchCompanies, 15000);
+    return () => clearInterval(intervalId);
   }, []);
 
   return (

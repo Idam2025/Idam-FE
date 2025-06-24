@@ -6,4 +6,5 @@ export interface CompanyProfile {
   profileImage: string;
   email: string;
   phone: string;
+  companyDescription?: string;
 }
