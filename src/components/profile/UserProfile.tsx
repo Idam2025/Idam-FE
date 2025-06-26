@@ -13,9 +13,37 @@ export default function UserProfile() {
     phone: "",
   });
 
+  const isValidEmail = (email: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const isValidPhone = (phone: string) =>
+    /^01[0-9]-?[0-9]{3,4}-?[0-9]{4}$/.test(phone);
+
+  const [emailValid, setEmailValid] = useState(true);
+  const [phoneValid, setPhoneValid] = useState(true);
+
   const [showTagDeleteModal, setShowTagDeleteModal] = useState(false);
 
+  const [tagModalPosition, setTagModalPosition] = useState({ x: 200, y: 200 });
+  const handleOpenTagDeleteModal = () => {
+    setSelectedTags([]);
+
+    if (student?.tags) {
+      setStudentTags(student.tags);
+    }
+
+    if (student?.categoryId) {
+      setCategoryId(student.categoryId); // ✅ 프로필에서 받은 카테고리 ID 사용
+    }
+
+    setTimeout(() => {
+      setShowTagDeleteModal(true);
+    }, 0);
+  };
+
   const [profileImage, setProfileImage] = useState<File | null>(null);
+
+  const [studentTags, setStudentTags] = useState<string[]>(student?.tags ?? []);
 
   const profileImageInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -36,7 +64,6 @@ export default function UserProfile() {
   const [showPortfolioModal, setShowPortfolioModal] = useState(false);
 
   const tagDeleteModalRef = useRef<HTMLDivElement>(null); // Draggable용 ref
-  const tagModalPosition = { x: 0, y: 0 }; // 초기 위치, 중앙 고정용
 
   const [portfolios, setPortfolios] = useState<{ id: number; url: string }[]>(
     []
@@ -53,7 +80,12 @@ export default function UserProfile() {
   const portfolioModalRef = useRef(null);
 
   const handleDeleteTags = async () => {
-    if (!categoryId || selectedTags.length === 0) return;
+    console.log("🔥 삭제 버튼 클릭됨");
+    console.log(categoryId, selectedTags.length);
+    // 이렇게 바꾸기
+    if (selectedTags.length === 0) return;
+
+    console.log("🔥 삭제 버튼 클릭됨");
 
     try {
       const token = localStorage.getItem("accessToken");
@@ -212,6 +244,7 @@ export default function UserProfile() {
       });
 
       setPortfolios(data.portfolios);
+      setStudentTags(data.tags);
     }
   };
 
@@ -320,6 +353,52 @@ export default function UserProfile() {
     );
   };
 
+  const handleUploadUrlOnly = async () => {
+    if (!portfolioUrl) {
+      alert("URL을 입력해주세요.");
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("accessToken");
+      const formData = new FormData();
+      formData.append("portfolioUrl", portfolioUrl);
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/students/${userId}/portfolios`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        }
+      );
+
+      const json = await res.json();
+      if (json.success) {
+        alert("포트폴리오 URL이 등록되었습니다.");
+        setPortfolioUrl(""); // 입력창 초기화
+        // TODO: 프로필 다시 fetch
+      } else {
+        throw new Error(json.message);
+      }
+    } catch (err) {
+      console.error("URL 등록 실패:", err);
+      alert("URL 등록 중 오류 발생");
+    }
+  };
+  /* ---------------------------------------태그 모달 ------------------*/
+  useEffect(() => {
+    if (showTagModal) {
+      const modalWidth = 400; // 너 모달 width에 맞게 조정
+      const modalHeight = 300; // 너 모달 height에 맞게 조정
+      const x = window.innerWidth / 2 - modalWidth / 2;
+      const y = window.innerHeight / 2 - modalHeight / 2;
+      setModalPosition({ x, y });
+    }
+  }, [showTagModal]);
+  /* ---------------------------------------------------------------*/
   const handleAddTags = async () => {
     if (!userId || !categoryId || selectedTags.length === 0) return;
 
@@ -399,9 +478,11 @@ export default function UserProfile() {
             <div className={styles.profile_font}>{student.name}</div>
             <div className={styles.profile_font2}>{student.schoolName}</div>
           </div>
+
           <div className={styles.profile_button_container}>
             <button
               className={styles.fancyButton}
+              disabled={!emailValid || !phoneValid}
               onClick={() => {
                 if (editMode) {
                   handleSave();
@@ -430,28 +511,41 @@ export default function UserProfile() {
               <input
                 className={styles.editInput}
                 value={formData.email}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, email: e.target.value }))
-                }
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setFormData((prev) => ({ ...prev, email: value }));
+                  setEmailValid(isValidEmail(value));
+                }}
                 placeholder={student.email}
               />
             ) : (
               <p>{student.email}</p>
             )}
+            <>
+              {!emailValid && (
+                <p className={styles.error}>유효한 이메일 주소를 입력하세요.</p>
+              )}
+            </>
           </div>
+
           <div>
             <strong>전화번호</strong>
             {editMode ? (
               <input
                 className={styles.editInput}
                 value={formData.phone}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, phone: e.target.value }))
-                }
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setFormData((prev) => ({ ...prev, phone: value }));
+                  setPhoneValid(isValidPhone(value));
+                }}
                 placeholder={student.phone}
               />
             ) : (
               <p>{student.phone}</p>
+            )}
+            {!phoneValid && (
+              <p className={styles.error}>유효한 전화번호 형식을 입력하세요.</p>
             )}
           </div>
           <div>
@@ -486,10 +580,7 @@ export default function UserProfile() {
               {editMode && (
                 <div
                   className={styles.minusButton}
-                  onClick={() => {
-                    setSelectedTags([]); // 초기엔 아무것도 선택되지 않게
-                    setShowTagDeleteModal(true);
-                  }}
+                  onClick={handleOpenTagDeleteModal}
                   title="태그 삭제"
                 >
                   <FaMinus />
@@ -505,13 +596,13 @@ export default function UserProfile() {
                     <h3 className={styles.modalHeader}>기술 스택 삭제</h3>
 
                     <div className={styles.tagContainer_delete}>
-                      {student.tags?.map((tag: string, idx: number) => (
+                      {studentTags.map((tag, idx) => (
                         <span
                           key={idx}
                           className={`${styles.tagItem} ${
                             selectedTags.includes(tag) ? styles.selected : ""
                           }`}
-                          onClick={() => handleTagClick(tag)} // 선택/해제 가능
+                          onClick={() => handleTagClick(tag)}
                         >
                           {tag}
                         </span>
@@ -540,7 +631,7 @@ export default function UserProfile() {
               {showTagModal && (
                 <Draggable
                   nodeRef={tagModalRef}
-                  defaultPosition={modalPosition}
+                  defaultPosition={tagModalPosition}
                 >
                   <div ref={tagModalRef} className={styles.modal}>
                     <h3 className={styles.modalHeader}>기술 스택 선택</h3>
@@ -599,8 +690,9 @@ export default function UserProfile() {
                 </Draggable>
               )}
             </div>
+
             <div className={styles.tagContainer}>
-              {student.tags?.map((tag: string, idx: number) => (
+              {student?.tags?.map((tag: string, idx: number) => (
                 <span key={idx} className={styles.tagItem}>
                   {tag}
                 </span>
@@ -613,7 +705,7 @@ export default function UserProfile() {
             {showPortfolioModal && (
               <Draggable
                 nodeRef={portfolioModalRef}
-                defaultPosition={portfolioModalPosition}
+                defaultPosition={tagModalPosition}
               >
                 <div ref={portfolioModalRef} className={styles.modal}>
                   <h3>포트폴리오 업로드</h3>
@@ -651,12 +743,14 @@ export default function UserProfile() {
           <div className={styles.portfolioContainer}>
             <strong>포트폴리오</strong>
             <div className={styles.editForm}>
-              <button
-                className={styles.fancyButton}
-                onClick={() => setShowPortfolioModal(true)}
-              >
-                포트폴리오 추가
-              </button>
+              {editMode && (
+                <button
+                  className={styles.fancyButton}
+                  onClick={() => setShowPortfolioModal(true)}
+                >
+                  포트폴리오 추가
+                </button>
+              )}
             </div>
             {portfolios.length === 0 ? (
               <p>등록된 포트폴리오가 없습니다.</p>
@@ -664,13 +758,12 @@ export default function UserProfile() {
               <div className={styles.portfolioList}>
                 {portfolios.map((p) => (
                   <div key={p.id} className={styles.portfolioItem}>
-                    <iframe
-                      src={p.url}
+                    <embed
+                      src={`${p.url}#toolbar=0`}
+                      type="application/pdf"
                       width="100%"
-                      height="200px"
-                      title={`portfolio-${p.id}`}
-                      className={styles.portfolioViewer}
-                    ></iframe>
+                      height="80%"
+                    />
 
                     <div className={styles.buttonRow}>
                       <button

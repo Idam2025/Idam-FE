@@ -1,3 +1,11 @@
+.background {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  overflow-y: hidden;
+}
+
 .container {
   display: flex;
   justify-content: center;
@@ -5,7 +13,6 @@
   height: 100vh;
   max-height: 100vh;
   overflow: hidden;
-  padding: 60px 20px;
   background-image: url("/usual/resized_image.png");
   background-size: cover;
   background-position: center;
@@ -22,14 +29,16 @@
 }
 
 .profile_container {
+  margin-top: 70px;
   border-radius: 36px;
+  overflow-x: hidden;
   background: linear-gradient(transparent, rgb(143, 72, 223));
   box-shadow: 0px 4px 38px rgba(204, 194, 194, 0.623);
-  width: 100%;
-  height: 80vh;
+  width: 80%;
+  height: 60vh;
   max-width: 1200px;
   padding: 40px;
-  padding-right: 10px;
+  padding-right: 30px;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -162,33 +171,53 @@
 
 .portfolioGrid {
   display: grid;
+  padding: 5px;
+  gap: 30px;
   grid-template-columns: repeat(2, 1fr); /* 한 줄에 2개 고정 */
-  gap: 20px;
+  justify-items: center;
 }
 
 .portfolioCard {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.247);
   border-radius: 12px;
-  padding: 16px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
   gap: 10px;
+  width: 100%;
   height: 100%;
+  margin-bottom: 20px;
+  margin-top: 40px;
 }
 
 .portfolioTitle {
   font-size: 16px;
   font-weight: 600;
   color: #ffffff;
+  width: 100%;
 }
 
 .portfolioPreview {
-  width: 40%;
-  height: 500px;
+  width: 100%;
+  height: 40vh;
   border: none;
   border-radius: 8px;
-  object-fit: cover;
+  display: block;
+}
+
+.portfolioPreviewWrapper {
+  width: 95%;
+
+  height: 30vh;
+  aspect-ratio: 16 / 9; /* 비율 유지 */
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .portfolioLink {
@@ -405,4 +434,20 @@
   display: flex;
   gap: 12px;
   margin-top: 20px;
+}
+
+.fancyButton_port {
+  padding: 6px 12px;
+  background-color: #7f72f5;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  width: 20%;
+  transition: background-color 0.2s ease;
+}
+
+.fancyButton_port:hover {
+  background-color: #685dc5;
 }

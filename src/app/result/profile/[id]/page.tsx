@@ -5,6 +5,7 @@ import styles from "@/components/result/profile/profile.module.css";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import PdfModal from "@/components/profile/PdfModal";
+import NavigationBar from "@/components/navigationbar/Home/mainNavigationBar";
 
 interface StudentProfile {
   name: string;
@@ -103,123 +104,141 @@ export default function Page() {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.profile_container}>
-        <div className={styles.profile_content}>
-          <div className={styles.profile_content_Title}>
-            <img
-              className={styles.profile_image}
-              src={student?.profileImage || "/profile/default.png"}
-              alt={student?.name || "Profile"}
-            />
-            <div className={styles.profile_font_container}>
-              <div className={styles.profile_font}>{student?.name}</div>
-              <div className={styles.profile_font2}>{student?.email}</div>
-              <button
-                onClick={() => setShowModal(true)}
-                className={styles.fancyButton}
-              >
-                Chat
-              </button>
-            </div>
-          </div>
-
-          <div className={styles.detail_info_container}>
-            <div className={styles.infoBox}>
-              <div>
-                <strong>학교</strong>
-                <p>{student?.schoolName}</p>
-              </div>
-              <div>
-                <strong>전공</strong>
-                <p>{student?.major}</p>
-              </div>
-              <div>
-                <strong>닉네임</strong>
-                <p>{student?.nickname}</p>
-              </div>
-              <div>
-                <strong>성별</strong>
-                <p>{student?.gender}</p>
-              </div>
-              <div>
-                <strong>전화번호</strong>
-                <p>{student?.phone}</p>
-              </div>
-              <div>
-                <strong>기술 스택</strong>
-                <div className={styles.tagList}>
-                  {student?.tags?.map((tag, i) => (
-                    <span key={i} className={styles.tag}>
-                      {tag}
-                    </span>
-                  ))}
+    <>
+      <div className={styles.background}>
+        <NavigationBar />
+        <div className={styles.container}>
+          <div className={styles.profile_container}>
+            <div className={styles.profile_content}>
+              <div className={styles.profile_content_Title}>
+                <img
+                  className={styles.profile_image}
+                  src={student?.profileImage || "/profile/default.png"}
+                  alt={student?.name || "Profile"}
+                />
+                <div className={styles.profile_font_container}>
+                  <div className={styles.profile_font}>{student?.name}</div>
+                  <div className={styles.profile_font2}>{student?.email}</div>
+                  <button
+                    onClick={() => setShowModal(true)}
+                    className={styles.fancyButton}
+                  >
+                    Chat
+                  </button>
                 </div>
               </div>
-            </div>
-          </div>
 
-          {Array.isArray(student?.portfolios) &&
-            student.portfolios.length > 0 && (
-              <div className={styles.portfolioSection}>
-                <h3>포트폴리오</h3>
-                <div className={styles.portfolioGrid}>
-                  {student.portfolios.map((p, i) => (
-                    <div key={i} className={styles.portfolioCard}>
-                      <div className={styles.portfolioTitle}>{p.title}</div>
-                      <div
-                        onClick={() => setPdfUrl(p.url)}
-                        className={styles.portfolioPreviewWrapper}
-                      >
-                        {p.url.endsWith(".pdf") ? (
-                          <iframe
-                            src={p.url}
-                            className={styles.portfolioPreview}
-                            title={p.title}
-                          />
-                        ) : (
-                          <img
-                            src={p.url}
-                            alt={p.title}
-                            className={styles.portfolioPreview}
-                          />
-                        )}
-                      </div>
+              <div className={styles.detail_info_container}>
+                <div className={styles.infoBox}>
+                  <div>
+                    <strong>학교</strong>
+                    <p>{student?.schoolName}</p>
+                  </div>
+                  <div>
+                    <strong>전공</strong>
+                    <p>{student?.major}</p>
+                  </div>
+                  <div>
+                    <strong>닉네임</strong>
+                    <p>{student?.nickname}</p>
+                  </div>
+                  <div>
+                    <strong>성별</strong>
+                    <p>{student?.gender}</p>
+                  </div>
+                  <div>
+                    <strong>전화번호</strong>
+                    <p>{student?.phone}</p>
+                  </div>
+
+                  <div>
+                    <strong>기술 스택</strong>
+                    <div className={styles.tagList}>
+                      {student?.tags?.map((tag, i) => (
+                        <span key={i} className={styles.tag}>
+                          {tag}
+                        </span>
+                      ))}
                     </div>
-                  ))}
+                  </div>
                 </div>
               </div>
-            )}
-        </div>
-      </div>
 
-      {showModal && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modalContent}>
-            <h2>프로젝트명을 입력해주세요</h2>
-            <input
-              type="text"
-              value={projectName}
-              onChange={(e) => setProjectName(e.target.value)}
-              onKeyUp={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  moveChat();
-                }
-              }}
-              className={styles.modalInput}
-            />
-            <div className={styles.modalButtons}>
-              <button onClick={() => setShowModal(false)}>취소</button>
-              <button onClick={moveChat} disabled={isLoading}>
-                확인
-              </button>
+              {Array.isArray(student?.portfolios) &&
+                student.portfolios.length > 0 && (
+                  <div className={styles.portfolioSection}>
+                    <h3>포트폴리오</h3>
+                    <div className={styles.portfolioGrid}>
+                      {student.portfolios.map((p, i) => (
+                        <div key={i} className={styles.portfolioCard}>
+                          <div className={styles.portfolioTitle}>{p.title}</div>
+
+                          <div
+                            onClick={() => setPdfUrl(p.url)}
+                            className={styles.portfolioPreviewWrapper}
+                          >
+                            {p.url.endsWith(".pdf") ? (
+                              <iframe
+                                src={`${p.url}#toolbar=0`}
+                                className={styles.portfolioPreview}
+                                title={p.title}
+                                width="100%"
+                                height="80%"
+                              />
+                            ) : (
+                              <img
+                                src={p.url}
+                                alt={p.title}
+                                className={styles.portfolioPreview}
+                              />
+                            )}
+                          </div>
+
+                          <button
+                            className={styles.fancyButton_port}
+                            onClick={() => window.open(p.url, "_blank")}
+                            style={{ marginTop: "8px" }}
+                          >
+                            자세히 보기
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
             </div>
           </div>
-        </div>
-      )}
 
-      {pdfUrl && <PdfModal url={pdfUrl} onClose={() => setPdfUrl(null)} />}
-    </div>
+          {showModal && (
+            <div className={styles.modalOverlay}>
+              <div className={styles.modalContent}>
+                <h2>프로젝트명을 입력해주세요</h2>
+                <input
+                  type="text"
+                  value={projectName}
+                  onChange={(e) => setProjectName(e.target.value)}
+                  onKeyUp={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      moveChat();
+                    }
+                  }}
+                  className={styles.modalInput}
+                />
+                <div className={styles.modalButtons}>
+                  <button onClick={() => setShowModal(false)}>취소</button>
+                  <button onClick={moveChat} disabled={isLoading}>
+                    확인
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {pdfUrl && <PdfModal url={pdfUrl} onClose={() => setPdfUrl(null)} />}
+        </div>
+        );
+      </div>
+    </>
   );
 }

@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import style from "./findContainer.module.css";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type Student = {
   userId: number;
@@ -114,6 +116,7 @@ export default function FindContainer() {
 
   return (
     <div className={style.findContainerWrapper}>
+      <div className={style.TITLE}>STUDENT INFORMATION</div>
       {sections.map((section, idx) => (
         <motion.div
           key={idx}
@@ -130,14 +133,17 @@ export default function FindContainer() {
             {section.students.map((student) => (
               <div key={student.userId} className={style.profileWrapper}>
                 <div className={style.imageWrapper}>
-                  <Image
-                    src={student.profileImage || "/profile/default.png"}
-                    alt={student.name || "프로필 이미지"}
-                    className={style.image}
-                    width={170}
-                    height={170}
-                    priority
-                  />
+                  <Link href={`/result/profile/${student.userId}`}>
+                    <Image
+                      src={student.profileImage || "/profile/default.png"}
+                      alt={student.name || "프로필 이미지"}
+                      className={style.image}
+                      width={170}
+                      height={170}
+                      priority
+                      style={{ cursor: "pointer" }}
+                    />
+                  </Link>
                 </div>
                 <div className={style.name}>{student.nickname}</div>
                 <div className={style.tagList}>

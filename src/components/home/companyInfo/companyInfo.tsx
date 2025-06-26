@@ -16,14 +16,14 @@ const dummyCompanies: Company[] = [
   {
     userId: -1,
     companyName: "더미 컴퍼니",
-    profileImage: "/Home/white.webp",
+    profileImage: "/Home/company_default.jpg",
     companyDescription: "기업 소개 정보가 없습니다.",
     website: "https://example.com",
   },
   {
     userId: -2,
     companyName: "가짜 주식회사",
-    profileImage: "/Home/white.webp",
+    profileImage: "/Home/company_default.jpg",
     companyDescription: "이곳은 더미 데이터를 보여주는 영역입니다.",
     website: "https://dummycorp.dev",
   },

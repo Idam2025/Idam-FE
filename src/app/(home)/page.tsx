@@ -39,7 +39,7 @@ export default function Page() {
         <motion.div variants={itemVariants(0.2)}>
           <LogoAndAiContainer />
         </motion.div>
-        <motion.div variants={itemVariants(0.4)}>
+        <motion.div variants={itemVariants(0.4)} style={{ marginTop: "30px" }}>
           <FindContainer />
         </motion.div>
         <motion.div variants={itemVariants(0.6)}>

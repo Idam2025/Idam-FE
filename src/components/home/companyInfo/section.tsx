@@ -23,7 +23,7 @@ export default function CompanyInfo({
       <div className={style.right}>
         <div className={style.imgStyle}>
           <Image
-            src={imageSrc}
+            src={imageSrc || "/Home/company_default.jpg"}
             alt="company"
             width={500}
             height={281}
