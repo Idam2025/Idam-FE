@@ -1,0 +1,214 @@
+.bg {
+  width: 100%;
+  min-height: 100vh;
+  background-image: url("/usual/resized_image.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(6px);
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.container {
+  width: 100%;
+  max-width: 680px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 1px 20px rgba(215, 215, 215, 0.767);
+  padding: 32px;
+  margin: auto;
+  backdrop-filter: blur(10px) saturate(180%);
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
+}
+.loading {
+  color: white;
+  text-align: center;
+  padding: 40px;
+}
+.profile_content_Title {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin-bottom: 30px;
+  position: relative;
+}
+.avatarWrapper {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #819ddb;
+  flex-shrink: 0;
+}
+.profile_image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #eef4ff;
+  border-radius: 50%;
+  display: block;
+  cursor: pointer;
+}
+.addButton {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 30px;
+  height: 30px;
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 2;
+  box-shadow: 0 1px 6px rgba(59, 130, 246, 0.15);
+  transition: background 0.15s;
+}
+.addButton:hover {
+  background: #2563eb;
+}
+.hidden {
+  display: none !important;
+}
+.profile_font_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.profile_font {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: #e0edff;
+}
+.profile_font2 {
+  font-size: 14px;
+  color: #9cb7ef;
+  margin-bottom: 2px;
+}
+.profile_button_container {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+  margin-top: 10px;
+}
+.fancyButton,
+.linkSubmitBtn {
+  background-color: #3b82f6;
+  color: white;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.18s;
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.08);
+}
+.fancyButton:hover,
+.linkSubmitBtn:hover {
+  background-color: #2563eb;
+}
+.detail_info_container {
+  margin-top: 16px;
+}
+.infoBox {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+}
+.infoBox > div {
+  min-width: 0;
+  font-size: 14px;
+}
+.infoBox > div:not(:last-child) {
+  border-bottom: 1px solid #263c65;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+}
+.infoBox strong {
+  display: block;
+  color: #b1c8ef;
+  font-weight: 500;
+  margin-bottom: 2px;
+  font-size: 13px;
+}
+.infoBox p,
+.infoBox input {
+  margin: 0;
+  color: #dbeafe;
+  font-size: 14px;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+.input,
+.editInput {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1.5px solid #819ddb;
+  width: 100%;
+  font-size: 14px;
+  margin-top: 3px;
+}
+.input:read-only,
+.editInput:read-only {
+  background-color: rgba(255, 255, 255, 0.04);
+  color: #bfcfff;
+  border-style: dashed;
+}
+.input::placeholder,
+.editInput::placeholder {
+  color: #a7b5d4;
+  opacity: 0.7;
+}
+.textRow {
+  font-size: 14px;
+  color: #dbeafe;
+  margin: 4px 0;
+}
+.portfolioSection {
+  margin-top: 28px;
+}
+.portfolioTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #cddfff;
+  margin-bottom: 16px;
+  text-align: center;
+}
+/* 반응형 */
+@media (max-width: 600px) {
+  .container {
+    padding: 8px;
+    border-radius: 0;
+  }
+  .avatarWrapper {
+    width: 72px;
+    height: 72px;
+  }
+  .portfolioSection {
+    margin-top: 16px;
+  }
+  .infoBox {
+    padding: 10px 6px;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}

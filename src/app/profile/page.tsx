@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import StudentProfilePage from "@/components/profile/UserProfile";
 import CompanyProfilePage from "@/components/profile/CompanyProfilePage";
+import NavigationBar from "@/components/navigationbar/Home/mainNavigationBar";
+import style from "./profile.module.css";
 
 export default function ProfilePage() {
   const [userType, setUserType] = useState<string | null>(null);
@@ -21,9 +23,16 @@ export default function ProfilePage() {
     return <div>불러오는 중...</div>;
   }
 
-  return userType === "COMPANY" ? (
-    <CompanyProfilePage />
-  ) : (
-    <StudentProfilePage />
+  return (
+    <>
+      <div className={style.container}>
+        <NavigationBar />
+        {userType === "COMPANY" ? (
+          <CompanyProfilePage />
+        ) : (
+          <StudentProfilePage />
+        )}
+      </div>
+    </>
   );
 }

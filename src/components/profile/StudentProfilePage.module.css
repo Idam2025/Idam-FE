@@ -1,0 +1,465 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+
+  background-image: url("/usual/resized_image.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: repeat;
+  overflow-y: hidden;
+}
+
+.profile_image_wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.stackTitleRow {
+  display: flex;
+  align-items: center;
+  /* 텍스트와 버튼 사이 간격 */
+}
+
+.plusIcon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #7f72f5;
+  color: white;
+  border-radius: 50%;
+  padding: 6px;
+  font-size: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.label {
+  margin-right: 10px;
+}
+
+.bg {
+  width: 100%;
+  height: 100vh;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.plusButton {
+  background-color: #7f72f5;
+  color: white;
+  border-radius: 50%;
+  padding: 3px;
+  width: 12px;
+  height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+  margin-left: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.plusButton:hover {
+  background-color: #5f56d6;
+}
+
+.minusButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  padding: 3px;
+  margin-bottom: 6px;
+  margin-left: 5px;
+  background-color: #ffb1b1; /* 연한 빨간색 */
+  border-radius: 50%;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+  margin-left: 8px; /* + 버튼과 간격 */
+}
+
+.minusButton:hover {
+  background-color: #ff7d7d; /* hover 시 더 진한 빨강 */
+  transform: scale(1.1);
+}
+
+.profile_container {
+  background: linear-gradient(transparent, rgb(143, 72, 223));
+  box-shadow: 0px 4px 38px rgba(204, 194, 194, 0.623);
+  width: 100%;
+  height: 80vh;
+  max-width: 1400px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 25px;
+  max-height: 100%;
+  margin-right: -20px;
+}
+
+.profile_content_Title {
+  display: flex;
+  width: auto;
+  align-items: center;
+  gap: 20px;
+  border-radius: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: linear-gradient(rgb(251, 154, 240), transparent);
+  padding: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.profile_image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #ccc;
+}
+
+.profile_font_container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profile_font {
+  color: #ffffff;
+  font-family: Poppins;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.profile_font2 {
+  color: #eddede;
+  font-family: Poppins;
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.profile_button_container {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 20px;
+}
+
+.fancyButton {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #7b5cff, #5ac8fa);
+  border: none;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.fancyButton_port {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #7b5cff, #5ac8fa);
+  border: none;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.fancyButton:hover {
+  background: #5ac8fa;
+  color: whitesmoke;
+}
+
+.fancyButton:active {
+  transform: scale(0.97);
+}
+
+.modal .fancyButton {
+  margin-top: 10px;
+  padding: 10px 10px;
+  background: linear-gradient(135deg, #7b5cff, #5ac8fa);
+  border: none;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.fancyButton2 {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #420b86, #5ac8fa);
+  border: none;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.fancyButton2:hover {
+  transform: scale(1);
+}
+
+.fancyButton2:active {
+  transform: scale(0.97);
+}
+
+.cancelButton {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #ff0303, rgb(255, 164, 164));
+  border: none;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancelButton:hover {
+  background-color: #d1d5db;
+}
+
+.buttonRow {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.infoBox {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px 0;
+  font-family: Poppins, sans-serif;
+  font-size: 16px;
+  color: #fffdfd;
+  line-height: 1.5;
+}
+
+.infoBox strong {
+  font-weight: 600;
+  color: #ffffff;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.infoBox p {
+  margin: 0;
+  padding: 0;
+}
+
+.editForm {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 16px;
+  background: transparent;
+  padding-left: 0px !important;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.editInput {
+  min-width: 120px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  color: white;
+  background: transparent;
+  margin-right: 10px;
+}
+
+/* ------------------------------------------------ Tag 관련 디자인 */
+
+.tagContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.tagBadge {
+  background-color: #ffffff;
+  color: #2c4cff;
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  font-weight: 500;
+}
+
+.modal .tagContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+  height: 20vh;
+  overflow-y: auto;
+}
+
+.tagContainer_delete {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px !important;
+  margin-top: 12px;
+  overflow-y: auto;
+}
+
+.tagItem {
+  padding: 6px 12px;
+  background-color: #ffffff;
+  color: #2c4cff;
+  border-radius: 9999px;
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+}
+
+.tagItem:hover {
+  background-color: #c0cbd9;
+}
+
+.tagItem.selected {
+  background-color: #7b5cff;
+  color: white;
+}
+
+/*---------------------------------------------------포트폴리오 -------------------*/
+
+.infoBox_port {
+  display: flex;
+  width: 100%;
+  gap: 20px;
+  padding: 20px 0;
+  font-family: Poppins, sans-serif;
+  font-size: 16px;
+  color: #fffdfd;
+  line-height: 1.5;
+}
+
+.modal {
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  right: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(black, rgb(74, 74, 83));
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  width: 400px;
+  max-width: 90%;
+}
+
+.modal_delete {
+  position: fixed;
+  top: 40%;
+  left: 40%;
+  right: 0%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(black, rgb(74, 74, 83));
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  width: 400px;
+  max-width: 90%;
+}
+
+.modal h3 {
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.modal input[type="file"],
+.modal input[type="text"] {
+  width: 100%;
+  margin-bottom: 16px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+  background: transparent;
+  color: white;
+}
+
+.modal button {
+  margin-right: 10px;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+}
+
+.portfolioContainer {
+  width: 100%;
+  margin-top: 30px;
+}
+
+.portfolioList {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 24px;
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .portfolioItem {
+    flex: 1 1 100%;
+  }
+}
+
+.portfolioItem {
+  flex: 1 1 calc(50% - 12px); /* 2개씩 + gap 고려 */
+  background: rgba(255, 255, 255, 0.168);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+}
+
+.portfolioViewer {
+  width: 100%;
+  height: 300px;
+  border: none;
+  border-radius: 8px;
+}

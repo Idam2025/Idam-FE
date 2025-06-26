@@ -1,208 +1,701 @@
-"use client";
+import { useEffect, useRef, useState } from "react";
+import styles from "./StudentProfilePage.module.css";
+import { FaPlus, FaMinus } from "react-icons/fa";
+import Draggable from "react-draggable";
 
-import styles from "@/components/result/profile/profile.module.css";
-import PdfModal from "./PdfModal";
-import useStudentProfile from "@/hooks/profile/useStudentProfile";
-import { useState } from "react";
+export default function UserProfile() {
+  const [student, setStudent] = useState<any>(null);
+  const [editMode, setEditMode] = useState(false);
+  const [formData, setFormData] = useState({
+    nickname: "",
+    gender: "",
+    email: "",
+    phone: "",
+  });
 
-export default function StudentProfilePage() {
-  const {
-    student,
-    isLoading,
-    editMode,
-    setEditMode,
-    formData,
-    setFormData,
-    handleChange,
-    handleSave,
-    handlePreview,
-    pdfUrl,
-    showModal,
-    setShowModal,
-    fetchTags,
-  } = useStudentProfile();
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
+  const [showTagDeleteModal, setShowTagDeleteModal] = useState(false);
+
+  const [profileImage, setProfileImage] = useState<File | null>(null);
+
+  const profileImageInputRef = useRef<HTMLInputElement | null>(null);
+
+  const [showTagModal, setShowTagModal] = useState(false);
+
+  const tagModalRef = useRef<HTMLDivElement>(null);
+
+  const [categoryId, setCategoryId] = useState<number | null>(null);
+  const [categories, setCategories] = useState<{ id: number; name: string }[]>(
+    []
+  );
+  const [tagOptions, setTagOptions] = useState<string[]>([]);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
+  const [userId, setUserId] = useState<number | null>(null);
+  const [portfolioFile, setPortfolioFile] = useState<File | null>(null);
+  const [portfolioUrl, setPortfolioUrl] = useState("");
+  const [showPortfolioModal, setShowPortfolioModal] = useState(false);
+
+  const tagDeleteModalRef = useRef<HTMLDivElement>(null); // Draggable용 ref
+  const tagModalPosition = { x: 0, y: 0 }; // 초기 위치, 중앙 고정용
+
+  const [portfolios, setPortfolios] = useState<{ id: number; url: string }[]>(
+    []
+  );
+
+  const [selectedPortfolio, setSelectedPortfolio] = useState<string | null>(
     null
   );
-  const [showCategorySelect, setShowCategorySelect] = useState(false);
-  const [fetchedTags, setFetchedTags] = useState<string[]>([]);
 
-  if (isLoading || !student)
-    return <div className={styles.loading}>불러오는 중...</div>;
+  const [portfolioModalPosition, setPortfolioModalPosition] = useState({
+    x: 0,
+    y: 0,
+  });
+  const portfolioModalRef = useRef(null);
 
+  const handleDeleteTags = async () => {
+    if (!categoryId || selectedTags.length === 0) return;
+
+    try {
+      const token = localStorage.getItem("accessToken");
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/students/${userId}/categories/${categoryId}/tags`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ tags: selectedTags }),
+        }
+      );
+      const json = await res.json();
+      if (json.success) {
+        setShowTagDeleteModal(false);
+        setSelectedTags([]);
+        await getStudentProfile(); // ✅ 프로필 데이터 다시 불러오기
+      } else {
+        throw new Error(json.message);
+      }
+    } catch (err) {
+      console.error("태그 삭제 실패:", err);
+      alert("태그 삭제 중 오류 발생");
+    }
+  };
+
+  useEffect(() => {
+    if (showPortfolioModal) {
+      const modalWidth = 400; // 대략적인 모달 크기
+      const modalHeight = 300;
+      const centerX = window.innerWidth / 2 - modalWidth / 2;
+      const centerY = window.innerHeight / 2 - modalHeight / 2;
+      setPortfolioModalPosition({ x: centerX, y: centerY });
+    }
+  }, [showPortfolioModal]);
+
+  const handleUploadPortfolio = async () => {
+    if (!userId || !portfolioFile) {
+      alert("포트폴리오 파일을 선택해주세요.");
+      return;
+    }
+
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("portfolioFile", portfolioFile); // PDF 파일
+    formData.append("portfolioUrl", portfolioUrl); // 선택적 URL
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/students/${userId}/portfolios`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: formData,
+        }
+      );
+
+      const json = await res.json();
+      if (json.success) {
+        await getStudentProfile();
+        setShowPortfolioModal(false);
+        setPortfolioFile(null);
+        setPortfolioUrl("");
+      } else {
+        alert("등록 실패: " + json.message);
+      }
+    } catch (err) {
+      console.error("포트폴리오 등록 오류:", err);
+      alert("오류가 발생했습니다.");
+    }
+  };
+
+  const handleDeletePortfolio = async (portfolioId: number) => {
+    if (!userId) return;
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) return;
+
+    const confirmed = window.confirm("정말 삭제하시겠습니까?");
+    if (!confirmed) return;
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/students/${userId}/portfolios/${portfolioId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      const json = await res.json();
+      if (json.success) {
+        setPortfolios((prev) => prev.filter((p) => p.id !== portfolioId));
+      } else {
+        alert("삭제 실패: " + json.message);
+      }
+    } catch (err) {
+      console.error("삭제 오류:", err);
+      alert("삭제 중 오류가 발생했습니다.");
+    }
+  };
+
+  useEffect(() => {
+    const storedUserId = localStorage.getItem("userId");
+    if (storedUserId) setUserId(Number(storedUserId));
+  }, []);
+
+  useEffect(() => {
+    if (userId) {
+      getStudentProfile();
+    }
+  }, [userId]);
+
+  const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    if (showTagModal) {
+      const modalWidth = 400; // 예상 모달 너비
+      const modalHeight = 400; // 예상 모달 높이
+      const centerX = window.innerWidth / 2 - modalWidth / 2;
+      const centerY = window.innerHeight / 2 - modalHeight / 2;
+      setModalPosition({ x: centerX, y: centerY });
+    }
+  }, [showTagModal]);
+
+  const getStudentProfile = async () => {
+    if (!userId) return;
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) return;
+
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/students/${userId}/profile`,
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    );
+    const json = await res.json();
+    if (json.success) {
+      const data = json.data;
+      setStudent(data);
+      setFormData({
+        nickname: data.nickname,
+        gender: data.gender,
+        email: data.email,
+        phone: data.phone,
+      });
+
+      setPortfolios(data.portfolios);
+    }
+  };
+
+  const handleSave = async () => {
+    if (!userId) return;
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) return;
+    console.log(formData.phone, formData.email);
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/students/${userId}/profile`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({
+            nickname: formData.nickname,
+            phone: formData.phone,
+            email: formData.email,
+            gender: formData.gender,
+          }),
+        }
+      );
+
+      const json = await res.json();
+      console.log(json);
+      if (json.success) {
+        await getStudentProfile();
+        setEditMode(false);
+      } else {
+        alert("수정 실패: " + json.message);
+      }
+    } catch (err) {
+      console.error("프로필 수정 오류:", err);
+      alert("서버 오류 발생");
+    }
+  };
+
+  const handleUploadImage = async (file: File) => {
+    if (!userId || !file) return;
+
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) return;
+
+    const fd = new FormData();
+    fd.append("profileImage", file);
+
+    try {
+      await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/students/${userId}/profile/image`,
+        {
+          method: "PUT",
+          headers: { Authorization: `Bearer ${accessToken}` },
+          body: fd,
+        }
+      );
+      await getStudentProfile();
+    } catch (err) {
+      console.error("프로필 이미지 업로드 오류:", err);
+      alert("업로드 중 오류가 발생했습니다.");
+    }
+  };
+
+  const handleDeleteImage = async () => {
+    if (!userId) return;
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) return;
+
+    await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/students/${userId}/profile/image`,
+      {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    );
+
+    await getStudentProfile();
+  };
+
+  const handleFetchTags = async () => {
+    if (!categoryId) return;
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) return;
+
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/categories/${categoryId}/tags`,
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    );
+    const json = await res.json();
+    if (json.success) {
+      const tagNames = json.data.map((tag: { tagName: string }) => tag.tagName);
+      setTagOptions(tagNames);
+    }
+  };
+
+  const handleTagClick = (tagName: string) => {
+    setSelectedTags((prev) =>
+      prev.includes(tagName)
+        ? prev.filter((tag) => tag !== tagName)
+        : [...prev, tagName]
+    );
+  };
+
+  const handleAddTags = async () => {
+    if (!userId || !categoryId || selectedTags.length === 0) return;
+
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) return;
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/students/${userId}/categories/${categoryId}/tags`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ tags: selectedTags }),
+        }
+      );
+
+      const json = await res.json();
+      if (json.success) {
+        setSelectedTags([]);
+        setShowTagModal(false);
+        await getStudentProfile();
+      } else {
+        alert("태그 추가 실패: " + json.message);
+      }
+    } catch (err) {
+      console.error("태그 추가 오류:", err);
+      alert("오류 발생");
+    }
+  };
+
+  if (!student) return <div className={styles.profile_font}>로딩 중...</div>;
   return (
-    <div className={styles.bg}>
-      <div className={styles.container}>
-        <div className={styles.profile_container}>
-          <div className={styles.scrollContainer}>
-            <div className={styles.scrollContent}>
-              <div className={styles.profile_content_Title}>
-                <img
-                  src={student.profileImage || "/default-profile.png"}
-                  alt="Profile"
-                  className={styles.profile_image}
+    <div className={styles.container}>
+      <div className={styles.profile_container}>
+        <div className={styles.profile_content_Title}>
+          <div className={styles.profile_image_wrapper}>
+            <img
+              src={student.profileImage || "/profile/default.png"}
+              className={styles.profile_image}
+              alt="Profile"
+              onClick={() => {
+                if (editMode) profileImageInputRef.current?.click();
+              }}
+              style={{ cursor: editMode ? "pointer" : "default" }}
+            />
+
+            {editMode && (
+              <>
+                <div
+                  className={styles.plusIcon}
+                  onClick={() => profileImageInputRef.current?.click()}
+                >
+                  <FaPlus />
+                </div>
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={profileImageInputRef}
+                  style={{ display: "none" }}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setProfileImage(file);
+                      handleUploadImage(file);
+                    }
+                  }}
                 />
-                <div className={styles.profile_font_container}>
-                  {editMode ? (
-                    <input
-                      type="text"
-                      name="nickname"
-                      value={formData.nickname}
-                      onChange={handleChange}
-                      className={styles.editInput}
-                    />
-                  ) : (
-                    <div className={styles.profile_font}>
-                      {student.nickname}
-                    </div>
-                  )}
-                  <div className={styles.profile_font2}>{student.email}</div>
-                </div>
-                <div className={styles.profile_button_container}>
-                  <button
-                    className={styles.fancyButton}
-                    onClick={editMode ? handleSave : () => setEditMode(true)}
+              </>
+            )}
+          </div>
+
+          <div className={styles.profile_font_container}>
+            <div className={styles.profile_font}>{student.name}</div>
+            <div className={styles.profile_font2}>{student.schoolName}</div>
+          </div>
+          <div className={styles.profile_button_container}>
+            <button
+              className={styles.fancyButton}
+              onClick={() => {
+                if (editMode) {
+                  handleSave();
+                } else {
+                  setEditMode(true);
+                }
+              }}
+            >
+              {editMode ? "완료" : "수정"}
+            </button>
+          </div>
+        </div>
+
+        <div className={styles.infoBox}>
+          <div>
+            <strong>학번</strong>
+            <p>{student.schoolId}</p>
+          </div>
+          <div>
+            <strong>전공</strong>
+            <p>{student.major}</p>
+          </div>
+          <div>
+            <strong>이메일</strong>
+            {editMode ? (
+              <input
+                className={styles.editInput}
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, email: e.target.value }))
+                }
+                placeholder={student.email}
+              />
+            ) : (
+              <p>{student.email}</p>
+            )}
+          </div>
+          <div>
+            <strong>전화번호</strong>
+            {editMode ? (
+              <input
+                className={styles.editInput}
+                value={formData.phone}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, phone: e.target.value }))
+                }
+                placeholder={student.phone}
+              />
+            ) : (
+              <p>{student.phone}</p>
+            )}
+          </div>
+          <div>
+            <strong>닉네임</strong>
+            {editMode ? (
+              <input
+                className={styles.editInput}
+                value={formData.nickname}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, nickname: e.target.value }))
+                }
+                placeholder={student.nickname}
+              />
+            ) : (
+              <p>{student.nickname}</p>
+            )}
+          </div>
+          <div>
+            <div className={styles.stackTitleRow}>
+              <strong>기술 스택</strong>
+              {editMode && (
+                <div className={styles.tagIconGroup}>
+                  <div
+                    className={styles.plusButton}
+                    onClick={() => setShowTagModal(true)}
+                    title="태그 추가"
                   >
-                    {editMode ? "저장" : "수정"}
-                  </button>
-                  {editMode && (
-                    <>
-                      <button
-                        className={styles.fancyButton}
-                        onClick={() => setShowCategorySelect((prev) => !prev)}
-                      >
-                        태그 조회
-                      </button>
-
-                      {showCategorySelect && (
-                        <div style={{ marginTop: "10px" }}>
-                          <select
-                            className={styles.editInput}
-                            onChange={(e) => {
-                              const categoryId = Number(e.target.value);
-                              setSelectedCategoryId(categoryId);
-                              fetchTags(categoryId);
-                            }}
-                          >
-                            <option value="">카테고리 선택</option>
-                            <option value="1">IT·프로그래밍</option>
-                            <option value="2">디자인</option>
-                            <option value="3">마케팅</option>
-                          </select>
-                        </div>
-                      )}
-                    </>
-                  )}
-                </div>
-              </div>
-
-              <div className={styles.detail_info_container}>
-                <div className={styles.infoBox}>
-                  <div>
-                    <strong>이름</strong>
-                    <p>{student.name}</p>
-                  </div>
-                  <div>
-                    <strong>학교</strong>
-                    <p>{student.schoolName}</p>
-                  </div>
-                  <div>
-                    <strong>학번</strong>
-                    <p>{student.schoolId}</p>
-                  </div>
-                  <div>
-                    <strong>전화번호</strong>
-                    {editMode ? (
-                      <input
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        className={styles.editInput}
-                      />
-                    ) : (
-                      <p>{student.phone}</p>
-                    )}
-                  </div>
-                  <div>
-                    <strong>성별</strong>
-                    <p>{student.gender === "MALE" ? "남성" : "여성"}</p>
-                    <br />
-                    <strong>학과</strong>
-                    {editMode ? (
-                      <input
-                        name="major"
-                        value={formData.major}
-                        onChange={handleChange}
-                        className={styles.editInput}
-                      />
-                    ) : (
-                      <p>{student.major}</p>
-                    )}
-                  </div>
-                  <div>
-                    <strong>기술 스택</strong>
-                    {editMode ? (
-                      <input
-                        name="tags"
-                        value={formData.tags}
-                        onChange={handleChange}
-                        className={styles.editInput}
-                      />
-                    ) : (
-                      <div className={styles.tagList}>
-                        {student.tags.map((tag, index) => (
-                          <span key={index} className={styles.tag}>
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    )}
+                    <FaPlus />
                   </div>
                 </div>
-              </div>
+              )}
+              {editMode && (
+                <div
+                  className={styles.minusButton}
+                  onClick={() => {
+                    setSelectedTags([]); // 초기엔 아무것도 선택되지 않게
+                    setShowTagDeleteModal(true);
+                  }}
+                  title="태그 삭제"
+                >
+                  <FaMinus />
+                </div>
+              )}
 
-              <div className={styles.portfolioSection}>
-                <h3>포트폴리오</h3>
-                <div className={styles.portfolioGrid}>
-                  {student.portfolios.map((p, idx) => (
-                    <div key={idx} className={styles.portfolioCard}>
-                      <div className={styles.portfolioTitle}>{p.title}</div>
-                      {p.url.endsWith(".pdf") ? (
-                        <embed
-                          src={p.url}
-                          type="application/pdf"
-                          width="100%"
-                          height="200px"
-                          onClick={() => handlePreview(p.url)}
-                          style={{ cursor: "pointer" }}
-                        />
-                      ) : (
-                        <img
-                          src={p.url}
-                          alt={p.title}
-                          className={styles.portfolioImage}
-                          onClick={() => handlePreview(p.url)}
-                        />
-                      )}
-                      <a
-                        href={p.url}
-                        className={styles.buttonLikeLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        자세히 보기
-                      </a>
+              {showTagDeleteModal && (
+                <Draggable
+                  nodeRef={tagDeleteModalRef}
+                  defaultPosition={tagModalPosition}
+                >
+                  <div ref={tagDeleteModalRef} className={styles.modal_delete}>
+                    <h3 className={styles.modalHeader}>기술 스택 삭제</h3>
+
+                    <div className={styles.tagContainer_delete}>
+                      {student.tags?.map((tag: string, idx: number) => (
+                        <span
+                          key={idx}
+                          className={`${styles.tagItem} ${
+                            selectedTags.includes(tag) ? styles.selected : ""
+                          }`}
+                          onClick={() => handleTagClick(tag)} // 선택/해제 가능
+                        >
+                          {tag}
+                        </span>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              </div>
+
+                    <div className={styles.buttonRow}>
+                      <button
+                        className={styles.fancyButton2}
+                        onClick={handleDeleteTags}
+                        disabled={selectedTags.length === 0}
+                      >
+                        선택한 태그 삭제
+                      </button>
+                      <button
+                        className={styles.cancelButton}
+                        onClick={() => setShowTagDeleteModal(false)}
+                      >
+                        닫기
+                      </button>
+                    </div>
+                  </div>
+                </Draggable>
+              )}
+
+              {showTagModal && (
+                <Draggable
+                  nodeRef={tagModalRef}
+                  defaultPosition={modalPosition}
+                >
+                  <div ref={tagModalRef} className={styles.modal}>
+                    <h3 className={styles.modalHeader}>기술 스택 선택</h3>
+
+                    <label className={styles.label}>카테고리 선택</label>
+                    <select
+                      className={styles.editInput}
+                      value={categoryId ?? ""}
+                      onChange={(e) => setCategoryId(Number(e.target.value))}
+                    >
+                      <option value="" disabled>
+                        카테고리를 선택하세요
+                      </option>
+                      <option value={1}>IT·프로그래밍</option>
+                      <option value={2}>디자인</option>
+                      <option value={3}>마케팅</option>
+                    </select>
+
+                    <button
+                      className={styles.fancyButton}
+                      onClick={handleFetchTags}
+                      style={{ marginTop: "12px" }}
+                    >
+                      태그 불러오기
+                    </button>
+
+                    <div className={styles.tagContainer}>
+                      {tagOptions.map((tag, idx) => (
+                        <span
+                          key={idx}
+                          className={`${styles.tagItem} ${
+                            selectedTags.includes(tag) ? styles.selected : ""
+                          }`}
+                          onClick={() => handleTagClick(tag)}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className={styles.buttonRow}>
+                      <button
+                        className={styles.fancyButton2}
+                        onClick={handleAddTags}
+                      >
+                        태그 추가
+                      </button>
+                      <button
+                        className={styles.cancelButton}
+                        onClick={() => setShowTagModal(false)}
+                      >
+                        닫기
+                      </button>
+                    </div>
+                  </div>
+                </Draggable>
+              )}
+            </div>
+            <div className={styles.tagContainer}>
+              {student.tags?.map((tag: string, idx: number) => (
+                <span key={idx} className={styles.tagItem}>
+                  {tag}
+                </span>
+              ))}
             </div>
           </div>
         </div>
+        {editMode && (
+          <>
+            {showPortfolioModal && (
+              <Draggable
+                nodeRef={portfolioModalRef}
+                defaultPosition={portfolioModalPosition}
+              >
+                <div ref={portfolioModalRef} className={styles.modal}>
+                  <h3>포트폴리오 업로드</h3>
+                  <input
+                    type="file"
+                    accept="application/pdf"
+                    onChange={(e) =>
+                      setPortfolioFile(e.target.files?.[0] ?? null)
+                    }
+                  />
+                  <input
+                    type="text"
+                    placeholder="포트폴리오 URL (선택)"
+                    value={portfolioUrl}
+                    onChange={(e) => setPortfolioUrl(e.target.value)}
+                  />
+                  <button
+                    className={styles.fancyButton_port}
+                    onClick={handleUploadPortfolio}
+                  >
+                    업로드
+                  </button>
+                  <button
+                    className={styles.cancelButton}
+                    onClick={() => setShowPortfolioModal(false)}
+                  >
+                    닫기
+                  </button>
+                </div>
+              </Draggable>
+            )}
+          </>
+        )}
+        <div className={styles.infoBox_port}>
+          <div className={styles.portfolioContainer}>
+            <strong>포트폴리오</strong>
+            <div className={styles.editForm}>
+              <button
+                className={styles.fancyButton}
+                onClick={() => setShowPortfolioModal(true)}
+              >
+                포트폴리오 추가
+              </button>
+            </div>
+            {portfolios.length === 0 ? (
+              <p>등록된 포트폴리오가 없습니다.</p>
+            ) : (
+              <div className={styles.portfolioList}>
+                {portfolios.map((p) => (
+                  <div key={p.id} className={styles.portfolioItem}>
+                    <iframe
+                      src={p.url}
+                      width="100%"
+                      height="200px"
+                      title={`portfolio-${p.id}`}
+                      className={styles.portfolioViewer}
+                    ></iframe>
+
+                    <div className={styles.buttonRow}>
+                      <button
+                        className={styles.fancyButton}
+                        onClick={() => window.open(p.url, "_blank")}
+                      >
+                        자세히 보기
+                      </button>
+
+                      {editMode && (
+                        <button
+                          className={styles.cancelButton}
+                          onClick={() => handleDeletePortfolio(p.id)}
+                        >
+                          삭제
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
-      {showModal && pdfUrl && (
-        <PdfModal url={pdfUrl} onClose={() => setShowModal(false)} />
-      )}
     </div>
   );
 }
