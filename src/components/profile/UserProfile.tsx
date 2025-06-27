@@ -432,7 +432,7 @@ export default function UserProfile() {
     }
   };
 
-  if (!student) return <div className={styles.profile_font}>로딩 중...</div>;
+  if (!student) return <div className={styles.profile_font}></div>;
   return (
     <div className={styles.container}>
       <div className={styles.profile_container}>

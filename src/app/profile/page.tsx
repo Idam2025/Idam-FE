@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import StudentProfilePage from "@/components/profile/UserProfile";
 import CompanyProfilePage from "@/components/profile/CompanyProfilePage";
 import NavigationBar from "@/components/navigationbar/Home/mainNavigationBar";
+import styles from "@/components/profile/StudentProfilePage.module.css";
 import style from "./profile.module.css";
+import { FaSpinner } from "react-icons/fa";
 
 export default function ProfilePage() {
   const [userType, setUserType] = useState<string | null>(null);
@@ -20,7 +22,11 @@ export default function ProfilePage() {
   }, []);
 
   if (!mounted || !userType) {
-    return <div>불러오는 중...</div>;
+    return (
+      <div className={styles.loadingContainer}>
+        <FaSpinner className={styles.spinnerIcon} />
+      </div>
+    );
   }
 
   return (
